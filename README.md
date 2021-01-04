@@ -2,7 +2,7 @@
 
 > 
 
-[![NPM](https://img.shields.io/npm/v/react-pic-gallery.svg)](https://www.npmjs.com/package/react-pic-gallery) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+[![NPM](https://img.shields.io/npm/v/react-pic-gallery.svg)](https://www.npmjs.com/package/react-pic-gallery)
 
 ## Install
 
@@ -12,17 +12,33 @@ npm install --save react-pic-gallery
 
 ## Usage
 
+A list of objects containing a thumbnail source and the full source is the only needed parameter.
+
 ```tsx
-import React, { Component } from 'react'
+import React from 'react'
+import PicGallery, { imageObject } from 'react-pic-gallery'
 
-import MyComponent from 'react-pic-gallery'
-import 'react-pic-gallery/dist/index.css'
+const listOfImages:imageObject[]=[
+  {thumbnailSrc:"https://picsum.photos/id/237/200/300",fullSrc:"https://picsum.photos/id/237/800/600"},
+  {thumbnailSrc:"https://picsum.photos/id/154/200/150",fullSrc:"https://picsum.photos/id/154/200/150"},
+  {thumbnailSrc:"https://picsum.photos/id/385/300/200",fullSrc:"https://picsum.photos/id/385/800/600"},
+  {thumbnailSrc:"https://picsum.photos/id/25/100/250",fullSrc:"https://picsum.photos/id/25/100/250"},
+  {thumbnailSrc:"https://picsum.photos/id/35/120/200",fullSrc:"https://picsum.photos/id/35/120/200"},
+  {thumbnailSrc:"https://picsum.photos/id/84/280/185",fullSrc:"https://picsum.photos/id/84/280/185"},
+  {thumbnailSrc:"https://picsum.photos/id/185/200/300",fullSrc:"https://picsum.photos/id/185/200/300"},
+  {thumbnailSrc:"https://picsum.photos/id/55/200/150",fullSrc:"https://picsum.photos/id/55/200/150"},
+  {thumbnailSrc:"https://picsum.photos/id/852/300/200",fullSrc:"https://picsum.photos/id/852/300/200"},
+]
 
-class Example extends Component {
-  render() {
-    return <MyComponent />
-  }
+const App = () => {
+  return (
+    <div style={{background:'grey',padding:20,position:'absolute',width:'auto',height:'100%', border:'1px solid black'}}>
+      <PicGallery imgList={listOfImages} />
+    </div>
+  )
 }
+
+export default App
 ```
 
 ## License
