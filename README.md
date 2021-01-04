@@ -32,7 +32,7 @@ const listOfImages:imageObject[]=[
 
 const App = () => {
   return (
-    <div style={{background:'grey',padding:20,position:'absolute',width:'auto',height:'100%', border:'1px solid black'}}>
+    <div>
       <PicGallery imgList={listOfImages} />
     </div>
   )
