@@ -4,6 +4,12 @@
 
 [![NPM](https://img.shields.io/npm/v/react-pic-gallery.svg)](https://www.npmjs.com/package/react-pic-gallery)
 
+React library for a simple image gallery with lightbox implemented.
+
+## Demo
+
+![demo gif]('https://github.com/marcelrsoub/react-pic-gallery/blob/master/demo.gif')
+
 ## Install
 
 ```bash
@@ -19,21 +25,43 @@ import React from 'react'
 import PicGallery, { imageObject } from 'react-pic-gallery'
 
 const listOfImages:imageObject[]=[
-  {thumbnailSrc:"https://picsum.photos/id/237/200/300",fullSrc:"https://picsum.photos/id/237/800/600"},
-  {thumbnailSrc:"https://picsum.photos/id/154/200/150",fullSrc:"https://picsum.photos/id/154/200/150"},
-  {thumbnailSrc:"https://picsum.photos/id/385/300/200",fullSrc:"https://picsum.photos/id/385/800/600"},
-  {thumbnailSrc:"https://picsum.photos/id/25/100/250",fullSrc:"https://picsum.photos/id/25/100/250"},
-  {thumbnailSrc:"https://picsum.photos/id/35/120/200",fullSrc:"https://picsum.photos/id/35/120/200"},
-  {thumbnailSrc:"https://picsum.photos/id/84/280/185",fullSrc:"https://picsum.photos/id/84/280/185"},
-  {thumbnailSrc:"https://picsum.photos/id/185/200/300",fullSrc:"https://picsum.photos/id/185/200/300"},
-  {thumbnailSrc:"https://picsum.photos/id/55/200/150",fullSrc:"https://picsum.photos/id/55/200/150"},
-  {thumbnailSrc:"https://picsum.photos/id/852/300/200",fullSrc:"https://picsum.photos/id/852/300/200"},
+  {thumbnailSrc:"https://picsum.photos/id/237/200/300",fullSrc:"https://picsum.photos/id/237/800/600",description:"A Dog standing on a wooden floor"},
+  {thumbnailSrc:"https://picsum.photos/id/154/200/150",fullSrc:"https://picsum.photos/id/154/200/150"}
 ]
 
 const App = () => {
   return (
     <div>
       <PicGallery imgList={listOfImages} />
+    </div>
+  )
+}
+
+export default App
+```
+
+## Options
+
+The options interface can be imported from the library and the object can be passed in the main component:
+
+```tsx
+import React from 'react'
+import PicGallery, { imageObject, Options } from 'react-pic-gallery'
+
+const listOfImages:imageObject[]=[
+  {thumbnailSrc:"https://picsum.photos/id/237/200/300",fullSrc:"https://picsum.photos/id/237/800/600",description:"A Dog standing on a wooden floor"},
+  {thumbnailSrc:"https://picsum.photos/id/154/200/150",fullSrc:"https://picsum.photos/id/154/200/150"}
+]
+
+const optionsObj:Options = {
+  downloadBtnDisplay:true,
+  descriptionBoxDisplay:true
+}
+
+const App = () => {
+  return (
+    <div>
+      <PicGallery imgList={listOfImages} options={optionsObj} />
     </div>
   )
 }
