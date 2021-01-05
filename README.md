@@ -8,7 +8,7 @@ React library for a simple image gallery with lightbox implemented.
 
 ## Demo
 
-![demo gif]('demo.gif')
+![demo gif](demo.gif)
 
 ## Install
 
