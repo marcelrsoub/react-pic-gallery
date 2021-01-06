@@ -2,6 +2,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { circularLoading } from '@yami-beta/react-circular-loading'
+import { act } from 'react-dom/test-utils'
 
 // 1. Types Declaration
 
@@ -28,7 +29,7 @@ const ModalDiv = styled.div`
   background: rgba(0, 0, 0, 0.774);
   /* backdrop-filter: blur(6px); */
   display: flex;
-  z-index: 1e9;
+  z-index: 9999999;
   justify-content: center;
 `
 
@@ -95,6 +96,7 @@ const ImgLazyLoading = (props: {
   const [imgSrcUrl, setImgSrcUrl] = React.useState('')
 
   React.useEffect(() => {
+    const ac = new AbortController();
     if (props.imgSrc) {
       fetch(props.imgSrc)
         .then((response) => response.blob())
@@ -102,6 +104,7 @@ const ImgLazyLoading = (props: {
           setImgSrcUrl(URL.createObjectURL(blob))
         })
     }
+    return ()=>{ac.abort();} // cleanup function
   }, [])
 
   if (imgSrcUrl) {
