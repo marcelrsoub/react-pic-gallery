@@ -49,9 +49,9 @@ const LbButton = styled.a`
 
 const DescriptionDiv = styled.div`
   background: white;
-  display:block;
-  margin:auto;
-  padding:10px;
+  display: block;
+  margin: auto;
+  padding: 10px;
   width: calc(90% - 20px);
 `
 
@@ -161,6 +161,7 @@ const ImgLightbox = (props: {
 
   return (
     <ModalDiv
+      className='reactPic-lightbox'
       onClick={() => {
         props.onClose()
       }}
@@ -177,12 +178,14 @@ const ImgLightbox = (props: {
           <CircularLoading />
         </div>
       ) : (
-        <div style={{
-          display: 'block',
-          margin: 'auto',
-          maxWidth: '90%',
-          maxHeight: '80%'
-        }}>
+        <div
+          style={{
+            display: 'block',
+            margin: 'auto',
+            maxWidth: '90%',
+            maxHeight: '80%'
+          }}
+        >
           <img
             src={imgSrcUrl}
             alt=''
@@ -194,7 +197,13 @@ const ImgLightbox = (props: {
               maxHeight: '80%'
             }}
           />
-          {props.options?.descriptionBoxDisplay ? (props.imgObj?.description ? <DescriptionDiv>{props.imgObj?.description}</DescriptionDiv> : null) : null}
+          {props.options?.descriptionBoxDisplay ? (
+            props.imgObj?.description ? (
+              <DescriptionDiv className='reactPic-description'>
+                {props.imgObj?.description}
+              </DescriptionDiv>
+            ) : null
+          ) : null}
         </div>
       )}
     </ModalDiv>
@@ -205,21 +214,21 @@ const ImgLightbox = (props: {
 
 // 4.1. Default Options
 
-const defaultOptions:Options = {
-  downloadBtnDisplay:true,
-  descriptionBoxDisplay:true,
+const defaultOptions: Options = {
+  downloadBtnDisplay: true,
+  descriptionBoxDisplay: true
 }
 
 // 4.2. Main
 
-const PicGallery = (props : { imgList: imageObject[], options?:Options }) => {
+const PicGallery = (props: { imgList: imageObject[]; options?: Options }) => {
   const [open, setOpen] = React.useState(false)
   const [modalImgObj, setModalImgObj] = React.useState<imageObject | null>(null)
 
-  const options:Options = { ...defaultOptions, ...props.options}
+  const options: Options = { ...defaultOptions, ...props.options }
 
   return (
-    <Wrapper>
+    <Wrapper className='reactPic-wrapper'>
       {open ? (
         <ImgLightbox
           imgObj={modalImgObj}
@@ -229,14 +238,14 @@ const PicGallery = (props : { imgList: imageObject[], options?:Options }) => {
           }}
         />
       ) : null}
-      <Grid>
+      <Grid className='reactPic-grid'>
         {props.imgList.map((element: imageObject) => {
           return (
             <div
               key={
                 element.thumbnailSrc ? element.thumbnailSrc : element.fullSrc
               }
-              className='imgDiv'
+              className='reactPic-imgDiv'
               style={{
                 overflow: 'hidden',
                 width: '100%',
@@ -245,7 +254,7 @@ const PicGallery = (props : { imgList: imageObject[], options?:Options }) => {
               }}
             >
               <div
-                className='innerImgDiv'
+                className='reactPic-innerImgDiv'
                 style={{
                   display: 'flex',
                   justifyContent: 'center',
