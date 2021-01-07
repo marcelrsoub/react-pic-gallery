@@ -55,9 +55,18 @@ const listOfImages:imageObject[]=[
   {thumbnailSrc:"https://picsum.photos/id/154/200/150",fullSrc:"https://picsum.photos/id/154/200/150"}
 ]
 
+const DownBtn = ()=>{
+  return <div>Download</div>
+}
+const DescBox = (props:{children:any})=>{
+  return <div style={{background:'red'}}>{props.children}</div>
+}
+
 const optionsObj:Options = {
   downloadBtnDisplay:true,
-  descriptionBoxDisplay:true
+  downloadCustomBtn:DownBtn,
+  descriptionBoxDisplay:true,
+  descriptionCustomBox:DescBox
 }
 
 const App = () => {

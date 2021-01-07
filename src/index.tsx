@@ -2,7 +2,6 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { circularLoading } from '@yami-beta/react-circular-loading'
-import { act } from 'react-dom/test-utils'
 
 // 1. Types Declaration
 
@@ -14,8 +13,10 @@ export interface imageObject {
 
 export interface Options {
   downloadBtnDisplay?: boolean
+  downloadCustomBtn?:()=>JSX.Element
   // shareBtnDisplay?:boolean
   descriptionBoxDisplay?: boolean
+  descriptionCustomBox?:(props:{children:any})=>JSX.Element
 }
 
 // 2. Styled Components
@@ -46,6 +47,11 @@ const LbButton = styled.a`
   padding: 5px;
   border: 1px solid white;
   border-radius: 5px;
+`
+const ABtn = styled.a`
+  float: right;
+  text-decoration: none;
+  color: white;
 `
 
 const DescriptionDiv = styled.div`
@@ -171,9 +177,9 @@ const ImgLightbox = (props: {
     >
       {/* <LbButton ><a href={props.imgSrc} download>Download</a></LbButton> */}
       <LbButtonsDiv>
-        <LbButton href={imgSrcUrl} download>
+        {props.options?.downloadBtnDisplay || props.options?.downloadCustomBtn ? (props.options.downloadCustomBtn ? <ABtn href={imgSrcUrl} download>{props.options.downloadCustomBtn()}</ABtn> : <LbButton href={imgSrcUrl} download>
           Download
-        </LbButton>
+        </LbButton>):null}
       </LbButtonsDiv>
 
       {imgSrcUrl === '' ? (
@@ -202,9 +208,9 @@ const ImgLightbox = (props: {
           />
           {props.options?.descriptionBoxDisplay ? (
             props.imgObj?.description ? (
-              <DescriptionDiv className='reactPic-description'>
-                {props.imgObj?.description}
-              </DescriptionDiv>
+              props.options.descriptionCustomBox ? <props.options.descriptionCustomBox>{props.imgObj?.description}</props.options.descriptionCustomBox> :<DescriptionDiv className='reactPic-description'>
+              {props.imgObj?.description}
+            </DescriptionDiv>
             ) : null
           ) : null}
         </div>
