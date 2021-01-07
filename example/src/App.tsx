@@ -21,10 +21,10 @@ const DescBox = (props:{children:any})=>{
 }
 
 const options:Options = {
-  downloadBtnDisplay:true,
-  downloadCustomBtn:DownBtn,
-  descriptionBoxDisplay:true,
-  descriptionCustomBox:DescBox
+  // downloadBtnDisplay:true,
+  // downloadCustomBtn:DownBtn,
+  // descriptionBoxDisplay:true,
+  // descriptionCustomBox:DescBox
 }
 
 const App = () => {
