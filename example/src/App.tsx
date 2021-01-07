@@ -1,5 +1,5 @@
 import React from 'react'
-import PicGallery, { imageObject } from 'react-pic-gallery'
+import PicGallery, { imageObject, Options } from 'react-pic-gallery'
 
 const listOfImages:imageObject[]=[
   {thumbnailSrc:"https://picsum.photos/id/237/200/300",fullSrc:"https://picsum.photos/id/237/800/600",description:"A Dog standing on a wooden floor"},
@@ -13,10 +13,24 @@ const listOfImages:imageObject[]=[
   {thumbnailSrc:"https://picsum.photos/id/852/300/200",fullSrc:"https://picsum.photos/id/852/800/600"},
 ]
 
+const DownBtn = ()=>{
+  return <div>Download</div>
+}
+const DescBox = (props:{children:any})=>{
+  return <div style={{background:'red'}}>{props.children}</div>
+}
+
+const options:Options = {
+  downloadBtnDisplay:true,
+  downloadCustomBtn:DownBtn,
+  descriptionBoxDisplay:true,
+  descriptionCustomBox:DescBox
+}
+
 const App = () => {
   return (
     <div style={{background:'#292929',padding:20,position:'absolute',width:'calc(100% - 35px)',height:'calc(100% - 35px)'}}>
-      <PicGallery imgList={listOfImages} />
+      <PicGallery imgList={listOfImages} options={options} />
     </div>
   )
 }
