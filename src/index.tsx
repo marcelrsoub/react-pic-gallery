@@ -3,9 +3,9 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { circularLoading } from '@yami-beta/react-circular-loading'
 
-// BUG: 
-    // Warning: Can't perform a React state update on an unmounted component. This is a no-op, but it indicates a memory leak in your application. To fix, cancel all subscriptions and asynchronous tasks in a useEffect cleanup function.
-    // in ImgLightbox (created by PicGallery)
+// BUG:
+// Warning: Can't perform a React state update on an unmounted component. This is a no-op, but it indicates a memory leak in your application. To fix, cancel all subscriptions and asynchronous tasks in a useEffect cleanup function.
+// in ImgLightbox (created by PicGallery)
 
 // 1. Types Declaration
 
@@ -17,10 +17,10 @@ export interface imageObject {
 
 export interface Options {
   downloadBtnDisplay?: boolean
-  downloadCustomBtn?:()=>JSX.Element
+  downloadCustomBtn?: () => JSX.Element
   // shareBtnDisplay?:boolean
   descriptionBoxDisplay?: boolean
-  descriptionCustomBox?:(props:{children:any})=>JSX.Element
+  descriptionCustomBox?: (props: { children: any }) => JSX.Element
 }
 
 // 2. Styled Components
@@ -60,12 +60,12 @@ const ABtn = styled.a`
 
 const DescriptionDiv = styled.div`
   background: white;
-  position:fixed;
-  bottom:0px;
+  position: fixed;
+  bottom: 0px;
   padding: 10px;
   width: 100%;
-  max-height:60px;
-  overflow-y:scroll;
+  max-height: 60px;
+  overflow-y: scroll;
 `
 
 const Wrapper = styled.div({
@@ -108,7 +108,7 @@ const ImgLazyLoading = (props: {
   const [imgSrcUrl, setImgSrcUrl] = React.useState('')
 
   React.useEffect(() => {
-    const ac = new AbortController();
+    const ac = new AbortController()
     if (props.imgSrc) {
       fetch(props.imgSrc)
         .then((response) => response.blob())
@@ -116,7 +116,9 @@ const ImgLazyLoading = (props: {
           setImgSrcUrl(URL.createObjectURL(blob))
         })
     }
-    return ()=>{ac.abort();} // cleanup function
+    return () => {
+      ac.abort()
+    } // cleanup function
   }, [])
 
   if (imgSrcUrl) {
@@ -172,20 +174,32 @@ const ImgLightbox = (props: {
           setImgSrcUrl(URL.createObjectURL(blob))
         })
     }
+    // fixing body scrolling while lightbox is open
+    document.body.style.overflow='hidden'
   }, [])
 
   return (
     <ModalDiv
       className='reactPic-lightbox'
       onClick={() => {
+        document.body.style.overflow=''
         props.onClose()
       }}
     >
       {/* <LbButton ><a href={props.imgSrc} download>Download</a></LbButton> */}
       <LbButtonsDiv>
-        {props.options?.downloadBtnDisplay || props.options?.downloadCustomBtn ? (props.options.downloadCustomBtn ? <ABtn href={imgSrcUrl} download>{props.options.downloadCustomBtn()}</ABtn> : <LbButton href={imgSrcUrl} download>
-          Download
-        </LbButton>):null}
+        {props.options?.downloadBtnDisplay ||
+        props.options?.downloadCustomBtn ? (
+          props.options.downloadCustomBtn ? (
+            <ABtn href={imgSrcUrl} download>
+              {props.options.downloadCustomBtn()}
+            </ABtn>
+          ) : (
+            <LbButton href={imgSrcUrl} download>
+              Download
+            </LbButton>
+          )
+        ) : null}
       </LbButtonsDiv>
 
       {imgSrcUrl === '' ? (
@@ -195,7 +209,7 @@ const ImgLightbox = (props: {
       ) : (
         <div
           style={{
-            display: 'flex',            
+            display: 'flex'
           }}
         >
           <img
@@ -204,15 +218,20 @@ const ImgLightbox = (props: {
             style={{
               maxWidth: '90%',
               maxHeight: '80%',
-              margin:'auto',
-              
+              margin: 'auto'
             }}
           />
           {props.options?.descriptionBoxDisplay ? (
             props.imgObj?.description ? (
-              props.options.descriptionCustomBox ? <props.options.descriptionCustomBox>{props.imgObj?.description}</props.options.descriptionCustomBox> :<DescriptionDiv className='reactPic-description'>
-              {props.imgObj?.description}
-            </DescriptionDiv>
+              props.options.descriptionCustomBox ? (
+                <props.options.descriptionCustomBox>
+                  {props.imgObj?.description}
+                </props.options.descriptionCustomBox>
+              ) : (
+                <DescriptionDiv className='reactPic-description'>
+                  {props.imgObj?.description}
+                </DescriptionDiv>
+              )
             ) : null
           ) : null}
         </div>
