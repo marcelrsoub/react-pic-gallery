@@ -13,12 +13,12 @@ const listOfImages:imageObject[]=[
   {thumbnailSrc:"https://picsum.photos/id/852/300/200",fullSrc:"https://picsum.photos/id/852/800/600"},
 ]
 
-const DownBtn = ()=>{
-  return <div>Download</div>
-}
-const DescBox = (props:{children:any})=>{
-  return <div style={{background:'red'}}>{props.children}</div>
-}
+// const DownBtn = ()=>{
+//   return <div>Download</div>
+// }
+// const DescBox = (props:{children:any})=>{
+//   return <div style={{background:'red'}}>{props.children}</div>
+// }
 
 const options:Options = {
   // downloadBtnDisplay:true,
