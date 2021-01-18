@@ -2,6 +2,8 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { circularLoading } from '@yami-beta/react-circular-loading'
+import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch'
+import './styles.css'
 
 // BUG:
 // Warning: Can't perform a React state update on an unmounted component. This is a no-op, but it indicates a memory leak in your application. To fix, cancel all subscriptions and asynchronous tasks in a useEffect cleanup function.
@@ -24,7 +26,6 @@ export interface Options {
 }
 
 // 2. Styled Components
-
 const ModalDiv = styled.div`
   position: fixed;
   top: 0;
@@ -119,7 +120,7 @@ const ImgLazyLoading = (props: {
     return () => {
       ac.abort()
     } // cleanup function
-  }, [])
+  }, [props.imgSrc])
 
   if (imgSrcUrl) {
     return (
@@ -175,14 +176,14 @@ const ImgLightbox = (props: {
         })
     }
     // fixing body scrolling while lightbox is open
-    document.body.style.overflow='hidden'
-  }, [])
+    document.body.style.overflow = 'hidden'
+  }, [props.imgObj])
 
   return (
     <ModalDiv
       className='reactPic-lightbox'
       onClick={() => {
-        document.body.style.overflow=''
+        document.body.style.overflow = ''
         props.onClose()
       }}
     >
@@ -207,34 +208,44 @@ const ImgLightbox = (props: {
           <CircularLoading />
         </div>
       ) : (
-        <div
-          style={{
-            display: 'flex'
-          }}
+        <TransformWrapper
+          defaultScale={1}
         >
-          <img
-            src={imgSrcUrl}
-            alt=''
+          <div
             style={{
-              maxWidth: '90%',
-              maxHeight: '80%',
-              margin: 'auto'
+              display: 'flex',
+              width: '100%',
+              height: '100%'
             }}
-          />
-          {props.options?.descriptionBoxDisplay ? (
-            props.imgObj?.description ? (
-              props.options.descriptionCustomBox ? (
-                <props.options.descriptionCustomBox>
-                  {props.imgObj?.description}
-                </props.options.descriptionCustomBox>
-              ) : (
-                <DescriptionDiv className='reactPic-description'>
-                  {props.imgObj?.description}
-                </DescriptionDiv>
-              )
-            ) : null
-          ) : null}
-        </div>
+          >
+            <div
+              style={{
+                margin: 'auto',
+              }}
+            >
+              <TransformComponent>
+                <img src={imgSrcUrl} alt='' style={{
+                  maxWidth:"80vw",
+                  maxHeight:"80vh",
+                  margin:'auto'
+                }} />
+              </TransformComponent>
+            </div>
+            {props.options?.descriptionBoxDisplay ? (
+              props.imgObj?.description ? (
+                props.options.descriptionCustomBox ? (
+                  <props.options.descriptionCustomBox>
+                    {props.imgObj?.description}
+                  </props.options.descriptionCustomBox>
+                ) : (
+                  <DescriptionDiv className='reactPic-description'>
+                    {props.imgObj?.description}
+                  </DescriptionDiv>
+                )
+              ) : null
+            ) : null}
+          </div>
+        </TransformWrapper>
       )}
     </ModalDiv>
   )
