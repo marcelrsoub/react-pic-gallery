@@ -3,6 +3,10 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { circularLoading } from '@yami-beta/react-circular-loading'
 
+// BUG: 
+    // Warning: Can't perform a React state update on an unmounted component. This is a no-op, but it indicates a memory leak in your application. To fix, cancel all subscriptions and asynchronous tasks in a useEffect cleanup function.
+    // in ImgLightbox (created by PicGallery)
+
 // 1. Types Declaration
 
 export interface imageObject {
