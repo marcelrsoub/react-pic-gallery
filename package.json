@@ -63,6 +63,7 @@
   ],
   "dependencies": {
     "@yami-beta/react-circular-loading": "^3.0.0",
+    "react-zoom-pan-pinch": "^1.6.1",
     "styled-components": "^5.2.1"
   }
 }
