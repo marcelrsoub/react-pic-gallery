@@ -60,10 +60,12 @@ const ABtn = styled.a`
 
 const DescriptionDiv = styled.div`
   background: white;
-  display: block;
-  margin: auto;
+  position:fixed;
+  bottom:0px;
   padding: 10px;
-  width: calc(90% - 20px);
+  width: 100%;
+  max-height:60px;
+  overflow-y:scroll;
 `
 
 const Wrapper = styled.div({
@@ -193,21 +195,17 @@ const ImgLightbox = (props: {
       ) : (
         <div
           style={{
-            display: 'block',
-            margin: 'auto',
-            maxWidth: '90%',
-            maxHeight: '80%'
+            display: 'flex',            
           }}
         >
           <img
             src={imgSrcUrl}
             alt=''
             style={{
-              touchAction: 'pan-right pinch-zoom',
-              display: 'block',
-              margin: 'auto',
               maxWidth: '90%',
-              maxHeight: '80%'
+              maxHeight: '80%',
+              margin:'auto',
+              
             }}
           />
           {props.options?.descriptionBoxDisplay ? (
