@@ -65,6 +65,7 @@ const DescriptionDiv = styled.div`
   bottom: 0px;
   padding: 10px;
   width: 100%;
+  text-align: center;
   max-height: 60px;
   overflow-y: scroll;
 `
@@ -179,6 +180,17 @@ const ImgLightbox = (props: {
     document.body.style.overflow = 'hidden'
   }, [props.imgObj])
 
+  // React.useEffect(() => {
+  //   const zoomDiv: HTMLElement | null | any = document.querySelector(
+  //     '.react-transform-component'
+  //   )
+  //   console.log(zoomDiv.style)
+
+  //   if (zoomDiv) {
+  //     zoomDiv.style.overflow = ''
+  //   }
+  // }, [])
+
   return (
     <ModalDiv
       className='reactPic-lightbox'
@@ -208,43 +220,49 @@ const ImgLightbox = (props: {
           <CircularLoading />
         </div>
       ) : (
-        <TransformWrapper
-          defaultScale={1}
-        >
+        <TransformWrapper defaultScale={1} options={{}}>
           <div
             style={{
               display: 'flex',
               width: '100%',
-              height: '100%'
+              height: props.imgObj?.description ? 'calc(100% - 95px)' : '100%',
+              paddingBottom: props.imgObj?.description ? 60 : 0,
+              paddingTop: props.imgObj?.description ? 35 : 0
             }}
           >
             <div
               style={{
-                margin: 'auto',
+                margin: 'auto'
               }}
             >
               <TransformComponent>
-                <img src={imgSrcUrl} alt='' style={{
-                  maxWidth:"80vw",
-                  maxHeight:"80vh",
-                  margin:'auto'
-                }} />
+                <img
+                  src={imgSrcUrl}
+                  alt=''
+                  id='lightboxImg'
+                  style={{
+                    maxWidth: '80vw',
+                    maxHeight: 'calc(80vh - 60px)',
+                    margin: 'auto',
+                    zIndex: 1000000
+                  }}
+                />
               </TransformComponent>
             </div>
-            {props.options?.descriptionBoxDisplay ? (
-              props.imgObj?.description ? (
-                props.options.descriptionCustomBox ? (
-                  <props.options.descriptionCustomBox>
-                    {props.imgObj?.description}
-                  </props.options.descriptionCustomBox>
-                ) : (
-                  <DescriptionDiv className='reactPic-description'>
-                    {props.imgObj?.description}
-                  </DescriptionDiv>
-                )
-              ) : null
-            ) : null}
           </div>
+          {props.options?.descriptionBoxDisplay ? (
+            props.imgObj?.description ? (
+              props.options.descriptionCustomBox ? (
+                <props.options.descriptionCustomBox>
+                  {props.imgObj?.description}
+                </props.options.descriptionCustomBox>
+              ) : (
+                <DescriptionDiv className='reactPic-description'>
+                  {props.imgObj?.description}
+                </DescriptionDiv>
+              )
+            ) : null
+          ) : null}
         </TransformWrapper>
       )}
     </ModalDiv>
@@ -267,6 +285,12 @@ const PicGallery = (props: { imgList: imageObject[]; options?: Options }) => {
   const [modalImgObj, setModalImgObj] = React.useState<imageObject | null>(null)
 
   const options: Options = { ...defaultOptions, ...props.options }
+
+  // allowing full screen zooming on react-zoom library
+  const sheet = document.createElement('style')
+  sheet.innerHTML =
+    '.react-transform-component { overflow: inherit !important; }'
+  document.body.appendChild(sheet)
 
   return (
     <Wrapper className='reactPic-wrapper'>
