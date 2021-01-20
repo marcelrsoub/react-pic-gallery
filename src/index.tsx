@@ -5,10 +5,6 @@ import { circularLoading } from '@yami-beta/react-circular-loading'
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch'
 import './styles.css'
 
-// BUG:
-// Warning: Can't perform a React state update on an unmounted component. This is a no-op, but it indicates a memory leak in your application. To fix, cancel all subscriptions and asynchronous tasks in a useEffect cleanup function.
-// in ImgLightbox (created by PicGallery)
-
 // 1. Types Declaration
 
 export interface imageObject {
@@ -180,17 +176,6 @@ const ImgLightbox = (props: {
     document.body.style.overflow = 'hidden'
   }, [props.imgObj])
 
-  // React.useEffect(() => {
-  //   const zoomDiv: HTMLElement | null | any = document.querySelector(
-  //     '.react-transform-component'
-  //   )
-  //   console.log(zoomDiv.style)
-
-  //   if (zoomDiv) {
-  //     zoomDiv.style.overflow = ''
-  //   }
-  // }, [])
-
   return (
     <ModalDiv
       className='reactPic-lightbox'
@@ -199,7 +184,6 @@ const ImgLightbox = (props: {
         props.onClose()
       }}
     >
-      {/* <LbButton ><a href={props.imgSrc} download>Download</a></LbButton> */}
       <LbButtonsDiv>
         {props.options?.downloadBtnDisplay ||
         props.options?.downloadCustomBtn ? (
