@@ -271,10 +271,15 @@ const PicGallery = (props: { imgList: imageObject[]; options?: Options }) => {
   const options: Options = { ...defaultOptions, ...props.options }
 
   // allowing full screen zooming on react-zoom library
-  const sheet = document.createElement('style')
-  sheet.innerHTML =
-    '.react-transform-component { overflow: inherit !important; }'
-  document.body.appendChild(sheet)
+  const styleTag = document.querySelector("#react-pic-style")
+  if(!styleTag){
+    const sheet = document.createElement('style')
+    sheet.innerHTML =
+      '.react-transform-component { overflow: inherit !important; }'
+      sheet.id = 'react-pic-style'
+    document.body.appendChild(sheet)
+
+  }
 
   return (
     <Wrapper className='reactPic-wrapper'>
