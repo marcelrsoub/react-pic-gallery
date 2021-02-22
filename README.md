@@ -6,6 +6,13 @@
 
 React library for a simple image gallery with lightbox implemented.
 
+## Features
+
+- 📱 Responsive
+- 🚵 Lazy load on pictures
+- ✏ Buttons and CSS customization classes are accessible
+- 💡 Lightbox implemented 
+
 ## Demo
 
 https://marcelrsoub.github.io/react-pic-gallery/
