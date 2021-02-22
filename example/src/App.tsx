@@ -1,5 +1,6 @@
 import React from 'react'
 import PicGallery, { imageObject, Options } from 'react-pic-gallery'
+import './App.css'
 
 const listOfImages:imageObject[]=[
   {thumbnailSrc:"https://picsum.photos/id/237/200/300",fullSrc:"https://picsum.photos/id/237/800/600",description:"A Dog standing on a wooden floor"},
@@ -29,7 +30,9 @@ const options:Options = {
 
 const App = () => {
   return (
-    <div style={{background:'#292929',padding:20,position:'absolute',width:'calc(100% - 35px)',height:'calc(100% - 35px)'}}>
+    <div>
+      <h1>react-pic-gallery</h1>
+
       <PicGallery imgList={listOfImages} options={options} />
     </div>
   )
