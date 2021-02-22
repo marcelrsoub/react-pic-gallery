@@ -19,6 +19,8 @@ export interface Options {
   // shareBtnDisplay?:boolean
   descriptionBoxDisplay?: boolean
   descriptionCustomBox?: (props: { children: any }) => JSX.Element
+  rowHeight?: number
+  navigation?: boolean
 }
 
 // 2. Styled Components
@@ -61,6 +63,7 @@ const DescriptionDiv = styled.div`
   bottom: 0px;
   padding: 10px;
   width: 100%;
+  color:#666;
   text-align: center;
   max-height: 60px;
   overflow-y: scroll;
@@ -76,6 +79,7 @@ const Wrapper = styled.div({
 const Grid = styled.div({
   display: 'grid',
   gridTemplateColumns: 'repeat(3, 1fr)',
+  gridTemplateRows: '1fr',
   gap: '2px',
   width: '100%',
   height: 'auto'
@@ -156,6 +160,7 @@ const ImgLightbox = (props: {
   imgObj: imageObject | null
   options?: Options
   onClose: () => void
+  onNavigation: (arg0: 'next' | 'previous') => void
 }) => {
   const [imgSrcUrl, setImgSrcUrl] = React.useState('')
 
@@ -179,9 +184,13 @@ const ImgLightbox = (props: {
   return (
     <ModalDiv
       className='reactPic-lightbox'
-      onClick={() => {
+      onClick={(event) => {
         document.body.style.overflow = ''
-        props.onClose()
+        const target: any = event.target
+
+        if (target.className === 'reactPic-lightbox-background') {
+          props.onClose()
+        }
       }}
     >
       <LbButtonsDiv>
@@ -206,6 +215,7 @@ const ImgLightbox = (props: {
       ) : (
         <TransformWrapper defaultScale={1} options={{}}>
           <div
+            className='reactPic-lightbox-background'
             style={{
               display: 'flex',
               width: '100%',
@@ -234,6 +244,34 @@ const ImgLightbox = (props: {
               </TransformComponent>
             </div>
           </div>
+          <div
+            style={{
+              position: 'absolute',
+              left: 20,
+              top: '50%',
+              fontSize:50,
+              cursor: 'pointer'
+            }}
+            onClick={() => {
+              props.onNavigation('previous')
+            }}
+          >
+            &#8249;
+          </div>
+          <div
+            style={{
+              position: 'absolute',
+              right: 20,
+              top: '50%',
+              fontSize:50,
+              cursor: 'pointer'
+            }}
+            onClick={() => {
+              props.onNavigation('next')
+            }}
+          >
+            &#8250;
+          </div>
           {props.options?.descriptionBoxDisplay ? (
             props.imgObj?.description ? (
               props.options.descriptionCustomBox ? (
@@ -259,41 +297,54 @@ const ImgLightbox = (props: {
 
 const defaultOptions: Options = {
   downloadBtnDisplay: true,
-  descriptionBoxDisplay: true
+  descriptionBoxDisplay: true,
+  navigation: true
 }
 
 // 4.2. Main
 
 const PicGallery = (props: { imgList: imageObject[]; options?: Options }) => {
   const [open, setOpen] = React.useState(false)
-  const [modalImgObj, setModalImgObj] = React.useState<imageObject | null>(null)
+  const [modalImgIndex, setModalImgIndex] = React.useState<number>(0)
 
   const options: Options = { ...defaultOptions, ...props.options }
 
   // allowing full screen zooming on react-zoom library
-  const styleTag = document.querySelector("#react-pic-style")
-  if(!styleTag){
+  const styleTag = document.querySelector('#react-pic-style')
+  if (!styleTag) {
     const sheet = document.createElement('style')
     sheet.innerHTML =
       '.react-transform-component { overflow: inherit !important; }'
-      sheet.id = 'react-pic-style'
+    sheet.id = 'react-pic-style'
     document.body.appendChild(sheet)
-
   }
 
   return (
     <Wrapper className='reactPic-wrapper'>
       {open ? (
         <ImgLightbox
-          imgObj={modalImgObj}
+          imgObj={props.imgList[modalImgIndex]}
           options={options}
+          onNavigation={(action: 'next' | 'previous') => {
+            // setOpen(false);
+            if (
+              action === 'next' &&
+              modalImgIndex + 1 < props.imgList.length
+            ) {
+              setModalImgIndex(modalImgIndex + 1)
+            } else if (action === 'previous' && modalImgIndex - 1 >= 0) {
+              setModalImgIndex(modalImgIndex - 1)
+            }
+
+            // setOpen(true)
+          }}
           onClose={() => {
             setOpen(false)
           }}
         />
       ) : null}
       <Grid className='reactPic-grid'>
-        {props.imgList.map((element: imageObject) => {
+        {props.imgList.map((element: imageObject, count: number) => {
           return (
             <div
               key={
@@ -315,7 +366,7 @@ const PicGallery = (props: { imgList: imageObject[]; options?: Options }) => {
                   alignItems: 'center',
                   overflow: 'hidden !important',
                   width: '100%',
-                  height: '100%',
+                  height: options.rowHeight ? options.rowHeight : '150px',
                   cursor: 'pointer'
                 }}
               >
@@ -331,7 +382,7 @@ const PicGallery = (props: { imgList: imageObject[]; options?: Options }) => {
                     minHeight: '100%'
                   }}
                   onClick={() => {
-                    setModalImgObj(element)
+                    setModalImgIndex(count)
                     setOpen(!open)
                   }}
                 />
