@@ -7,21 +7,21 @@ import './styles.css'
 
 // 1. Types Declaration
 
-export interface imageObject {
-  fullSrc: string
-  thumbnailSrc?: string
-  description?: string
-}
+// export interface imageObject {
+//   fullSrc: string
+//   thumbnailSrc?: string
+//   description?: string
+// }
 
-export interface Options {
-  downloadBtnDisplay?: boolean
-  downloadCustomBtn?: () => JSX.Element
-  // shareBtnDisplay?:boolean
-  descriptionBoxDisplay?: boolean
-  descriptionCustomBox?: (props: { children: any }) => JSX.Element
-  rowHeight?: number
-  navigation?: boolean
-}
+// export interface Options {
+//   downloadBtnDisplay?: boolean
+//   downloadCustomBtn?: () => JSX.Element
+//   // shareBtnDisplay?:boolean
+//   descriptionBoxDisplay?: boolean
+//   descriptionCustomBox?: (props: { children: any }) => JSX.Element
+//   rowHeight?: number
+//   navigation?: boolean
+// }
 
 // 2. Styled Components
 const ModalDiv = styled.div`
@@ -102,11 +102,12 @@ const CircularLoading = circularLoading({
   dotColor2: `rgba(255 ,255, 255, 1.0)`
 })
 
-const ImgLazyLoading = (props: {
-  imgSrc: string
-  style: React.CSSProperties
-  onClick: () => void
-}) => {
+// const ImgLazyLoading = (props: {
+//   imgSrc: string
+//   style: React.CSSProperties
+//   onClick: () => void
+// }) => {
+  const ImgLazyLoading = (props) => {
   const [imgSrcUrl, setImgSrcUrl] = React.useState('')
 
   React.useEffect(() => {
@@ -156,12 +157,13 @@ const ImgLazyLoading = (props: {
   }
 }
 
-const ImgLightbox = (props: {
-  imgObj: imageObject | null
-  options?: Options
-  onClose: () => void
-  onNavigation: (arg0: 'next' | 'previous') => void
-}) => {
+// const ImgLightbox = (props: {
+//   imgObj: imageObject | null
+//   options?: Options
+//   onClose: () => void
+//   onNavigation: (arg0: 'next' | 'previous') => void
+// }) => {
+const ImgLightbox = (props) => {
   const [imgSrcUrl, setImgSrcUrl] = React.useState('')
 
   React.useEffect(() => {
@@ -303,11 +305,12 @@ const defaultOptions: Options = {
 
 // 4.2. Main
 
-const PicGallery = (props: { imgList: imageObject[]; options?: Options }) => {
+// export default function PicGallery (props: { imgList: imageObject[]; options?: Options }) {
+export default function PicGallery (props) {
   const [open, setOpen] = React.useState(false)
-  const [modalImgIndex, setModalImgIndex] = React.useState<number>(0)
+  const [modalImgIndex, setModalImgIndex] = React.useState(0)
 
-  const options: Options = { ...defaultOptions, ...props.options }
+  const options = { ...defaultOptions, ...props.options }
 
   // allowing full screen zooming on react-zoom library
   const styleTag = document.querySelector('#react-pic-style')
@@ -344,7 +347,7 @@ const PicGallery = (props: { imgList: imageObject[]; options?: Options }) => {
         />
       ) : null}
       <Grid className='reactPic-grid'>
-        {props.imgList.map((element: imageObject, count: number) => {
+        {props.imgList.map((element, count) => {
           return (
             <div
               key={
@@ -394,5 +397,3 @@ const PicGallery = (props: { imgList: imageObject[]; options?: Options }) => {
     </Wrapper>
   )
 }
-
-export default PicGallery
