@@ -188,7 +188,7 @@ const ImgLightbox = (props) => {
       className='reactPic-lightbox'
       onClick={(event) => {
         document.body.style.overflow = ''
-        const target: any = event.target
+        const target = event.target
 
         if (target.className === 'reactPic-lightbox-background') {
           props.onClose()
@@ -297,7 +297,7 @@ const ImgLightbox = (props) => {
 
 // 4.1. Default Options
 
-const defaultOptions: Options = {
+const defaultOptions = {
   downloadBtnDisplay: true,
   descriptionBoxDisplay: true,
   navigation: true
@@ -328,7 +328,7 @@ export default function PicGallery (props) {
         <ImgLightbox
           imgObj={props.imgList[modalImgIndex]}
           options={options}
-          onNavigation={(action: 'next' | 'previous') => {
+          onNavigation={(action) => {
             // setOpen(false);
             if (
               action === 'next' &&
