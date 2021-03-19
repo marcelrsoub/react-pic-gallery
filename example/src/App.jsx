@@ -1,8 +1,8 @@
 import React from 'react'
-import PicGallery, { imageObject, Options } from 'react-pic-gallery'
+import PicGallery from 'react-pic-gallery'
 import './App.css'
 
-const listOfImages:imageObject[]=[
+const listOfImages=[
   {thumbnailSrc:"https://picsum.photos/id/237/200/300",fullSrc:"https://picsum.photos/id/237/800/600",description:"A Dog standing on a wooden floor"},
   {thumbnailSrc:"https://picsum.photos/id/154/200/150",fullSrc:"https://picsum.photos/id/154/200/150"},
   {thumbnailSrc:"https://picsum.photos/id/385/300/200",fullSrc:"https://picsum.photos/id/385/800/600"},
@@ -21,7 +21,7 @@ const listOfImages:imageObject[]=[
 //   return <div style={{background:'red'}}>{props.children}</div>
 // }
 
-const options:Options = {
+const options = {
   // downloadBtnDisplay:true,
   // downloadCustomBtn:DownBtn,
   // descriptionBoxDisplay:true,
