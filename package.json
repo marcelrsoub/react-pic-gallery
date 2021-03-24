@@ -41,7 +41,6 @@
     "dist"
   ],
   "dependencies": {
-    "@yami-beta/react-circular-loading": "^3.0.0",
     "react-zoom-pan-pinch": "^1.6.1"
   }
 }
