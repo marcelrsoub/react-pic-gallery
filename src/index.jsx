@@ -107,7 +107,7 @@ const CircularLoading = circularLoading({
 //   style: React.CSSProperties
 //   onClick: () => void
 // }) => {
-  const ImgLazyLoading = (props) => {
+const ImgLazyLoading = (props) => {
   const [imgSrcUrl, setImgSrcUrl] = React.useState('')
 
   React.useEffect(() => {
@@ -162,6 +162,8 @@ const CircularLoading = circularLoading({
 //   options?: Options
 //   onClose: () => void
 //   onNavigation: (arg0: 'next' | 'previous') => void
+//   hasPrevious: false
+//   hasNext: false
 // }) => {
 const ImgLightbox = (props) => {
   const [imgSrcUrl, setImgSrcUrl] = React.useState('')
@@ -170,8 +172,8 @@ const ImgLightbox = (props) => {
     const imgSrc = props.imgObj?.fullSrc
       ? props.imgObj.fullSrc
       : props.imgObj?.thumbnailSrc
-      ? props.imgObj.thumbnailSrc
-      : null
+        ? props.imgObj.thumbnailSrc
+        : null
     if (imgSrc) {
       fetch(imgSrc)
         .then((response) => response.blob())
@@ -197,17 +199,17 @@ const ImgLightbox = (props) => {
     >
       <LbButtonsDiv>
         {props.options?.downloadBtnDisplay ||
-        props.options?.downloadCustomBtn ? (
-          props.options.downloadCustomBtn ? (
-            <ABtn href={imgSrcUrl} download>
-              {props.options.downloadCustomBtn()}
-            </ABtn>
-          ) : (
-            <LbButton href={imgSrcUrl} download>
-              Download
-            </LbButton>
-          )
-        ) : null}
+          props.options?.downloadCustomBtn ? (
+            props.options.downloadCustomBtn ? (
+              <ABtn href={imgSrcUrl} download>
+                {props.options.downloadCustomBtn()}
+              </ABtn>
+            ) : (
+                <LbButton href={imgSrcUrl} download>
+                  Download
+                </LbButton>
+              )
+          ) : null}
       </LbButtonsDiv>
 
       {imgSrcUrl === '' ? (
@@ -215,38 +217,38 @@ const ImgLightbox = (props) => {
           <CircularLoading />
         </div>
       ) : (
-        <TransformWrapper defaultScale={1} options={{}}>
-          <div
-            className='reactPic-lightbox-background'
-            style={{
-              display: 'flex',
-              width: '100%',
-              height: props.imgObj?.description ? 'calc(100% - 95px)' : '100%',
-              paddingBottom: props.imgObj?.description ? 60 : 0,
-              paddingTop: props.imgObj?.description ? 35 : 0
-            }}
-          >
+          <TransformWrapper defaultScale={1} options={{}}>
             <div
+              className='reactPic-lightbox-background'
               style={{
-                margin: 'auto'
+                display: 'flex',
+                width: '100%',
+                height: props.imgObj?.description ? 'calc(100% - 95px)' : '100%',
+                paddingBottom: props.imgObj?.description ? 60 : 0,
+                paddingTop: props.imgObj?.description ? 35 : 0
               }}
             >
-              <TransformComponent>
-                <img
-                  src={imgSrcUrl}
-                  alt=''
-                  id='lightboxImg'
-                  style={{
-                    maxWidth: '80vw',
-                    maxHeight: 'calc(80vh - 60px)',
-                    margin: 'auto',
-                    zIndex: 1000000
-                  }}
-                />
-              </TransformComponent>
+              <div
+                style={{
+                  margin: 'auto'
+                }}
+              >
+                <TransformComponent>
+                  <img
+                    src={imgSrcUrl}
+                    alt=''
+                    id='lightboxImg'
+                    style={{
+                      maxWidth: '80vw',
+                      maxHeight: 'calc(80vh - 60px)',
+                      margin: 'auto',
+                      zIndex: 1000000
+                    }}
+                  />
+                </TransformComponent>
+              </div>
             </div>
-          </div>
-          <div
+            {props.hasPrevious && <div
             style={{
               position: 'absolute',
               left: 20,
@@ -259,8 +261,9 @@ const ImgLightbox = (props) => {
             }}
           >
             &#8249;
-          </div>
-          <div
+          </div>}
+
+          {props.hasNext && <div
             style={{
               position: 'absolute',
               right: 20,
@@ -273,22 +276,22 @@ const ImgLightbox = (props) => {
             }}
           >
             &#8250;
-          </div>
-          {props.options?.descriptionBoxDisplay ? (
-            props.imgObj?.description ? (
-              props.options.descriptionCustomBox ? (
-                <props.options.descriptionCustomBox>
-                  {props.imgObj?.description}
-                </props.options.descriptionCustomBox>
-              ) : (
-                <DescriptionDiv className='reactPic-description'>
-                  {props.imgObj?.description}
-                </DescriptionDiv>
-              )
-            ) : null
-          ) : null}
-        </TransformWrapper>
-      )}
+          </div>}
+            {props.options?.descriptionBoxDisplay ? (
+              props.imgObj?.description ? (
+                props.options.descriptionCustomBox ? (
+                  <props.options.descriptionCustomBox>
+                    {props.imgObj?.description}
+                  </props.options.descriptionCustomBox>
+                ) : (
+                    <DescriptionDiv className='reactPic-description'>
+                      {props.imgObj?.description}
+                    </DescriptionDiv>
+                  )
+              ) : null
+            ) : null}
+          </TransformWrapper>
+        )}
     </ModalDiv>
   )
 }
@@ -306,7 +309,7 @@ const defaultOptions = {
 // 4.2. Main
 
 // export default function PicGallery (props: { imgList: imageObject[]; options?: Options }) {
-export default function PicGallery (props) {
+export default function PicGallery(props) {
   const [open, setOpen] = React.useState(false)
   const [modalImgIndex, setModalImgIndex] = React.useState(0)
 
@@ -344,6 +347,8 @@ export default function PicGallery (props) {
           onClose={() => {
             setOpen(false)
           }}
+          hasPrevious= {modalImgIndex - 1 >= 0 ? true : false}
+          hasNext={modalImgIndex + 1 < props.imgList.length ? true : false}
         />
       ) : null}
       <Grid className='reactPic-grid'>
