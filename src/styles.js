@@ -41,7 +41,8 @@ styles.DescriptionDiv = {
   padding: '10px',
   color: '#666',
   textAlign: 'center',
-  position:'relative'
+  position:'relative',
+  zIndex:-1,
 }
 
 styles.Wrapper = {
