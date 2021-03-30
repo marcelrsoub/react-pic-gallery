@@ -6,8 +6,8 @@
   "license": "MIT",
   "repository": "marcelrsoub/react-pic-gallery",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "module": "dist/index.modern.js",
-  "source": "src/index.jsx",
   "engines": {
     "node": ">=10"
   },
