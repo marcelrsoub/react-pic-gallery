@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import ImgLazyLoading from './ImgLazyLoading'
 import ImgLightbox from './ImgLightbox'
 import styles from './styles'
