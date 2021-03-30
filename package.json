@@ -6,6 +6,7 @@
   "license": "MIT",
   "repository": "marcelrsoub/react-pic-gallery",
   "main": "dist/index.js",
+  "source": "src/index.jsx",
   "types": "dist/index.d.ts",
   "module": "dist/index.modern.js",
   "engines": {
