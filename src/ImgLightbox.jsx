@@ -67,13 +67,14 @@ const ImgLightbox = (props) => {
           <CircularLoading />
         </div>
       ) : (
+        <div>
         <TransformWrapper
           defaultScale={1}
           options={{
-            limitToBounds: false,
+            limitToBounds: true,
             limitToWrapper: true,
             transformEnabled: true,
-            centerContent:true
+            centerContent:true,
           }}
         >
           <div
@@ -96,7 +97,7 @@ const ImgLightbox = (props) => {
                   maxWidth: '80vw',
                   maxHeight: 'calc(80vh - 60px)',
                   margin: 'auto',
-                  zIndex: 1000000
+                  zIndex: 99999999999
                 }}
               />
             </TransformComponent>
@@ -117,6 +118,7 @@ const ImgLightbox = (props) => {
               )
             ) : null
           ) : null}
+        </TransformWrapper>
           {props.hasPrevious && (
             <div
               style={{
@@ -150,7 +152,7 @@ const ImgLightbox = (props) => {
               &#8250;
             </div>
           )}
-        </TransformWrapper>
+          </div>
       )}
     </div>
   )
