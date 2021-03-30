@@ -16,7 +16,7 @@ import styles from './styles'
 //   downloadCustomBtn?: () => JSX.Element
 //   // shareBtnDisplay?:boolean
 //   descriptionBoxDisplay?: boolean
-//   descriptionCustomBox?: (props: { children: any }) => JSX.Element
+//   descriptionCustomBox?: (imgObject:any) => JSX.Element
 //   rowHeight?: number
 //   navigation?: boolean
 // }
@@ -40,7 +40,7 @@ const defaultOptions = {
 
 // 4.2. Main
 
-// export default function PicGallery (props: { imgList: imageObject[]; options?: Options }) {
+// export default function PicGallery (props: { imgList: imageObject[]; options?: Options, bottomCustomContent?: (imgObject)=>JSX.Element }) {
 export default function PicGallery(props) {
   const [open, setOpen] = React.useState(false)
   const [modalImgIndex, setModalImgIndex] = React.useState(0)

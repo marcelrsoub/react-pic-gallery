@@ -1,0 +1,19 @@
+/// <reference types="react" />
+import './styles.css';
+export interface imageObject {
+  fullSrc: string;
+  thumbnailSrc?: string;
+  description?: string;
+}
+export type Options = {
+    downloadBtnDisplay?: boolean;
+    downloadCustomBtn?: (props: { imgObj: imageObject }) => JSX.Element;
+    descriptionBoxDisplay?: boolean;
+    descriptionCustomBox?: (props: { imgObj: imageObject }) => JSX.Element;
+  };
+
+declare const PicGallery: (props: {
+  imgList: imageObject[];
+  options?: Options;
+}) => JSX.Element;
+export default PicGallery;

@@ -3,14 +3,14 @@ import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
 import CircularLoading from './CircularLoading';
 import styles from './styles';
 
-// const ImgLightbox = (props: {
-//   imgObj: imageObject | null
-//   options?: Options
-//   onClose: () => void
-//   onNavigation: (arg0: 'next' | 'previous') => void
-//   hasPrevious: false
-//   hasNext: false
-// }) => {
+// interface ImageProps {
+//     imgObj: imageObject | null
+//     options?: Options
+//     onClose: () => void
+//     onNavigation: (arg0: 'next' | 'previous') => void
+//     hasPrevious: false
+//     hasNext: false
+//   }
 
 const ImgLightbox = (props) => {
     const [imgSrcUrl, setImgSrcUrl] = React.useState('')
