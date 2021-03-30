@@ -3,6 +3,7 @@ export interface imageObject {
   fullSrc: string;
   thumbnailSrc?: string;
   description?: string;
+  [key:string]:string
 }
 export type Options = {
     downloadBtnDisplay?: boolean;

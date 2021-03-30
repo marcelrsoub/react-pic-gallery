@@ -23,7 +23,8 @@ import styles from './styles'
 
 // 2. Styles
 
-const extraStyle=``;
+const extraStyle=`
+`;
 
 // 3. Lightbox and Image Component
 
@@ -52,9 +53,12 @@ export default function PicGallery(props) {
   if (!styleTag) {
     const sheet = document.createElement('style')
     sheet.innerHTML =
-      '.react-transform-component { overflow: inherit !important; }'+extraStyle;
+      '.react-transform-component { overflow: unset !important; }'+extraStyle;
     sheet.id = 'react-pic-style'
     document.body.appendChild(sheet)
+  }else{
+
+    styleTag.innerHTML = styleTag.innerText + extraStyle;
   }
 
   return (
