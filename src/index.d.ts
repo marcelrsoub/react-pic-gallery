@@ -1,5 +1,4 @@
 /// <reference types="react" />
-import './styles.css';
 export interface imageObject {
   fullSrc: string;
   thumbnailSrc?: string;
