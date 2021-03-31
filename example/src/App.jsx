@@ -3,7 +3,7 @@ import PicGallery from 'react-pic-gallery'
 import './App.css'
 
 const listOfImages=[
-  {thumbnailSrc:"https://picsum.photos/id/237/200/300",fullSrc:"https://picsum.photos/id/237/800/600",description:"A Dog standing on a wooden floor"},
+  {thumbnailSrc:"https://picsum.photos/id/237/200/300",fullSrc:"https://picsum.photos/id/237/800/600",description:"A Dog standing on a wooden floor."},
   {thumbnailSrc:"https://picsum.photos/id/154/200/150",fullSrc:"https://picsum.photos/id/154/200/150",hello:"hello, there!"},
   {thumbnailSrc:"https://picsum.photos/id/385/300/200",fullSrc:"https://picsum.photos/id/385/800/600"},
   {thumbnailSrc:"https://picsum.photos/id/25/100/250",fullSrc:"https://picsum.photos/id/25/100/250"},
@@ -28,6 +28,7 @@ const options = {
   // downloadCustomBtn:DownBtn,
   // descriptionBoxDisplay:true,
   // descriptionCustomBox:DescBox
+  // hidePagination: true
 }
 
 const App = () => {
