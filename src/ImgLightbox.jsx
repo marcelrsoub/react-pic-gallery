@@ -8,8 +8,8 @@ import styles from './styles'
 //   options?: Options
 //   onClose: () => void
 //   onNavigation: (arg0: 'next' | 'previous') => void
-//   hasPrevious: false
-//   hasNext: false
+//   hasPrevious: boolean
+//   hasNext: boolean
 // }) => {
 
 const ImgLightbox = (props) => {
@@ -77,17 +77,6 @@ const ImgLightbox = (props) => {
             centerContent:true,
           }}
         >
-          <div
-            className='reactPic-lightbox-background'
-            style={{
-              display: 'flex',
-              width: '100% ',
-              height: '100%',
-              margin:'auto',
-              paddingBottom: 0,
-              paddingTop: 0
-            }}
-          >
             <TransformComponent>
               <img
                 src={imgSrcUrl}
@@ -95,17 +84,16 @@ const ImgLightbox = (props) => {
                 id='lightboxImg'
                 style={{
                   maxWidth: '80vw',
-                  maxHeight: 'calc(80vh - 60px)',
+                  maxHeight: 'calc(80vh - 20px)',
                   margin: 'auto',
                   zIndex: 99999999999
                 }}
               />
             </TransformComponent>
-          </div>
           {props.options?.descriptionBoxDisplay ? (
             props.imgObj?.description || DescriptionCustomBox  ? (
               DescriptionCustomBox ? (
-                <DescriptionCustomBox imgObj={props.imgObj}>
+                <DescriptionCustomBox imgObj={props.imgObj} onClose={props.onClose}>
                   {props.imgObj?.description}
                 </DescriptionCustomBox>
               ) : (
@@ -121,12 +109,15 @@ const ImgLightbox = (props) => {
         </TransformWrapper>
           {props.hasPrevious && (
             <div
+            className="react-lightbox-prevBtn"
               style={{
                 position: 'absolute',
                 left: 20,
                 top: '50%',
                 fontSize: 50,
-                cursor: 'pointer'
+                cursor: 'pointer',
+                color:'white',
+                display: props.options.hidePagination ? 'none' : 'inherit'
               }}
               onClick={() => {
                 props.onNavigation('previous')
@@ -138,12 +129,15 @@ const ImgLightbox = (props) => {
 
           {props.hasNext && (
             <div
+              className="react-lightbox-nextBtn"
               style={{
                 position: 'absolute',
                 right: 20,
                 top: '50%',
                 fontSize: 50,
-                cursor: 'pointer'
+                cursor: 'pointer',
+                color:'white',
+                display: props.options.hidePagination ? 'none' : 'inherit'
               }}
               onClick={() => {
                 props.onNavigation('next')
