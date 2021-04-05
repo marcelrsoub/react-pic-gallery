@@ -37,7 +37,7 @@ export default function CircularLoading() {
     sheet.innerHTML = extraStyle
     document.body.appendChild(sheet)
   }else{
-    styleTag.innerHTML = extraStyle;
+    styleTag.innerHTML = styleTag.innerText + extraStyle;
   }
   return <div className='lds-dual-ring'></div>
 }

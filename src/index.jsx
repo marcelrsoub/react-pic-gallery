@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import ImgLazyLoading from './ImgLazyLoading'
 import ImgLightbox from './ImgLightbox'
 import styles from './styles'
@@ -16,14 +16,15 @@ import styles from './styles'
 //   downloadCustomBtn?: () => JSX.Element
 //   // shareBtnDisplay?:boolean
 //   descriptionBoxDisplay?: boolean
-//   descriptionCustomBox?: (props: { children: any }) => JSX.Element
+//   descriptionCustomBox?: (imgObject:any) => JSX.Element
 //   rowHeight?: number
 //   navigation?: boolean
 // }
 
 // 2. Styles
 
-const extraStyle=``;
+const extraStyle=`
+`;
 
 // 3. Lightbox and Image Component
 
@@ -40,7 +41,7 @@ const defaultOptions = {
 
 // 4.2. Main
 
-// export default function PicGallery (props: { imgList: imageObject[]; options?: Options }) {
+// export default function PicGallery (props: { imgList: imageObject[]; options?: Options, bottomCustomContent?: (imgObject)=>JSX.Element }) {
 export default function PicGallery(props) {
   const [open, setOpen] = React.useState(false)
   const [modalImgIndex, setModalImgIndex] = React.useState(0)
@@ -52,9 +53,12 @@ export default function PicGallery(props) {
   if (!styleTag) {
     const sheet = document.createElement('style')
     sheet.innerHTML =
-      '.react-transform-component { overflow: inherit !important; }'+extraStyle;
+      '.react-transform-component { overflow: unset !important; }'+extraStyle;
     sheet.id = 'react-pic-style'
     document.body.appendChild(sheet)
+  }else{
+
+    styleTag.innerHTML = styleTag.innerText + extraStyle;
   }
 
   return (

@@ -6,11 +6,14 @@ styles.ModalDiv = {
   left: 0,
   width: '100%',
   height: '100%',
-  background: `rgba(0, 0, 0, 0.774)`,
-  /* backdrop-filter: blur(6px), */
+  background: `rgba(0, 0, 0, 0.454)`,
+  backdropFilter: 'blur(6px)',
   display: 'flex',
   zIndex: 9999999,
-  justifyContent: 'center'
+  display: 'grid',
+  gridTemplateRows: '60px | auto | 300px',
+  justifyContent: 'center',
+  alignContent: 'center'
 }
 
 styles.LbButtonsDiv = {
@@ -35,14 +38,11 @@ styles.ABtn = {
 
 styles.DescriptionDiv = {
   background: 'white',
-  position: 'fixed',
-  bottom: '0px',
   padding: '10px',
-  width: '100%',
   color: '#666',
   textAlign: 'center',
-  maxHeight: '60px',
-  overflowY: 'scroll'
+  position:'relative',
+  zIndex:-1,
 }
 
 styles.Wrapper = {
