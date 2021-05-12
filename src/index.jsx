@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import ImgLazyLoading from './ImgLazyLoading'
 import ImgLightbox from './ImgLightbox'
 import styles from './styles'
-
+import ReactDOM from 'react-dom'
 // 1. Types Declaration
 
 // export interface imageObject {
@@ -23,11 +23,10 @@ import styles from './styles'
 
 // 2. Styles
 
-const extraStyle=`
-`;
+const extraStyle = `
+`
 
 // 3. Lightbox and Image Component
-
 
 // 4. Main Component
 
@@ -48,34 +47,84 @@ export default function PicGallery(props) {
 
   const options = { ...defaultOptions, ...props.options }
 
+  // solving lightbox not in full screen problem
+  useEffect(() => {
+    if(props.options.externalLightbox){
+      const element = <div>
+      {open ? (
+        <ImgLightbox
+          imgObj={props.imgList[modalImgIndex]}
+          options={options}
+          onClose={() => {
+            setOpen(false)
+          }}
+          hasPrevious={false}
+          hasNext={false}
+        />
+      ) : null}
+    </div>;
+    const checkEl = document.querySelector('#react-pic-ext-lightbox')
+    if (!checkEl) {
+      const domEl = document.createElement('div')
+      domEl.id = 'react-pic-ext-lightbox'
+      const root = document.getElementById('root')
+      root.appendChild(domEl)
+      // const domEl = document.getElementById('react-pic-ext-lightbox')
+      if (domEl) {
+        ReactDOM.render(element, domEl)
+      }
+    } else {
+      ReactDOM.render(element, checkEl)
+    }
+    }
+  }, [open])
+  // ReactDOM.render(
+  //   <ImgLightbox
+  //     imgObj={props.imgList[modalImgIndex]}
+  //     options={options}
+  //     onNavigation={(action) => {
+  //       // setOpen(false);
+  //       if (action === 'next' && modalImgIndex + 1 < props.imgList.length) {
+  //         setModalImgIndex(modalImgIndex + 1)
+  //       } else if (action === 'previous' && modalImgIndex - 1 >= 0) {
+  //         setModalImgIndex(modalImgIndex - 1)
+  //       }
+
+  //       // setOpen(true)
+  //     }}
+  //     onClose={() => {
+  //       setOpen(false)
+  //     }}
+  //     hasPrevious={modalImgIndex - 1 >= 0 ? true : false}
+  //     hasNext={modalImgIndex + 1 < props.imgList.length ? true : false}
+  //   />,
+  //   extLightbox
+  // )
+
   // allowing full screen zooming on react-zoom library
   const styleTag = document.querySelector('#react-pic-style')
   if (!styleTag) {
     const sheet = document.createElement('style')
     sheet.innerHTML =
-      '.react-transform-component { overflow: unset !important; }'+extraStyle;
+      '.react-transform-component { overflow: unset !important; }' + extraStyle
     sheet.id = 'react-pic-style'
     document.body.appendChild(sheet)
-  }else{
-
-    styleTag.innerHTML = styleTag.innerText + extraStyle;
+  } else {
+    styleTag.innerHTML = styleTag.innerText + extraStyle
   }
 
   return (
     <div className='reactPic-wrapper' style={styles.Wrapper}>
-      {open ? (
+      {open && !props.options.externalLightbox ? (
         <ImgLightbox
           imgObj={props.imgList[modalImgIndex]}
           options={options}
           onNavigation={(action) => {
-            // setOpen(false);
             if (action === 'next' && modalImgIndex + 1 < props.imgList.length) {
               setModalImgIndex(modalImgIndex + 1)
             } else if (action === 'previous' && modalImgIndex - 1 >= 0) {
               setModalImgIndex(modalImgIndex - 1)
             }
-
-            // setOpen(true)
           }}
           onClose={() => {
             setOpen(false)
