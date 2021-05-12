@@ -10,6 +10,8 @@ export type Options = {
     downloadCustomBtn?: (props: { imgObj: imageObject }) => JSX.Element;
     descriptionBoxDisplay?: boolean;
     descriptionCustomBox?: (props: { imgObj: imageObject }) => JSX.Element;
+    externalLightbox?:boolean;
+    hidePagination?: boolean;
   };
 
 declare const PicGallery: (props: {

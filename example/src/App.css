@@ -1,5 +1,15 @@
 body{
-    color:white;
-    background:#666;
+    color:rgb(28, 4, 51);
+    background:rgb(241, 241, 241);
     padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.card {
+    border-radius: 15px;
+    background-color: white;
+    box-shadow: rgb(219, 219, 219) 0px 0px 50px;
+    padding: 50px;
+    text-align: center;
 }

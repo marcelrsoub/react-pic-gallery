@@ -17,7 +17,7 @@ React library for a simple image gallery with lightbox implemented.
 
 https://marcelrsoub.github.io/react-pic-gallery/
 
-![demo gif](https://i.imgur.com/f5O4m5i.gif)
+![demo gif](https://i.imgur.com/qMhra73.gif)
 
 ## Install
 
