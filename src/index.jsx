@@ -77,6 +77,11 @@ export default function PicGallery(props) {
       ReactDOM.render(element, checkEl)
     }
     }
+
+    return ()=>{
+      const checkEl = document.querySelector('#react-pic-ext-lightbox')
+      checkEl.remove()
+    }
   }, [open])
   // ReactDOM.render(
   //   <ImgLightbox
