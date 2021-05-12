@@ -6,6 +6,10 @@ body{
     justify-content: center;
 }
 
+hr{
+    border:2px whitesmoke solid;
+}
+
 .card {
     border-radius: 15px;
     background-color: white;
