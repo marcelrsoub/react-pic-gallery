@@ -52,33 +52,59 @@ const listOfImages = [
 //   return <div style={{background:'red'}}>{props.imgObj.hello}</div>
 // }
 
-const options = {
-  // downloadBtnDisplay:true,
-  // downloadCustomBtn:DownBtn,
-  // descriptionBoxDisplay:true,
-  // descriptionCustomBox:DescBox
-  // hidePagination: true
-  // externalLightbox:true
+
+const External = () => {
+  const lightboxRef = React.useRef()
+  
+  const options2 = {
+    downloadBtnDisplay:false,
+    // downloadCustomBtn:DownBtn,
+    // descriptionBoxDisplay:true,
+    // descriptionCustomBox:DescBox
+    // hidePagination: true
+    externalLightbox: true
+  }
+  return (
+    <>
+      <div ref={lightboxRef}></div>
+      <PicGallery imgList={listOfImages} options={options2} />
+    </>
+  )
 }
 
 const App = () => {
+  const options = {
+    // downloadBtnDisplay:true,
+    // downloadCustomBtn:DownBtn,
+    // descriptionBoxDisplay:true,
+    // descriptionCustomBox:DescBox
+    // hidePagination: true
+    // externalLightbox: true
+  }
   return (
-    <div className='card'>
-      <h1>react-pic-gallery</h1>
-      <hr />
-      <p>Image gallery and lightbox</p>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center'
-        }}
-      >
-        <div style={{ maxWidth: 300 }}>
-          <PicGallery imgList={listOfImages} options={options} />
+    <>
+      <div className='card'>
+        <h1>react-pic-gallery</h1>
+        <hr />
+        <p>Image gallery and lightbox</p>
+
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
+        >
+          <div style={{ maxWidth: 300 }}>
+            <PicGallery imgList={listOfImages} options={options} />
+          </div>
         </div>
       </div>
-    </div>
+      <div className='card'>
+        <h2>External Lightbox</h2>
+        <External />
+      </div>
+    </>
   )
 }
 
