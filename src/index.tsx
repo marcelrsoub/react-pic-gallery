@@ -2,24 +2,24 @@ import React, { useEffect } from 'react'
 import ImgLazyLoading from './ImgLazyLoading'
 import ImgLightbox from './ImgLightbox'
 import styles from './styles'
-import ReactDOM from 'react-dom'
+
 // 1. Types Declaration
 
 export interface imageObject {
   fullSrc: string;
   thumbnailSrc?: string;
   description?: string;
-  [key:string]:string
+  [key: string]: string
 }
 
 export interface Options {
   downloadBtnDisplay?: boolean;
-  downloadCustomBtn?: (props: { imgObj: imageObject }) => JSX.Element;
+  downloadCustomBtn?: (props: { imgObj: imageObject }) => Element;
   descriptionBoxDisplay?: boolean;
-  descriptionCustomBox?: (props: { imgObj: imageObject }) => JSX.Element;
+  descriptionCustomBox?: (props: { imgObj: imageObject }) => Element;
   externalLightbox?: boolean;
   hidePagination?: boolean;
-  rowHeight?:string | number;
+  rowHeight?: string | number;
 }
 
 // 2. Styles
@@ -44,29 +44,43 @@ const defaultOptions = {
 export default function PicGallery(props: {
   imgList: imageObject[];
   options?: Options,
-  bottomCustomContent?: (imgObject) => JSX.Element,
-  setExtLightboxChildren?:(imgLightbox:any)=>void
+  bottomCustomContent?: (imgObject) => Element,
+  setExtLightboxChildren?: (imgLightbox: React.Node) => void
 }) {
   // export default function PicGallery(props) {
   const [open, setOpen] = React.useState(false)
   const [modalImgIndex, setModalImgIndex] = React.useState(0)
 
-  const options:Options = { ...defaultOptions, ...props.options }
+  const options: Options = { ...defaultOptions, ...props.options }
 
   // solving lightbox not in full screen problem
   useEffect(() => {
     //TODO: add setExtLightboxChildren to Lightbox
+    if (typeof props.setExtLightboxChildren == 'function') {
+
+      if (open) {
+        props.setExtLightboxChildren(
+          <ImgLightbox
+            imgObj={props.imgList[modalImgIndex]}
+            options={options}
+            onClose={() => {
+              setOpen(false)
+            }}
+          />
+        )
+      } else {
+        props.setExtLightboxChildren(null)
+      }
+    }
   }, [open])
-
-
 
   // allowing full screen zooming on react-zoom library
   const styleTag = document.querySelector('#react-pic-style')
   if (!styleTag) {
     const sheet = document.createElement('style')
     sheet.innerHTML =
-      '.react-transform-component { overflow: unset !important; }' + extraStyle
-    sheet.id = 'react-pic-style'
+      '.react-transform-component { overflow: unset !important; }' + extraStyle;
+    sheet.id = 'react-pic-style';
     document.body.appendChild(sheet)
   } else {
     styleTag.innerHTML = styleTag.innerHTML + extraStyle

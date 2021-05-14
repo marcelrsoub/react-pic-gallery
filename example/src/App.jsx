@@ -54,7 +54,7 @@ const listOfImages = [
 
 
 const External = () => {
-  const lightboxRef = React.useRef()
+  const [lightboxNode, setLightboxNode] = React.useState(<></>)
   
   const options2 = {
     downloadBtnDisplay:false,
@@ -66,8 +66,8 @@ const External = () => {
   }
   return (
     <>
-      <div ref={lightboxRef}></div>
-      <PicGallery imgList={listOfImages} options={options2} />
+      <div children={lightboxNode}></div>
+      <PicGallery imgList={listOfImages} options={options2} setExtLightboxChildren={(children)=>setLightboxNode(children)} />
     </>
   )
 }
@@ -102,6 +102,7 @@ const App = () => {
       </div>
       <div className='card'>
         <h2>External Lightbox</h2>
+        <p>If your gallery is a child component of a child component of a ..., the lightbox might show up inside the components. In order to correct this problem you can use an external component and pass the lightbox to it everytime a picture is opened.</p>
         <External />
       </div>
     </>

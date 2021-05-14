@@ -7,7 +7,7 @@
   "repository": "marcelrsoub/react-pic-gallery",
   "main": "dist/index.js",
   "module": "dist/index.modern.js",
-  "source": "src/index.jsx",
+  "source": "src/index.tsx",
   "engines": {
     "node": ">=10"
   },
