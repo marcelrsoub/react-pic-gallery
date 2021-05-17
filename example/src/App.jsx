@@ -102,7 +102,7 @@ const App = () => {
       </div>
       <div className='card'>
         <h2>External Lightbox</h2>
-        <p>If your gallery is a child component of a child component of a ..., the lightbox might show up inside the components. In order to correct this problem you can use an external component and pass the lightbox to it everytime a picture is opened.</p>
+        <p>If your PicGallery is a child component of a child component of a ..., the lightbox might show up inside the components. In order to correct this problem you can use an external component and pass the lightbox to it everytime a picture is opened.</p>
         <External />
       </div>
     </>
