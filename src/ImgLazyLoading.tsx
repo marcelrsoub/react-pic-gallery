@@ -1,13 +1,11 @@
 import React from 'react'
 import CircularLoading from './CircularLoading'
 
-// const ImgLazyLoading = (props: {
-//   imgSrc: string
-//   style: React.CSSProperties
-//   onClick: () => void
-// }) => {
-
-const ImgLazyLoading = (props) => {
+const ImgLazyLoading = (props: {
+  imgSrc: string
+  style: React.CSSProperties
+  onClick: () => void
+}) => {
     const [imgSrcUrl, setImgSrcUrl] = React.useState('')
   
     React.useEffect(() => {

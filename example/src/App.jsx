@@ -43,9 +43,9 @@ const listOfImages = [
   }
 ]
 
-// const DownBtn = ()=>{
-//   return <div>Download</div>
-// }
+const DownBtn = ()=>{
+  return <div>Download</div>
+}
 
 // const DescBox = (props)=>{
 //   console.log("here")
@@ -74,8 +74,8 @@ const External = () => {
 
 const App = () => {
   const options = {
-    // downloadBtnDisplay:true,
-    // downloadCustomBtn:DownBtn,
+    downloadBtnDisplay:true,
+    downloadCustomBtn:DownBtn,
     // descriptionBoxDisplay:true,
     // descriptionCustomBox:DescBox
     // hidePagination: true

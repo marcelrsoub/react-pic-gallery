@@ -8,7 +8,6 @@ styles.ModalDiv = {
   height: '100%',
   background: `rgba(0, 0, 0, 0.454)`,
   backdropFilter: 'blur(6px)',
-  display: 'flex',
   zIndex: 9999999,
   display: 'grid',
   gridTemplateRows: '60px | auto | 300px',

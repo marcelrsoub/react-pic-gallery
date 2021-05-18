@@ -14,9 +14,9 @@ export interface imageObject {
 
 export interface Options {
   downloadBtnDisplay?: boolean;
-  downloadCustomBtn?: (props: { imgObj: imageObject }) => Element;
+  downloadCustomBtn?: (props: { imgObj?: imageObject }) => Element;
   descriptionBoxDisplay?: boolean;
-  descriptionCustomBox?: (props: { imgObj: imageObject }) => Element;
+  descriptionCustomBox?: (props: { imgObj?: imageObject, onClose?:()=>void }) => Element;
   externalLightbox?: boolean;
   hidePagination?: boolean;
   rowHeight?: string | number;
@@ -45,7 +45,7 @@ export default function PicGallery(props: {
   imgList: imageObject[];
   options?: Options,
   bottomCustomContent?: (imgObject) => Element,
-  setExtLightboxChildren?: (imgLightbox: React.Node) => void
+  setExtLightboxChildren?: (imgLightbox: React.Reacvagaha) => void
 }) {
   // export default function PicGallery(props) {
   const [open, setOpen] = React.useState(false)
@@ -55,7 +55,6 @@ export default function PicGallery(props: {
 
   // solving lightbox not in full screen problem
   useEffect(() => {
-    //TODO: add setExtLightboxChildren to Lightbox
     if (typeof props.setExtLightboxChildren == 'function') {
 
       if (open) {
