@@ -1,18 +1,17 @@
+import { imageObject, Options } from 'index'
 import React from 'react'
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch'
 import CircularLoading from './CircularLoading'
 import styles from './styles'
 
-// const ImgLightbox = (props: {
-//   imgObj: imageObject | null
-//   options?: Options
-//   onClose: () => void
-//   onNavigation: (arg0: 'next' | 'previous') => void
-//   hasPrevious: boolean
-//   hasNext: boolean
-// }) => {
-
-const ImgLightbox = (props) => {
+const ImgLightbox = (props: {
+  imgObj: imageObject | null
+  options?: Options
+  onClose: () => void
+  onNavigation?: (arg0: 'next' | 'previous') => void
+  hasPrevious?: boolean
+  hasNext?: boolean
+}) => {
   const [imgSrcUrl, setImgSrcUrl] = React.useState('')
 
   const DescriptionCustomBox = props.options.descriptionCustomBox
@@ -52,7 +51,7 @@ const ImgLightbox = (props) => {
         props.options?.downloadCustomBtn ? (
           props.options.downloadCustomBtn ? (
             <a href={imgSrcUrl} download style={styles.ABtn}>
-              {props.options.downloadCustomBtn()}
+              {props.options.downloadCustomBtn}
             </a>
           ) : (
             <a href={imgSrcUrl} download style={styles.LbButton}>

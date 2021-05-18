@@ -1,4 +1,1 @@
-- Arrow doesn't show up on the first and last pitures
-- Styled and functional components are organized in separated files
-- Demo page has a better esthetic and pictures
 - Share button is added
