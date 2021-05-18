@@ -14,9 +14,9 @@ export interface imageObject {
 
 export interface Options {
   downloadBtnDisplay?: boolean;
-  downloadCustomBtn?: (props: { imgObj?: imageObject }) => Element;
+  downloadCustomBtn?: (props: { imgObj?: imageObject }) => React.ReactNode;
   descriptionBoxDisplay?: boolean;
-  descriptionCustomBox?: (props: { imgObj?: imageObject, onClose?:()=>void }) => Element;
+  descriptionCustomBox?: (props: { imgObj?: imageObject, onClose?:()=>void }) => React.ReactNode;
   externalLightbox?: boolean;
   hidePagination?: boolean;
   rowHeight?: string | number;
