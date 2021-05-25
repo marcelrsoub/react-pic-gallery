@@ -16,10 +16,12 @@ export interface Options {
   downloadBtnDisplay?: boolean;
   downloadCustomBtn?: (props: { imgObj?: imageObject }) => React.ReactNode;
   descriptionBoxDisplay?: boolean;
-  descriptionCustomBox?: (props: { imgObj?: imageObject, onClose?:()=>void }) => React.ReactNode;
+  descriptionCustomBox?: (props: { imgObj?: imageObject, onClose?: () => void }) => React.ReactNode;
   externalLightbox?: boolean;
   hidePagination?: boolean;
   rowHeight?: string | number;
+  /** Number of Pictures per row. Default: 3 */
+  picsPerRow?: number;
 }
 
 // 2. Styles
@@ -105,7 +107,7 @@ export default function PicGallery(props: {
           hasNext={modalImgIndex + 1 < props.imgList.length ? true : false}
         />
       ) : null}
-      <div className='reactPic-grid' style={styles.Grid}>
+      <div className='reactPic-grid' style={{ ...styles.Grid, gridTemplateColumns: `repeat(${options.picsPerRow ? options.picsPerRow : "3"}, 1fr)`, }}>
         {props.imgList.map((element, count) => {
           return (
             <div

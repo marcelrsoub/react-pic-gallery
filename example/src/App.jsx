@@ -43,7 +43,7 @@ const listOfImages = [
   }
 ]
 
-const DownBtn = ()=>{
+const DownBtn = () => {
   return <div>Download</div>
 }
 
@@ -52,34 +52,38 @@ const DownBtn = ()=>{
 //   return <div style={{background:'red'}}>{props.imgObj.hello}</div>
 // }
 
-
 const External = () => {
   const [lightboxNode, setLightboxNode] = React.useState(<></>)
-  
+
   const options2 = {
-    downloadBtnDisplay:false,
+    downloadBtnDisplay: false,
     // downloadCustomBtn:DownBtn,
     // descriptionBoxDisplay:true,
-    // descriptionCustomBox:DescBox
-    // hidePagination: true
-    externalLightbox: true
+    // descriptionCustomBox:DescBox,
+    // hidePagination: true,
+    externalLightbox: true,
+    picsPerRow: 4
   }
   return (
     <>
       <div children={lightboxNode}></div>
-      <PicGallery imgList={listOfImages} options={options2} setExtLightboxChildren={(children)=>setLightboxNode(children)} />
+      <PicGallery
+        imgList={listOfImages}
+        options={options2}
+        setExtLightboxChildren={(children) => setLightboxNode(children)}
+      />
     </>
   )
 }
 
 const App = () => {
   const options = {
-    downloadBtnDisplay:true,
-    downloadCustomBtn:DownBtn,
+    downloadBtnDisplay: true,
+    downloadCustomBtn: DownBtn
     // descriptionBoxDisplay:true,
-    // descriptionCustomBox:DescBox
-    // hidePagination: true
-    // externalLightbox: true
+    // descriptionCustomBox:DescBox,
+    // hidePagination: true,
+    // externalLightbox: true,
   }
   return (
     <>
@@ -102,7 +106,12 @@ const App = () => {
       </div>
       <div className='card'>
         <h2>External Lightbox</h2>
-        <p>If your PicGallery is a child component of a child component of a ..., the lightbox might show up inside the components. In order to correct this problem you can use an external component and pass the lightbox to it everytime a picture is opened.</p>
+        <p>
+          If your PicGallery is a child component of a child component of a ...,
+          the lightbox might show up inside the components. In order to correct
+          this problem you can use an external component and pass the lightbox
+          to it everytime a picture is opened.
+        </p>
         <External />
       </div>
     </>

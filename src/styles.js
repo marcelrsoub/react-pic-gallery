@@ -40,8 +40,8 @@ styles.DescriptionDiv = {
   padding: '10px',
   color: '#666',
   textAlign: 'center',
-  position:'relative',
-  zIndex:-1,
+  position: 'relative',
+  zIndex: -1,
 }
 
 styles.Wrapper = {
@@ -53,7 +53,6 @@ styles.Wrapper = {
 
 styles.Grid = {
   display: 'grid',
-  gridTemplateColumns: 'repeat(3, 1fr)',
   gridTemplateRows: '1fr',
   gap: '2px',
   width: '100%',
