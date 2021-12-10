@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import ImgLightbox from './ImgLightbox/ImgLightbox'
 import ImgGallery from './ImgGallery/ImgGallery'
 import styles from './styles'
@@ -18,9 +18,9 @@ function PicGallery(props: {
   }) => JSX.Element
   setExtLightboxChildren?: (imgLightbox: JSX.Element | undefined) => void
 }) {
-  const [open, setOpen] = React.useState<boolean>(false)
+  const [open, setOpen] = useState<boolean>(false)
 
-  const [modalImgIndex, setModalImgIndex] = React.useState<number>(0)
+  const [modalImgIndex, setModalImgIndex] = useState<number>(0)
 
   const options: Options = { ...defaultOptions, ...props.options }
 
@@ -78,4 +78,4 @@ function PicGallery(props: {
   )
 }
 
-export default React.memo(PicGallery)
+export default PicGallery

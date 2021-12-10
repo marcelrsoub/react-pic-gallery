@@ -1,6 +1,6 @@
 {
   "name": "react-pic-gallery",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "author": "marcelrsoub",
   "license": "MIT",
   "repository": "marcelrsoub/react-pic-gallery",
@@ -33,5 +33,9 @@
     "@vitejs/plugin-react": "^1.0.7",
     "typescript": "^4.4.4",
     "vite": "^2.7.0"
+  },
+  "peerDependencies": {
+    "react": "^0.14.0 || ^15.0.0 || ^16.0.0 || ^17.0.0",
+    "react-dom": "^0.14.0 || ^15.0.0 || ^16.0.0 || ^17.0.0"
   }
 }
