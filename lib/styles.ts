@@ -1,6 +1,10 @@
-let styles = {}
+import React from 'react'
 
-styles.ModalDiv = {
+let styles: {
+  [key: string]: React.CSSProperties
+} = {}
+
+styles.lightbox = {
   position: 'fixed',
   top: 0,
   left: 0,
@@ -15,12 +19,14 @@ styles.ModalDiv = {
   alignContent: 'center'
 }
 
-styles.LbButtonsDiv = {
+styles.topCustomContent = {
   position: 'absolute',
-  top: '10px',
-  width: 'calc(100% - 20px)'
+  top: 0
 }
-
+styles.bottomCustomContent = {
+  position: 'absolute',
+  bottom: 0
+}
 styles.LbButton = {
   float: 'right',
   textDecoration: 'none',
@@ -41,7 +47,7 @@ styles.DescriptionDiv = {
   color: '#666',
   textAlign: 'center',
   position: 'relative',
-  zIndex: -1,
+  zIndex: -1
 }
 
 styles.Wrapper = {
@@ -59,4 +65,4 @@ styles.Grid = {
   height: 'auto'
 }
 
-export default styles;
+export default styles

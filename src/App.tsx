@@ -1,17 +1,16 @@
 import React from 'react'
-import PicGallery from 'react-pic-gallery'
+import PicGallery from '../lib'
+import { Options } from '../lib/models/models'
 import './App.css'
 
 const listOfImages = [
   {
     thumbnailSrc: 'https://picsum.photos/id/237/200/300',
-    fullSrc: 'https://picsum.photos/id/237/800/600',
-    description: 'A Dog standing on a wooden floor.'
+    fullSrc: 'https://picsum.photos/id/237/800/600'
   },
   {
     thumbnailSrc: 'https://picsum.photos/id/154/200/150',
-    fullSrc: 'https://picsum.photos/id/154/200/150',
-    hello: 'hello, there!'
+    fullSrc: 'https://picsum.photos/id/154/200/150'
   },
   {
     thumbnailSrc: 'https://picsum.photos/id/385/300/200',
@@ -43,23 +42,17 @@ const listOfImages = [
   }
 ]
 
-const DownBtn = () => {
-  return <div>Download</div>
-}
-
 // const DescBox = (props)=>{
 //   console.log("here")
 //   return <div style={{background:'red'}}>{props.imgObj.hello}</div>
 // }
 
 const External = () => {
-  const [lightboxNode, setLightboxNode] = React.useState(<></>)
+  const [lightboxNode, setLightboxNode] = React.useState<
+    JSX.Element | undefined
+  >(<></>)
 
   const options2 = {
-    downloadBtnDisplay: false,
-    // downloadCustomBtn:DownBtn,
-    // descriptionBoxDisplay:true,
-    // descriptionCustomBox:DescBox,
     // hidePagination: true,
     externalLightbox: true,
     picsPerRow: 4
@@ -77,14 +70,12 @@ const External = () => {
 }
 
 const App = () => {
-  const options = {
-    downloadBtnDisplay: true,
-    downloadCustomBtn: DownBtn
-    // descriptionBoxDisplay:true,
-    // descriptionCustomBox:DescBox,
-    // hidePagination: true,
+  const options: Options = {
+    // customLoadComponent: () => <h3>Loading</h3>
+    // hidePagination: false,
     // externalLightbox: true,
   }
+
   return (
     <>
       <div className='card'>
