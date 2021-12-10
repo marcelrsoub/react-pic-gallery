@@ -19,6 +19,7 @@ function PicGallery(props: {
   setExtLightboxChildren?: (imgLightbox: JSX.Element | undefined) => void
 }) {
   const [open, setOpen] = React.useState<boolean>(false)
+
   const [modalImgIndex, setModalImgIndex] = React.useState<number>(0)
 
   const options: Options = { ...defaultOptions, ...props.options }
@@ -63,10 +64,7 @@ function PicGallery(props: {
           }
           onClickNext={
             modalImgIndex + 1 < props.imgList.length
-              ? () => {
-                  setModalImgIndex(modalImgIndex + 1)
-                  console.log(modalImgIndex)
-                }
+              ? () => setModalImgIndex(modalImgIndex + 1)
               : undefined
           }
         />
