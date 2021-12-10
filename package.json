@@ -1,47 +1,37 @@
 {
   "name": "react-pic-gallery",
-  "version": "1.3.9",
-  "description": "",
+  "version": "1.5.0",
   "author": "marcelrsoub",
   "license": "MIT",
   "repository": "marcelrsoub/react-pic-gallery",
-  "main": "dist/index.js",
-  "module": "dist/index.modern.js",
-  "source": "src/index.tsx",
-  "engines": {
-    "node": ">=10"
-  },
-  "scripts": {
-    "build": "microbundle-crl --no-compress --format modern",
-    "start": "microbundle-crl watch --no-compress  --format modern",
-    "prepare": "run-s build",
-    "test": "run-s test:unit test:lint test:build",
-    "test:build": "run-s build",
-    "test:lint": "eslint .",
-    "test:unit": "cross-env CI=1 react-scripts test --env=jsdom",
-    "test:watch": "react-scripts test --env=jsdom",
-    "predeploy": "cd example && npm install && npm run build",
-    "deploy": "gh-pages -d example/build"
-  },
-  "peerDependencies": {
-    "react": "^16.0.0"
-  },
-  "devDependencies": {
-    "babel-eslint": "^10.0.3",
-    "cross-env": "^7.0.2",
-    "gh-pages": "^2.2.0",
-    "microbundle-crl": "^0.13.10",
-    "npm-run-all": "^4.1.5",
-    "prettier": "^2.0.4",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "react-scripts": "^3.4.1",
-    "typescript": "^4.2.4"
-  },
+  "main": "./dist/react-pic-gallery.umd.js",
+  "module": "./dist/react-pic-gallery.es.js",
   "files": [
     "dist"
   ],
+  "exports": {
+    ".": {
+      "import": "./dist/react-pic-gallery.es.js",
+      "require": "./dist/react-pic-gallery.umd.js"
+    }
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "github-pages": "gh-pages -d build"
+  },
   "dependencies": {
-    "react-zoom-pan-pinch": "^1.6.1"
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-zoom-pan-pinch": "^2.1.3"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.12",
+    "@types/react": "^17.0.33",
+    "@types/react-dom": "^17.0.10",
+    "@vitejs/plugin-react": "^1.0.7",
+    "typescript": "^4.4.4",
+    "vite": "^2.7.0"
   }
 }

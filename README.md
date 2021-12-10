@@ -1,6 +1,6 @@
 # react-pic-gallery
 
-> 
+>
 
 [![NPM](https://img.shields.io/npm/v/react-pic-gallery.svg)](https://www.npmjs.com/package/react-pic-gallery)
 
@@ -11,7 +11,7 @@ React library for a simple image gallery with lightbox implemented.
 - 📱 Responsive
 - 🚵 Lazy load on pictures
 - ✏ Buttons and CSS customization classes are accessible
-- 💡 Lightbox implemented 
+- 💡 Lightbox implemented
 
 ## Demo
 
@@ -33,9 +33,15 @@ A list of objects containing a thumbnail source and the full source is the only 
 import React from 'react'
 import PicGallery, { imageObject } from 'react-pic-gallery'
 
-const listOfImages:imageObject[]=[
-  {thumbnailSrc:"https://picsum.photos/id/237/200/300",fullSrc:"https://picsum.photos/id/237/800/600",description:"A Dog standing on a wooden floor"},
-  {thumbnailSrc:"https://picsum.photos/id/154/200/150",fullSrc:"https://picsum.photos/id/154/200/150"}
+const listOfImages: imageObject[] = [
+  {
+    thumbnailSrc: 'https://picsum.photos/id/237/200/300',
+    fullSrc: 'https://picsum.photos/id/237/800/600'
+  },
+  {
+    thumbnailSrc: 'https://picsum.photos/id/154/200/150',
+    fullSrc: 'https://picsum.photos/id/154/200/150'
+  }
 ]
 
 const App = () => {
@@ -57,29 +63,28 @@ The options interface can be imported from the library and the object can be pas
 import React from 'react'
 import PicGallery, { imageObject, Options } from 'react-pic-gallery'
 
-const listOfImages:imageObject[]=[
-  {thumbnailSrc:"https://picsum.photos/id/237/200/300",fullSrc:"https://picsum.photos/id/237/800/600",description:"A Dog standing on a wooden floor"},
-  {thumbnailSrc:"https://picsum.photos/id/154/200/150",fullSrc:"https://picsum.photos/id/154/200/150"}
+const listOfImages: imageObject[] = [
+  {
+    thumbnailSrc: 'https://picsum.photos/id/237/200/300',
+    fullSrc: 'https://picsum.photos/id/237/800/600',
+    description: 'A Dog standing on a wooden floor'
+  },
+  {
+    thumbnailSrc: 'https://picsum.photos/id/154/200/150',
+    fullSrc: 'https://picsum.photos/id/154/200/150'
+  }
 ]
 
-const DownBtn = ()=>{
-  return <div>Download</div>
-}
-const DescBox = (props:{children:any})=>{
-  return <div style={{background:'red'}}>{props.children}</div>
-}
-
-const optionsObj:Options = {
-  downloadBtnDisplay:true,
-  downloadCustomBtn:DownBtn,
-  descriptionBoxDisplay:true,
-  descriptionCustomBox:DescBox
+const options: Options = {
+  // customLoadComponent: () => <h3>Loading</h3>
+  // hidePagination: false,
+  // externalLightbox: true,
 }
 
 const App = () => {
   return (
     <div>
-      <PicGallery imgList={listOfImages} options={optionsObj} />
+      <PicGallery imgList={listOfImages} options={options} />
     </div>
   )
 }
