@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [react()],
   build: {
     lib: {
-      entry: path.resolve(__dirname, 'lib/index.tsx'),
+      entry: path.resolve(__dirname, 'src/lib/main.tsx'),
       name: 'react-pic-gallery',
       fileName: (format) => `react-pic-gallery.${format}.js`
     },

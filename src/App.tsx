@@ -1,6 +1,6 @@
 import React from 'react'
-import PicGallery from '../lib'
-import { Options } from '../lib/models/models'
+import PicGallery from './lib/main'
+import { Options } from './lib/models/models'
 import './App.css'
 
 const listOfImages = [

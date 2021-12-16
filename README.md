@@ -25,6 +25,12 @@ https://marcelrsoub.github.io/react-pic-gallery/
 npm install --save react-pic-gallery
 ```
 
+or with yarn:
+
+```bash
+yarn add react-pic-gallery
+```
+
 ## Usage
 
 A list of objects containing a thumbnail source and the full source is the only needed parameter.
