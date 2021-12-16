@@ -1,6 +1,6 @@
 import { ImageObject, Options } from '../models/models'
 import React from 'react'
-import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch'
+import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch'
 import CircularLoading from '../CircularLoading'
 import styles from '../styles'
 
@@ -77,7 +77,7 @@ const ImgLightbox = (props: {
       ) : (
         <div>
           <TransformWrapper>
-            <TransformComponent>
+            <TransformComponent wrapperStyle={{ overflow: 'visible' }}>
               <img
                 src={imgSrcUrl}
                 alt=''
@@ -97,7 +97,8 @@ const ImgLightbox = (props: {
               style={{
                 position: 'absolute',
                 left: 20,
-                top: '50%',
+                height: 50,
+                top: 'calc(50% - 50px)',
                 fontSize: 50,
                 cursor: 'pointer',
                 color: 'white',
@@ -115,7 +116,8 @@ const ImgLightbox = (props: {
               style={{
                 position: 'absolute',
                 right: 20,
-                top: '50%',
+                height: 50,
+                top: 'calc(50% - 50px)',
                 fontSize: 50,
                 cursor: 'pointer',
                 color: 'white',
