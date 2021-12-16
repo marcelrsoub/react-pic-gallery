@@ -30,11 +30,13 @@ function PicGallery(props: {
       if (open) {
         props.setExtLightboxChildren(
           <ImgLightbox
-            imgObj={props.imgList[modalImgIndex]}
+            open={open}
+            currentImgIndex={modalImgIndex}
+            imgList={props.imgList}
+            topCustomContent={props.topCustomContent}
+            bottomCustomContent={props.bottomCustomContent}
             options={options}
-            onClose={() => {
-              setOpen(false)
-            }}
+            onClose={() => setOpen(false)}
           />
         )
       } else {
@@ -43,30 +45,30 @@ function PicGallery(props: {
     }
   }, [open])
 
-  const onOpen = useCallback((count) => {
-    setModalImgIndex(count)
-    setOpen(true)
-  }, [])
+  const onOpen = useCallback(
+    (count) => {
+      setOpen(true)
+      setModalImgIndex(count)
+      console.log('modalImgIndex', modalImgIndex)
+      console.log('count', count)
+    },
+    [modalImgIndex]
+  )
 
   return (
     <div className='reactPic-wrapper' style={styles.Wrapper}>
       {open && !props.options?.externalLightbox ? (
         <ImgLightbox
-          imgObj={props.imgList[modalImgIndex]}
+          open={open}
+          currentImgIndex={modalImgIndex}
+          imgList={props.imgList}
           topCustomContent={props.topCustomContent}
           bottomCustomContent={props.bottomCustomContent}
           options={options}
-          onClose={() => setOpen(false)}
-          onClickPrevious={
-            modalImgIndex - 1 >= 0
-              ? () => setModalImgIndex(modalImgIndex - 1)
-              : undefined
-          }
-          onClickNext={
-            modalImgIndex + 1 < props.imgList.length
-              ? () => setModalImgIndex(modalImgIndex + 1)
-              : undefined
-          }
+          onClose={() => {
+            console.log('close')
+            setOpen(false)
+          }}
         />
       ) : null}
       <ImgGallery
