@@ -53,8 +53,8 @@ const External = () => {
   >(<></>)
 
   const options2 = {
-    // hidePagination: true,
-    externalLightbox: true,
+    hidePagination: true,
+    // externalLightbox: true,
     picsPerRow: 4
   }
   return (

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 const extraStyle = `
 .lds-dual-ring {
@@ -30,14 +30,19 @@ const extraStyle = `
 // 3. Lightbox and Image Component
 
 export default function CircularLoading() {
-  const styleTag = document.querySelector('#react-pic-style')
-  if (!styleTag) {
-    const sheet = document.createElement('style')
-    sheet.id = 'react-pic-style'
-    sheet.innerHTML = extraStyle
-    document.body.appendChild(sheet)
-  }else{
-    styleTag.innerHTML = styleTag.innerHTML + extraStyle;
-  }
+  useEffect(() => {
+    const styleTag = document.querySelector('#react-pic-style')
+    if (!styleTag) {
+      const sheet = document.createElement('style')
+      sheet.id = 'react-pic-style'
+      sheet.innerHTML = extraStyle
+      document.body.appendChild(sheet)
+    } else {
+      styleTag.innerHTML = styleTag.innerHTML + extraStyle
+    }
+    return () => {
+      document.querySelector('#react-pic-style')?.remove()
+    }
+  }, [])
   return <div className='lds-dual-ring'></div>
 }
