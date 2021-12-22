@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import ImgLazyLoading from '../ImgLazyLoading'
 import { ImageObject, Options } from '../models/models'
 import styles from '../styles'
@@ -8,6 +8,7 @@ function ImgGallery(props: {
   imgList: ImageObject[]
   onOpen: (index_of_image: number) => void
 }) {
+  const onOpen = useCallback((index) => () => props.onOpen(index), [])
   return (
     <div
       className='reactPic-grid'
@@ -54,7 +55,7 @@ function ImgGallery(props: {
                   minWidth: '100%',
                   minHeight: '100%'
                 }}
-                onClick={() => props.onOpen(index)}
+                onClick={onOpen(index)}
               />
             </div>
           </div>

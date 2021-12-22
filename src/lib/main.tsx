@@ -45,15 +45,13 @@ function PicGallery(props: {
     }
   }, [open])
 
-  const onOpen = useCallback(
-    (count) => {
-      setOpen(true)
-      setModalImgIndex(count)
-      console.log('modalImgIndex', modalImgIndex)
-      console.log('count', count)
-    },
-    [modalImgIndex]
-  )
+  const onOpen = useCallback((count) => {
+    setModalImgIndex(count)
+    setOpen(true)
+  }, [])
+  const onClose = useCallback(() => {
+    setOpen(false)
+  }, [])
 
   return (
     <div className='reactPic-wrapper' style={styles.Wrapper}>
@@ -65,10 +63,7 @@ function PicGallery(props: {
           topCustomContent={props.topCustomContent}
           bottomCustomContent={props.bottomCustomContent}
           options={options}
-          onClose={() => {
-            console.log('close')
-            setOpen(false)
-          }}
+          onClose={onClose}
         />
       ) : null}
       <ImgGallery

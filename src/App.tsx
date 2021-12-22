@@ -43,11 +43,6 @@ const listOfImages = [
   }
 ]
 
-// const DescBox = (props)=>{
-//   console.log("here")
-//   return <div style={{background:'red'}}>{props.imgObj.hello}</div>
-// }
-
 const External = () => {
   const [lightboxNode, setLightboxNode] = React.useState<
     JSX.Element | undefined
@@ -55,7 +50,7 @@ const External = () => {
 
   const options2 = {
     hidePagination: true,
-    // externalLightbox: true,
+    externalLightbox: true,
     picsPerRow: 4
   }
   return (
@@ -83,6 +78,29 @@ const App = () => {
         <h1>react-pic-gallery</h1>
         <hr />
         <p>Image gallery and lightbox</p>
+        <SyntaxHighlighter language='tsx' showLineNumbers>
+          {`import React from 'react'
+import PicGallery from 'react-pic-gallery'
+
+const listOfImages = [
+  {
+    thumbnailSrc: 'https://picsum.photos/id/237/200/300',
+    fullSrc: 'https://picsum.photos/id/237/800/600'
+  },
+  {
+    thumbnailSrc: 'https://picsum.photos/id/154/200/150',
+    fullSrc: 'https://picsum.photos/id/154/200/150'
+  }
+]
+
+const App = () => {
+  return (
+      <PicGallery
+        imgList={listOfImages}
+      />
+  )
+}`}
+        </SyntaxHighlighter>
 
         <div
           style={{
@@ -103,11 +121,7 @@ const App = () => {
           of taking up the full screen, you can use the External Lightbox
           option. This option uses an external div, as shown below.
         </p>
-        <SyntaxHighlighter
-          language='tsx'
-          showLineNumbers
-          customStyle={{ textAlign: 'left' }}
-        >
+        <SyntaxHighlighter language='tsx' showLineNumbers>
           {`const App = () => {
   const [lightboxNode, setLightboxNode] = React.useState<
     JSX.Element | undefined
@@ -115,7 +129,7 @@ const App = () => {
 
   const options2 = {
     hidePagination: true,
-    // externalLightbox: true,
+    externalLightbox: true,
     picsPerRow: 4
   }
   return (
