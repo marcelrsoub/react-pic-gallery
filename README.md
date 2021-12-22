@@ -11,7 +11,7 @@ React library for a simple image gallery with lightbox implemented.
 - 📱 Responsive
 - 🚵 Lazy load on pictures
 - ✏ Buttons and CSS customization classes are accessible
-- 💡 Lightbox implemented
+- 💡 Lightbox implemented with pinch zoom by [react-zoom-pan-pinch](https://www.npmjs.com/package/react-zoom-pan-pinch)
 
 ## Demo
 
@@ -35,11 +35,11 @@ yarn add react-pic-gallery
 
 A list of objects containing a thumbnail source and the full source is the only needed parameter.
 
-```tsx
+```jsx
 import React from 'react'
-import PicGallery, { imageObject } from 'react-pic-gallery'
+import PicGallery from 'react-pic-gallery'
 
-const listOfImages: imageObject[] = [
+const listOfImages = [
   {
     thumbnailSrc: 'https://picsum.photos/id/237/200/300',
     fullSrc: 'https://picsum.photos/id/237/800/600'
@@ -67,9 +67,9 @@ The options interface can be imported from the library and the object can be pas
 
 ```tsx
 import React from 'react'
-import PicGallery, { imageObject, Options } from 'react-pic-gallery'
+import PicGallery from 'react-pic-gallery'
 
-const listOfImages: imageObject[] = [
+const listOfImages = [
   {
     thumbnailSrc: 'https://picsum.photos/id/237/200/300',
     fullSrc: 'https://picsum.photos/id/237/800/600',
@@ -81,10 +81,12 @@ const listOfImages: imageObject[] = [
   }
 ]
 
-const options: Options = {
+const options = {
   // customLoadComponent: () => <h3>Loading</h3>
   // hidePagination: false,
   // externalLightbox: true,
+  // rowHeight: '100px',
+  // picsPerRow:3
 }
 
 const App = () => {

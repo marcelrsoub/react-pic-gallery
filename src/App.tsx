@@ -1,6 +1,7 @@
 import React from 'react'
 import PicGallery from './lib/main'
 import { Options } from './lib/models/models'
+import SyntaxHighlighter from 'react-syntax-highlighter'
 import './App.css'
 
 const listOfImages = [
@@ -98,10 +99,39 @@ const App = () => {
       <div className='card'>
         <h2>External Lightbox</h2>
         <p>
-          If your PicGallery is a child component of a child component of a ...,
-          the lightbox might show up inside the components. In order to correct
-          this problem you can use an external component and pass the lightbox
-          to it everytime a picture is opened.
+          If your PicGallery's lightbox is showing up inside an element instead
+          of taking up the full screen, you can use the External Lightbox
+          option. This option uses an external div, as shown below.
+        </p>
+        <SyntaxHighlighter
+          language='tsx'
+          showLineNumbers
+          customStyle={{ textAlign: 'left' }}
+        >
+          {`const App = () => {
+  const [lightboxNode, setLightboxNode] = React.useState<
+    JSX.Element | undefined
+  >(<></>)
+
+  const options2 = {
+    hidePagination: true,
+    // externalLightbox: true,
+    picsPerRow: 4
+  }
+  return (
+    <>
+      <div children={lightboxNode}></div>
+      <PicGallery
+        imgList={listOfImages}
+        options={options2}
+        setExtLightboxChildren={(children) => setLightboxNode(children)}
+      />
+    </>
+  )
+}`}
+        </SyntaxHighlighter>
+        <p>
+          Using <b>External Lightbox</b> brings a performance drop.
         </p>
         <External />
       </div>
