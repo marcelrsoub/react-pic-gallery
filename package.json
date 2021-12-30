@@ -20,7 +20,7 @@
     "build": "tsc && vite build",
     "preview": "vite --config vite.github-pages.config.ts preview",
     "build-example": "vite --config vite.github-pages.config.ts build",
-    "github-pages": "vite --config vite.github-pages.config.ts build gh-pages -d build",
+    "github-pages": "vite --config vite.github-pages.config.ts build && gh-pages -d build",
     "publish-patch": "yarn run build && standard-version --release-as patch && git push --follow-tags origin main && npm publish",
     "publish-minor": "yarn run build && standard-version --release-as minor && git push --follow-tags origin main && npm publish",
     "publish-major": "yarn run build && standard-version --release-as major && git push --follow-tags origin main && npm publish"
