@@ -4,6 +4,8 @@ import { Options } from './lib/models/models'
 import SyntaxHighlighter from 'react-syntax-highlighter'
 import './App.css'
 
+import icon from './favicon.svg'
+
 const listOfImages = [
   {
     thumbnailSrc: 'https://picsum.photos/id/237/200/300',
@@ -75,7 +77,18 @@ const App = () => {
   return (
     <>
       <div className='card'>
-        <h1>react-pic-gallery</h1>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            gap: '1rem',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
+          <img src={icon} style={{ height: '2rem', marginBottom: -10 }} />
+          <h1>react-pic-gallery</h1>
+        </div>
         <hr />
         <p>Image gallery and lightbox</p>
         <SyntaxHighlighter language='tsx' showLineNumbers>
