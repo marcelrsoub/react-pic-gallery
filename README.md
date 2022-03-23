@@ -82,7 +82,7 @@ const listOfImages = [
 ]
 
 const options = {
-  // customLoadComponent: () => <h3>Loading</h3>
+  // customLoadComponent: () => <h3>Loading</h3>,
   // hidePagination: false,
   // externalLightbox: true,
   // rowHeight: '100px',
