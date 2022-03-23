@@ -22,7 +22,7 @@ const ImgLazyLoading = (props: {
     const ac = new AbortController()
 
     if (props.imgSrc) {
-      fetch(props.imgSrc)
+      fetch(props.imgSrc, { mode: 'cors' })
         .then((response) => response.blob())
         .then((blob) => {
           setImgSrcUrl(URL.createObjectURL(blob))
