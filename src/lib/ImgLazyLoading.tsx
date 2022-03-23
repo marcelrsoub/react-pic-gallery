@@ -10,32 +10,11 @@ const ImgLazyLoading = (props: {
   onClick?: () => void
   lightboxMode?: boolean
 }) => {
-  const [imgSrcUrl, setImgSrcUrl] = React.useState('')
   const Loading: () => JSX.Element =
     props.options?.customLoadComponent !== undefined
       ? props.options.customLoadComponent
       : CircularLoading
-  const [loadingState, setLoadingState] = useState(true)
-
-  React.useEffect(() => {
-    setLoadingState(true)
-    const ac = new AbortController()
-
-    if (props.imgSrc) {
-      fetch(props.imgSrc, {
-        mode: 'cors',
-        headers: { 'Access-Control-Allow-Origin': '*' }
-      })
-        .then((response) => response.blob())
-        .then((blob) => {
-          setImgSrcUrl(URL.createObjectURL(blob))
-          setLoadingState(false)
-        })
-    }
-    return () => {
-      ac.abort()
-    } // cleanup function
-  }, [props.imgSrc])
+  const [loadingState, setLoadingState] = useState(false)
 
   if (loadingState) {
     return (
@@ -57,7 +36,7 @@ const ImgLazyLoading = (props: {
   }
   return (
     <img
-      src={imgSrcUrl}
+      src={props.imgSrc}
       alt=''
       id={props.id}
       style={{
