@@ -1,4 +1,5 @@
-import React, { useCallback } from 'react'
+import { useCallback } from 'react'
+import * as React from "react"
 import ImgLazyLoading from '../ImgLazyLoading'
 import { ImageObject, Options } from '../models/models'
 import styles from '../styles'
@@ -12,6 +13,7 @@ function ImgGallery(props: {
   return (
     <div
       className='reactPic-grid'
+      data-testid='test-reactPic-grid'
       style={{
         ...styles.Grid,
         gridTemplateColumns: `repeat(${

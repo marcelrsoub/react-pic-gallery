@@ -5,6 +5,7 @@ import { Options } from './models/models'
 const ImgLazyLoading = (props: {
   imgSrc: string
   id?: string
+  alt?:string
   style: React.CSSProperties
   options?: Options
   onClick?: () => void
@@ -37,12 +38,14 @@ const ImgLazyLoading = (props: {
   return (
     <img
       src={props.imgSrc}
-      alt=''
+      alt={props.alt}
+      aria-label='reactPic-img'
       id={props.id}
       style={{
         ...props.style
       }}
       onClick={props.onClick}
+      loading="lazy"
     />
   )
 }
