@@ -54,7 +54,7 @@ function PicGallery(props: {
   }, [])
 
   return (
-    <div className='reactPic-wrapper' style={styles.Wrapper}>
+    <div className='reactPic-wrapper' data-testid="test-main-div" style={styles.Wrapper}>
       {open && !props.options?.externalLightbox ? (
         <ImgLightbox
           open={open}
