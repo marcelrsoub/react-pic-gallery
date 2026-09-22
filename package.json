@@ -4,7 +4,10 @@
   "description": "Small, accessible React image gallery and lightbox.",
   "author": "marcelrsoub",
   "license": "MIT",
-  "repository": "marcelrsoub/react-pic-gallery",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marcelrsoub/react-pic-gallery.git"
+  },
   "type": "module",
   "module": "./dist/react-pic-gallery.js",
   "types": "./dist/index.d.ts",
