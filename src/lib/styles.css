@@ -213,6 +213,7 @@ dialog.react-pic-gallery__lightbox::backdrop {
   place-items: center;
   min-height: 0;
   padding: 0.75rem;
+  overflow: hidden;
   touch-action: pan-y;
 }
 
@@ -225,9 +226,11 @@ dialog.react-pic-gallery__lightbox::backdrop {
   place-items: center;
   width: min(100%, 82rem);
   height: 100%;
+  max-width: 100%;
+  max-height: 100%;
   min-width: 0;
   min-height: 0;
-  overflow: visible;
+  overflow: hidden;
   pointer-events: none;
   background: transparent;
   border-radius: var(--gallery-radius);
