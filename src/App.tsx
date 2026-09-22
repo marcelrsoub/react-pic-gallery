@@ -2,7 +2,19 @@ import { useState } from 'react'
 import { PicGallery, type GalleryImage, type LightboxContext } from './lib'
 import './App.css'
 
-const images: GalleryImage[] = [
+type ExifImage = GalleryImage & {
+  exif?: {
+    camera?: string
+    lens?: string
+    focalLength?: string
+    aperture?: string
+    shutter?: string
+    iso?: number
+    taken?: string
+  }
+}
+
+const images: ExifImage[] = [
   {
     id: 'coast',
     src: 'https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1800&q=85',
@@ -76,6 +88,67 @@ const images: GalleryImage[] = [
     caption: 'Open ground beneath the peaks'
   }
 ]
+
+const exifByAlt: Record<string, ExifImage['exif']> = {
+  'A calm blue coast under a bright sky': {
+    camera: 'Fujifilm X-T5',
+    lens: 'XF 23mm f/1.4',
+    focalLength: '23mm',
+    aperture: 'f/8',
+    shutter: '1/250s',
+    iso: 125,
+    taken: '2024-05-12 06:41'
+  },
+  'Sunlight through a dense green forest': {
+    camera: 'Sony A7 IV',
+    lens: 'FE 24-70mm f/2.8 GM',
+    focalLength: '42mm',
+    aperture: 'f/4',
+    shutter: '1/60s',
+    iso: 800,
+    taken: '2024-09-03 10:17'
+  },
+  'Snow-capped mountains reflected in a lake': {
+    camera: 'Canon EOS R6 Mark II',
+    lens: 'RF 15-35mm f/2.8 L',
+    focalLength: '18mm',
+    aperture: 'f/11',
+    shutter: '1/320s',
+    iso: 100,
+    taken: '2023-11-25 07:52'
+  },
+  'Layered desert dunes under a pale sky': {
+    camera: 'Nikon Z 7II',
+    lens: 'Nikkor Z 70-200mm f/2.8',
+    focalLength: '135mm',
+    aperture: 'f/5.6',
+    shutter: '1/1000s',
+    iso: 64,
+    taken: '2024-07-19 18:05'
+  },
+  'A mountain lake surrounded by green hills': {
+    camera: 'Sony A7R V',
+    lens: 'FE 16-35mm f/2.8 GM',
+    focalLength: '24mm',
+    aperture: 'f/9',
+    shutter: '1/125s',
+    iso: 100,
+    taken: '2024-06-08 09:23'
+  },
+  'Dark cliffs beside a deep blue sea': {
+    camera: 'Fujifilm GFX 100S',
+    lens: 'GF 32-64mm f/4 R LM WR',
+    focalLength: '45mm',
+    aperture: 'f/7.1',
+    shutter: '1/500s',
+    iso: 160,
+    taken: '2023-10-14 16:58'
+  }
+}
+
+const exifImages: ExifImage[] = images
+  .slice(0, 6)
+  .map((image) => ({ ...image, exif: exifByAlt[image.alt] }))
 
 const basicSnippet = `import { PicGallery } from 'react-pic-gallery'
 import 'react-pic-gallery/styles.css'
@@ -161,6 +234,44 @@ function CustomControls({
   )
 }
 
+const exifSnippet = `type ExifImage = GalleryImage & {
+  exif?: { camera: string; aperture: string; iso: number }
+}
+
+<PicGallery
+  images={exifImages}
+  renderCaption={({ image }) => <ExifCaption image={image} />}
+/>`
+
+function ExifCaption({ image }: { image: ExifImage }) {
+  const exif = image.exif
+
+  return (
+    <div className='exif-caption'>
+      <p className='exif-caption__title'>{image.caption ?? image.alt}</p>
+      {exif && (
+        <dl className='exif-caption__data'>
+          {[
+            exif.camera,
+            exif.lens,
+            exif.focalLength,
+            exif.aperture,
+            exif.shutter,
+            exif.iso !== undefined ? `ISO ${exif.iso}` : undefined,
+            exif.taken
+          ]
+            .filter(Boolean)
+            .map((value) => (
+              <div className='exif-caption__chip' key={value as string}>
+                {value}
+              </div>
+            ))}
+        </dl>
+      )}
+    </div>
+  )
+}
+
 function ExampleHeader({ title, description }: {
   title: string
   description: string
@@ -194,6 +305,21 @@ export default function App() {
         <p className='intro-copy'>
           A small, runtime-dependency-free image viewer with a clean API for adding your own UI.
         </p>
+        <ul className='feature-strip' aria-label='Key features'>
+          <li className='feature-strip__stat'>
+            <strong>5.9 kB</strong>
+            <span>gzipped, JS + CSS</span>
+          </li>
+          <li className='feature-strip__stat'>
+            <strong>0</strong>
+            <span>runtime dependencies</span>
+          </li>
+          <li>Native <code>&lt;dialog&gt;</code> lightbox</li>
+          <li>Keyboard-first &amp; screen-reader ready</li>
+          <li>Touch swipes, edge taps &amp; arrow keys</li>
+          <li>Typed render callbacks</li>
+          <li>CSS-variable theming</li>
+        </ul>
       </section>
 
       <section className='demo-section demo-section--hero' id='examples'>
@@ -242,6 +368,21 @@ export default function App() {
           <CodeBlock code={controlsSnippet} />
         </section>
       </div>
+
+      <section className='demo-section' id='exif'>
+        <h2>EXIF in the lightbox</h2>
+        <p className='exif-intro'>
+          Extend the image type with your own metadata and render it with
+          <code> renderCaption</code> — the library stays out of the way.
+        </p>
+        <div className='gallery-frame'>
+          <PicGallery
+            images={exifImages}
+            renderCaption={(context) => <ExifCaption image={context.image} />}
+          />
+        </div>
+        <CodeBlock code={exifSnippet} />
+      </section>
 
       <section className='docs-strip' id='docs'>
         <p>API reference, theming, and the complete v1 to v2 migration guide.</p>

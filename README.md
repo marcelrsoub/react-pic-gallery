@@ -20,7 +20,16 @@ bun add react-pic-gallery
 
 React 18.3+ and React 19 are supported. The [Quick start docs](https://marcelrsoub.github.io/react-pic-gallery/docs/getting-started/) provide these commands in a package-manager switcher.
 
-The package is intentionally lightweight: it has no runtime dependencies, React is a peer dependency, and the built JavaScript and CSS together are roughly 6 KB gzipped.
+The package is intentionally lightweight: it has no runtime dependencies, React is a peer dependency, and the built JavaScript and CSS together are about **5.9 KB gzipped** (4.0 KB JS + 1.9 KB CSS).
+
+## Why react-pic-gallery
+
+- **Tiny by design** — no runtime dependencies, no context providers, no polyfills; ~5.9 KB gzipped total.
+- **Simple by default** — one component, one stylesheet import, sensible accessible defaults.
+- **Yours when needed** — typed `renderActions`, `renderCaption`, and `renderControls` callbacks let you add custom UI without rebuilding the lightbox; extra fields on your image objects flow through fully typed.
+- **Accessible** — native modal `<dialog>`, focus containment and restoration, Escape to close, screen-reader announcements, `prefers-reduced-motion` support.
+- **Keyboard and touch friendly** — arrow-key navigation in the grid (roving tabindex) and in the lightbox, Enter to open, swipe navigation on touch devices.
+- **Themeable** — namespaced classes and CSS variables (`--gallery-accent`, `--gallery-overlay`, `--gallery-motion`, …).
 
 ## Quick start
 
@@ -104,8 +113,10 @@ The lightbox uses the native modal `<dialog>` element and includes:
 - Backdrop closing with stable page width while scrolling is locked.
 - Native lazy loading for thumbnails and explicit image loading/error states.
 - Horizontal swipe navigation on touch devices.
-- Pinch zoom up to 3x with one-finger panning while zoomed.
+- Instagram-Stories-style edge taps on touch screens: tap the right edge of the image to go forward, the left edge to go back (navigation buttons are hidden on small screens where tap zones take over).
 - Reduced-motion support, safe-area padding, rounded image surfaces, and animated transitions.
+
+The thumbnail grid supports arrow-key navigation with a roving tabindex: Tab once to enter the grid, then move with Arrow keys (Left/Right step, Up/Down jump a row, Home/End jump to the ends), Enter to open, and focus is restored to the same tile when the lightbox closes.
 
 Native modal behavior targets modern browsers: Chrome 37+, Edge 79+, Firefox 98+, and Safari/iOS 15.4+. The package does not ship a dialog polyfill.
 

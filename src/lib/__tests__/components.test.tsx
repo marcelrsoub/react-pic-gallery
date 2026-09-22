@@ -61,6 +61,77 @@ describe('Gallery', () => {
       expect(screen.queryByRole('progressbar')).not.toBeInTheDocument()
     )
   })
+
+  it('navigates the grid with arrow keys using a roving tabindex', () => {
+    const threeByThree: GalleryImage[] = [
+      { src: '1.jpg', alt: 'Image 1' },
+      { src: '2.jpg', alt: 'Image 2' },
+      { src: '3.jpg', alt: 'Image 3' },
+      { src: '4.jpg', alt: 'Image 4' },
+      { src: '5.jpg', alt: 'Image 5' },
+      { src: '6.jpg', alt: 'Image 6' }
+    ]
+    const onImageClick = vi.fn()
+    render(<Gallery images={threeByThree} onImageClick={onImageClick} />)
+
+    const tile = (alt: string) =>
+      screen.getByRole('button', { name: `Open ${alt}` }) as HTMLButtonElement
+
+    tile('Image 1').focus()
+    expect(tile('Image 1')).toHaveFocus()
+    expect(tile('Image 1')).toHaveAttribute('tabindex', '0')
+    expect(tile('Image 2')).toHaveAttribute('tabindex', '-1')
+
+    fireEvent.keyDown(tile('Image 1'), { key: 'ArrowRight' })
+    expect(tile('Image 2')).toHaveFocus()
+
+    fireEvent.keyDown(tile('Image 2'), { key: 'ArrowDown' })
+    expect(tile('Image 5')).toHaveFocus()
+
+    fireEvent.keyDown(tile('Image 5'), { key: 'ArrowLeft' })
+    expect(tile('Image 4')).toHaveFocus()
+
+    fireEvent.keyDown(tile('Image 4'), { key: 'ArrowUp' })
+    expect(tile('Image 1')).toHaveFocus()
+
+    fireEvent.keyDown(tile('Image 1'), { key: 'ArrowLeft' })
+    expect(tile('Image 1')).toHaveFocus()
+
+    fireEvent.keyDown(tile('Image 1'), { key: 'ArrowUp' })
+    expect(tile('Image 1')).toHaveFocus()
+
+    fireEvent.keyDown(tile('Image 1'), { key: 'End' })
+    expect(tile('Image 6')).toHaveFocus()
+
+    fireEvent.keyDown(tile('Image 6'), { key: 'ArrowRight' })
+    expect(tile('Image 6')).toHaveFocus()
+
+    fireEvent.keyDown(tile('Image 6'), { key: 'Home' })
+    expect(tile('Image 1')).toHaveFocus()
+  })
+
+  it('only exposes one tile in the tab order', () => {
+    render(<Gallery images={images} onImageClick={vi.fn()} />)
+
+    const tiles = screen.getAllByRole('button')
+    expect(tiles[0]).toHaveAttribute('tabindex', '0')
+    expect(tiles[1]).toHaveAttribute('tabindex', '-1')
+  })
+
+  it('updates the roving tabindex after opening an image', () => {
+    const onImageClick = vi.fn()
+    render(<Gallery images={images} onImageClick={onImageClick} />)
+
+    const secondTile = screen.getByRole('button', { name: 'Open Second image' })
+    fireEvent.click(secondTile)
+
+    expect(onImageClick).toHaveBeenCalledWith(1)
+    expect(secondTile).toHaveAttribute('tabindex', '0')
+    expect(screen.getByRole('button', { name: 'Open First image' })).toHaveAttribute(
+      'tabindex',
+      '-1'
+    )
+  })
 })
 
 describe('PicGallery', () => {
@@ -78,8 +149,15 @@ describe('PicGallery', () => {
       'one-large.jpg'
     )
 
-    fireEvent.keyDown(dialog, { key: 'ArrowRight' })
+    const closeButton = within(dialog).getByRole('button', {
+      name: 'Close image viewer'
+    })
+    closeButton.focus()
+    fireEvent.keyDown(closeButton, { key: 'ArrowRight' })
     expect(within(dialog).getByRole('img', { name: 'Second image' })).toBeVisible()
+
+    fireEvent.keyDown(closeButton, { key: 'ArrowLeft' })
+    expect(within(dialog).getByRole('img', { name: 'First image' })).toBeVisible()
 
     const cancelEvent = dispatchDialogCancel(dialog)
     expect(cancelEvent.defaultPrevented).toBe(true)
@@ -142,8 +220,62 @@ describe('PicGallery', () => {
     expect(within(dialog).getByRole('img', { name: 'First image' })).toBeVisible()
   })
 
-  it('keeps both navigation gutters and supports horizontal swipes', () => {
+  it('navigates with edge taps when tap zones are active', () => {
+    const originalMatchMedia = window.matchMedia
+    window.matchMedia = vi.fn(() => ({ matches: true })) as unknown as typeof window.matchMedia
+
+    try {
+      render(<PicGallery images={images} />)
+      fireEvent.click(screen.getByRole('button', { name: 'Open First image' }))
+
+      const dialog = screen.getByRole('dialog')
+      const viewport = dialog.querySelector<HTMLElement>('.react-pic-gallery__viewport')!
+      const image = within(dialog).getByRole('img', { name: 'First image' })
+      viewport.getBoundingClientRect = () =>
+        ({ left: 0, top: 0, width: 100, height: 100, right: 100, bottom: 100 }) as DOMRect
+
+      // tap center: no navigation
+      fireEvent.click(image, { clientX: 50, clientY: 50 })
+      expect(within(dialog).getByRole('img', { name: 'First image' })).toBeVisible()
+
+      // tap right edge: next image
+      fireEvent.click(image, { clientX: 90, clientY: 50 })
+      expect(within(dialog).getByRole('img', { name: 'Second image' })).toBeVisible()
+
+      // tap left edge: back to previous
+      fireEvent.click(within(dialog).getByRole('img', { name: 'Second image' }), {
+        clientX: 10,
+        clientY: 50
+      })
+      expect(within(dialog).getByRole('img', { name: 'First image' })).toBeVisible()
+
+      // tap right edge on the last image: stays (no next)
+      fireEvent.click(screen.getByRole('button', { name: 'Open First image' }))
+      fireEvent.click(within(dialog).getByRole('img', { name: 'First image' }), {
+        clientX: 90,
+        clientY: 50
+      })
+      expect(within(dialog).getByRole('img', { name: 'Second image' })).toBeVisible()
+    } finally {
+      window.matchMedia = originalMatchMedia
+    }
+  })
+
+  it('ignores edge taps when tap zones are not active', () => {
     render(<PicGallery images={images} />)
+    fireEvent.click(screen.getByRole('button', { name: 'Open First image' }))
+
+    const dialog = screen.getByRole('dialog')
+    const viewport = dialog.querySelector<HTMLElement>('.react-pic-gallery__viewport')!
+    const image = within(dialog).getByRole('img', { name: 'First image' })
+    viewport.getBoundingClientRect = () =>
+      ({ left: 0, top: 0, width: 100, height: 100, right: 100, bottom: 100 }) as DOMRect
+
+    fireEvent.click(image, { clientX: 90, clientY: 50 })
+    expect(within(dialog).getByRole('img', { name: 'First image' })).toBeVisible()
+  })
+
+  it('keeps both navigation gutters and supports horizontal swipes', () => {    render(<PicGallery images={images} />)
     fireEvent.click(screen.getByRole('button', { name: 'Open First image' }))
 
     const dialog = screen.getByRole('dialog')
@@ -184,33 +316,16 @@ describe('PicGallery', () => {
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
   })
 
-  it('supports bounded pinch zooming in the lightbox', () => {
+  it('keeps the lightbox image contained without a JavaScript transform', () => {
     render(<PicGallery images={images} />)
     fireEvent.click(screen.getByRole('button', { name: 'Open First image' }))
 
     const image = within(screen.getByRole('dialog')).getByRole('img', {
       name: 'First image'
     })
-    fireEvent.pointerDown(image, {
-      pointerId: 1,
-      pointerType: 'touch',
-      clientX: 100,
-      clientY: 100
-    })
-    fireEvent.pointerDown(image, {
-      pointerId: 2,
-      pointerType: 'touch',
-      clientX: 200,
-      clientY: 100
-    })
-    fireEvent.pointerMove(image, {
-      pointerId: 2,
-      pointerType: 'touch',
-      clientX: 300,
-      clientY: 100
-    })
 
-    expect(image.getAttribute('style')).toContain('scale(2)')
+    expect(image).toHaveStyle({ objectFit: 'contain' })
+    expect(image.style.transform).toBe('')
   })
 
   it('passes the current image and actions to custom UI', () => {

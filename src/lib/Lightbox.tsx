@@ -7,7 +7,6 @@ import {
   type AnimationEvent as ReactAnimationEvent,
   type KeyboardEvent as ReactKeyboardEvent,
   type MouseEvent as ReactMouseEvent,
-  type PointerEvent as ReactPointerEvent,
   type SyntheticEvent,
   type TouchEvent as ReactTouchEvent
 } from 'react'
@@ -26,15 +25,13 @@ const bodyLocks = new Set<BodyLockToken>()
 let bodyLockSnapshot: BodyLockSnapshot | null = null
 const interactiveControlSelector =
   'a[href], button, input, select, textarea, [role="combobox"], [role="menu"], [role="slider"], [role="spinbutton"], [role="tab"]'
-const lightboxImageSelector = '.react-pic-gallery__image-element'
-const maxZoomScale = 3
+const keyboardInteractiveControlSelector =
+  'input, select, textarea, [role="combobox"], [role="menu"], [role="slider"], [role="spinbutton"], [role="tab"]'
+const edgeTapMediaQuery = '(max-width: 600px), (pointer: coarse)'
+const edgeTapZoneRatio = 0.3
 
 function isInteractiveTarget(target: EventTarget | null) {
   return target instanceof Element && target.closest(interactiveControlSelector) !== null
-}
-
-function clamp(value: number, minimum: number, maximum: number) {
-  return Math.min(Math.max(value, minimum), maximum)
 }
 
 function lockBodyScroll(token: BodyLockToken) {
@@ -132,23 +129,9 @@ export function Lightbox<T extends GalleryImage>({
   const bodyLockTokenRef = useRef<BodyLockToken>({})
   const imagesRef = useRef(images)
   const touchStartRef = useRef<{ x: number; y: number } | null>(null)
-  const pointerPositionsRef = useRef(new Map<number, { x: number; y: number }>())
-  const pinchStartRef = useRef<{
-    distance: number
-    scale: number
-    offset: { x: number; y: number }
-  } | null>(null)
-  const panStartRef = useRef<{
-    x: number
-    y: number
-    offset: { x: number; y: number }
-  } | null>(null)
   const titleId = useId()
   const [isClosing, setIsClosing] = useState(false)
   const [swipeDirection, setSwipeDirection] = useState<'next' | 'previous' | null>(null)
-  const [zoomScale, setZoomScale] = useState(1)
-  const [zoomOffset, setZoomOffset] = useState({ x: 0, y: 0 })
-  const [zoomOrigin, setZoomOrigin] = useState('50% 50%')
   const activeIndex =
     index !== null && index >= 0 && index < images.length ? index : null
   const image = activeIndex === null ? undefined : images[activeIndex]
@@ -256,7 +239,7 @@ export function Lightbox<T extends GalleryImage>({
       if (
         target instanceof HTMLElement &&
         (target.isContentEditable ||
-          target.closest(interactiveControlSelector))
+          target.closest(keyboardInteractiveControlSelector))
       ) {
         return
       }
@@ -273,18 +256,14 @@ export function Lightbox<T extends GalleryImage>({
   )
 
   const handleTouchStart = useCallback((event: ReactTouchEvent<HTMLDivElement>) => {
-    if (
-      zoomScale > 1 ||
-      event.touches.length !== 1 ||
-      isInteractiveTarget(event.target)
-    ) {
+    if (event.touches.length !== 1 || isInteractiveTarget(event.target)) {
       touchStartRef.current = null
       return
     }
 
     const touch = event.touches[0]
     touchStartRef.current = { x: touch.clientX, y: touch.clientY }
-  }, [zoomScale])
+  }, [])
 
   const handleTouchEnd = useCallback(
     (event: ReactTouchEvent<HTMLDivElement>) => {
@@ -305,130 +284,12 @@ export function Lightbox<T extends GalleryImage>({
         swipePrevious()
       }
     },
-    [swipeNext, swipePrevious, zoomScale]
+    [swipeNext, swipePrevious]
   )
 
   const handleTouchCancel = useCallback(() => {
     touchStartRef.current = null
   }, [])
-
-  const handlePointerDown = useCallback(
-    (event: ReactPointerEvent<HTMLDivElement>) => {
-      if (
-        !(event.target instanceof Element) ||
-        event.target.closest(lightboxImageSelector) === null ||
-        (event.pointerType === 'mouse' && event.button !== 0)
-      ) {
-        return
-      }
-
-      const pointers = pointerPositionsRef.current
-      pointers.set(event.pointerId, { x: event.clientX, y: event.clientY })
-      event.currentTarget.setPointerCapture?.(event.pointerId)
-
-      if (pointers.size === 2) {
-        const [first, second] = [...pointers.values()]
-        const distance = Math.hypot(second.x - first.x, second.y - first.y)
-        const imageElement = event.currentTarget.querySelector<HTMLImageElement>(
-          lightboxImageSelector
-        )
-        const rect = imageElement?.getBoundingClientRect()
-        const centerX = (first.x + second.x) / 2
-        const centerY = (first.y + second.y) / 2
-
-        if (rect && rect.width > 0 && rect.height > 0) {
-          setZoomOrigin(
-            `${clamp(((centerX - rect.left) / rect.width) * 100, 0, 100)}% ${clamp(
-              ((centerY - rect.top) / rect.height) * 100,
-              0,
-              100
-            )}%`
-          )
-        }
-
-        pinchStartRef.current = {
-          distance: Math.max(distance, 1),
-          scale: zoomScale,
-          offset: zoomOffset
-        }
-        panStartRef.current = null
-      } else if (zoomScale > 1) {
-        panStartRef.current = {
-          x: event.clientX,
-          y: event.clientY,
-          offset: zoomOffset
-        }
-      }
-    },
-    [zoomOffset, zoomScale]
-  )
-
-  const handlePointerMove = useCallback(
-    (event: ReactPointerEvent<HTMLDivElement>) => {
-      const pointers = pointerPositionsRef.current
-      if (!pointers.has(event.pointerId)) return
-
-      pointers.set(event.pointerId, { x: event.clientX, y: event.clientY })
-
-      if (pointers.size >= 2 && pinchStartRef.current) {
-        const [first, second] = [...pointers.values()]
-        const distance = Math.max(
-          Math.hypot(second.x - first.x, second.y - first.y),
-          1
-        )
-        const nextScale = clamp(
-          pinchStartRef.current.scale * (distance / pinchStartRef.current.distance),
-          1,
-          maxZoomScale
-        )
-        setZoomScale(nextScale)
-        setZoomOffset(pinchStartRef.current.offset)
-        event.preventDefault()
-        return
-      }
-
-      if (pointers.size === 1 && panStartRef.current && zoomScale > 1) {
-        const imageElement = event.currentTarget.querySelector<HTMLImageElement>(
-          lightboxImageSelector
-        )
-        const width = imageElement?.clientWidth ?? 0
-        const height = imageElement?.clientHeight ?? 0
-        const maxOffsetX = Math.max(0, (width * (zoomScale - 1)) / 2)
-        const maxOffsetY = Math.max(0, (height * (zoomScale - 1)) / 2)
-        const offsetX = panStartRef.current.offset.x + event.clientX - panStartRef.current.x
-        const offsetY = panStartRef.current.offset.y + event.clientY - panStartRef.current.y
-
-        setZoomOffset({
-          x: clamp(offsetX, -maxOffsetX, maxOffsetX),
-          y: clamp(offsetY, -maxOffsetY, maxOffsetY)
-        })
-        event.preventDefault()
-      }
-    },
-    [zoomScale]
-  )
-
-  const handlePointerEnd = useCallback(
-    (event: ReactPointerEvent<HTMLDivElement>) => {
-      pointerPositionsRef.current.delete(event.pointerId)
-      if (event.currentTarget.hasPointerCapture?.(event.pointerId)) {
-        event.currentTarget.releasePointerCapture(event.pointerId)
-      }
-
-      if (pointerPositionsRef.current.size < 2) pinchStartRef.current = null
-      if (pointerPositionsRef.current.size === 1 && zoomScale > 1) {
-        const [pointer] = [...pointerPositionsRef.current.values()]
-        panStartRef.current = {
-          x: pointer.x,
-          y: pointer.y,
-          offset: zoomOffset
-        }
-      } else {
-        panStartRef.current = null
-      }
-    },
-    [zoomOffset, zoomScale]
-  )
 
   const handleImageAnimationEnd = useCallback(
     (event: ReactAnimationEvent<HTMLSpanElement>) => {
@@ -459,15 +320,6 @@ export function Lightbox<T extends GalleryImage>({
       changeIndexRef.current(null)
     }
   }, [cancelPendingClose])
-
-  useEffect(() => {
-    setZoomScale(1)
-    setZoomOffset({ x: 0, y: 0 })
-    setZoomOrigin('50% 50%')
-    pointerPositionsRef.current.clear()
-    pinchStartRef.current = null
-    panStartRef.current = null
-  }, [activeIndex])
 
   useEffect(() => {
     const request = closeRequestRef.current
@@ -540,6 +392,23 @@ export function Lightbox<T extends GalleryImage>({
     if (event.target === event.currentTarget) close()
   }
 
+  const handleViewportClick = (event: ReactMouseEvent<HTMLDivElement>) => {
+    if (!hasNavigation || isClosingRef.current) return
+    if (!(event.target instanceof Element)) return
+    if (event.target.closest('button')) return
+    if (window.matchMedia?.(edgeTapMediaQuery)?.matches !== true) return
+
+    const rect = event.currentTarget.getBoundingClientRect()
+    if (rect.width <= 0) return
+
+    const ratio = (event.clientX - rect.left) / rect.width
+    if (ratio < edgeTapZoneRatio) {
+      previous()
+    } else if (ratio > 1 - edgeTapZoneRatio) {
+      next()
+    }
+  }
+
   return createPortal(
     <dialog
       ref={lightboxRef}
@@ -593,10 +462,7 @@ export function Lightbox<T extends GalleryImage>({
             hasNavigation ? 'react-pic-gallery__viewport--has-navigation' : undefined
           )}
           onMouseDown={handleBackdropClick}
-          onPointerCancel={handlePointerEnd}
-          onPointerDown={handlePointerDown}
-          onPointerMove={handlePointerMove}
-          onPointerUp={handlePointerEnd}
+          onClick={handleViewportClick}
           onTouchCancel={handleTouchCancel}
           onTouchEnd={handleTouchEnd}
           onTouchStart={handleTouchStart}
@@ -617,19 +483,12 @@ export function Lightbox<T extends GalleryImage>({
             alt={image.alt}
             eager
             objectFit='contain'
-            width={image.width}
-            height={image.height}
             className={joinClassNames(
               'react-pic-gallery__lightbox-image',
               swipeDirection
                 ? `react-pic-gallery__lightbox-image--swipe-${swipeDirection}`
                 : undefined
             )}
-            imageStyle={{
-              transform: `translate3d(${zoomOffset.x}px, ${zoomOffset.y}px, 0) scale(${zoomScale})`,
-              transformOrigin: zoomOrigin,
-              transition: pointerPositionsRef.current.size > 0 ? 'none' : undefined
-            }}
             onAnimationEnd={handleImageAnimationEnd}
           />
           {showNext && (

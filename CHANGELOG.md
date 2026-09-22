@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.0.1] (2026-09-22)
+
+This patch release polishes the lightbox, adds keyboard grid navigation, and refreshes the demo site.
+
+### Added
+
+- Arrow-key navigation in the thumbnail grid with a roving tabindex (Tab once, then Arrow/Home/End keys; Enter opens).
+- Instagram-Stories-style edge taps on touch screens: tap the left or right edge of the lightbox image to navigate; visible navigation buttons are hidden on small screens.
+- Telemetry-free hero features strip and an EXIF-in-the-lightbox customization example in the demo.
+- `server.watch` configuration so the Vite dev server starts reliably on hosts with a low inotify limit.
+
+### Fixed
+
+- Lightbox images no longer overflow the viewport on short viewports (landscape phones and short desktop windows).
+- Mobile lightbox now uses dynamic viewport units (`dvh`) so browser URL bars no longer crop the image; landscape phones gain extra vertical space through compressed chrome and full-width images.
+- Removed the hover translate effect on lightbox controls; hover now only changes the background.
+
+### Removed
+
+- Pinch zoom and pan from the lightbox in favor of native browser zoom behavior.
+
 ## [2.0.0] (2026-09-22)
 
 This is a breaking release focused on a smaller API and a modern React toolchain.

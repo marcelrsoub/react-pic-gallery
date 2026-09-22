@@ -13,6 +13,21 @@ export default defineConfig({
       insertTypesEntry: true
     })
   ],
+  server: {
+    watch: {
+      usePolling: true,
+      interval: 300,
+      ignored: [
+        '**/node_modules/**',
+        '**/docs-site/**',
+        '**/build/**',
+        '**/dist/**',
+        '**/.opencode/**',
+        '**/.astro/**',
+        '**/.vscode/**'
+      ]
+    }
+  },
   build: {
     lib: {
       entry: path.resolve('src/lib/index.ts'),

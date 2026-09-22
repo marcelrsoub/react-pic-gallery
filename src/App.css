@@ -92,6 +92,55 @@ body {
   line-height: 1.7;
 }
 
+.feature-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  max-width: 46rem;
+  margin: 2.25rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.feature-strip__stat {
+  display: grid;
+  gap: 0.1rem;
+  padding: 0.5rem 0.9rem;
+  border: 1px solid rgba(183, 243, 74, 0.45);
+  border-radius: 0.75rem;
+  background: rgba(183, 243, 74, 0.08);
+}
+
+.feature-strip__stat strong {
+  color: var(--page-accent);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.feature-strip__stat span {
+  color: var(--page-muted);
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.feature-strip > li:not(.feature-strip__stat) {
+  padding: 0.45rem 0.8rem;
+  color: var(--page-ink);
+  border: 1px solid var(--page-line);
+  border-radius: 999px;
+  background: var(--page-panel);
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
+.feature-strip code {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 0.72rem;
+}
+
 .demo-section {
   padding: 2rem 0 4rem;
   border-top: 1px solid var(--page-line);
@@ -298,6 +347,52 @@ body {
 .demo-custom-controls > div {
   display: flex;
   gap: 0.4rem;
+}
+
+.exif-intro {
+  max-width: 30rem;
+  margin: 0.5rem 0 0;
+  color: var(--page-muted);
+  font-size: 0.85rem;
+  line-height: 1.55;
+}
+
+.exif-intro code {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 0.78rem;
+}
+
+.exif-caption {
+  display: grid;
+  gap: 0.55rem;
+  justify-items: center;
+}
+
+.exif-caption__title {
+  margin: 0;
+  color: #cbd5e1;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.exif-caption__data {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem;
+  margin: 0;
+}
+
+.exif-caption__chip {
+  padding: 0.2rem 0.55rem;
+  color: #e2e8f0;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.12);
+  font-size: 0.7rem;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
 }
 
 .docs-strip {
