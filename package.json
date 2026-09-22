@@ -1,58 +1,62 @@
 {
   "name": "react-pic-gallery",
-  "version": "1.5.16",
+  "version": "2.0.0",
+  "description": "Small, accessible React image gallery and lightbox.",
   "author": "marcelrsoub",
   "license": "MIT",
   "repository": "marcelrsoub/react-pic-gallery",
-  "main": "./dist/react-pic-gallery.umd.js",
-  "module": "./dist/react-pic-gallery.es.js",
-  "types": "./dist/lib/main.d.ts",
+  "type": "module",
+  "module": "./dist/react-pic-gallery.js",
+  "types": "./dist/index.d.ts",
   "files": [
     "dist"
   ],
+  "sideEffects": [
+    "./dist/styles.css"
+  ],
   "exports": {
     ".": {
-      "import": "./dist/react-pic-gallery.es.js",
-      "require": "./dist/react-pic-gallery.umd.js"
-    }
+      "types": "./dist/index.d.ts",
+      "import": "./dist/react-pic-gallery.js"
+    },
+    "./styles.css": "./dist/styles.css"
   },
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite --config vite.github-pages.config.ts preview",
-    "test": "jest --config jest.config.js --watch",
-    "build-example": "vite --config vite.github-pages.config.ts build",
-    "github-pages": "vite --config vite.github-pages.config.ts build && gh-pages -d build",
-    "publish-patch": "yarn run build && standard-version --release-as patch && git push --follow-tags origin main && npm publish",
-    "publish-minor": "yarn run build && standard-version --release-as minor && git push --follow-tags origin main && npm publish",
-    "publish-major": "yarn run build && standard-version --release-as major && git push --follow-tags origin main && npm publish"
-  },
-  "dependencies": {
-    "@testing-library/react": "12.1.2",
-    "react-zoom-pan-pinch": "^2.1.3"
+    "dev": "npm run dev:docs",
+    "dev:library": "vite",
+    "typecheck": "tsc --noEmit",
+    "build": "npm run typecheck && vite build",
+    "preview": "npm run preview:docs",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "build:demo": "npm run build:docs",
+    "dev:docs": "astro dev --config docs-site/astro.config.mjs",
+    "build:docs": "astro build --config docs-site/astro.config.mjs",
+    "preview:docs": "astro preview --config docs-site/astro.config.mjs",
+    "github-pages": "npm run build:docs && gh-pages -d build",
+    "prepack": "npm run build"
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "^5.16.4",
-    "@types/jest": "^28.1.6",
-    "@types/node": "^16.11.12",
-    "@types/react": "^17.0.33",
-    "@types/react-dom": "^17.0.10",
-    "@types/react-syntax-highlighter": "^13.5.2",
-    "@vitejs/plugin-react": "^1.0.7",
-    "gh-pages": "^3.2.3",
-    "jest": "^28.1.3",
-    "jest-environment-jsdom": "^28.1.3",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-syntax-highlighter": "^15.4.5",
-    "standard-version": "^9.3.2",
-    "ts-jest": "^28.0.7",
-    "typescript": "^4.4.4",
-    "vite": "^2.7.0",
-    "vite-plugin-dts": "^1.2.0"
+    "@astrojs/react": "^6.0.6",
+    "@astrojs/starlight": "^0.42.2",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.1",
+    "astro": "^7.3.3",
+    "gh-pages": "^6.3.0",
+    "jsdom": "^30.1.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "typescript": "^6.0.3",
+    "vite": "^8.3.0",
+    "vite-plugin-dts": "^5.1.1",
+    "vitest": "^5.0.1"
   },
   "peerDependencies": {
-    "react": "^0.14.0 || ^15.0.0 || ^16.0.0 || ^17.0.0",
-    "react-dom": "^0.14.0 || ^15.0.0 || ^16.0.0 || ^17.0.0"
+    "react": "^18.3.1 || ^19.0.0",
+    "react-dom": "^18.3.1 || ^19.0.0"
   }
 }

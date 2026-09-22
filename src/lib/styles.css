@@ -1,0 +1,423 @@
+:where(.react-pic-gallery, .react-pic-gallery__lightbox) {
+  --gallery-gap: 0.75rem;
+  --gallery-radius: 1rem;
+  --gallery-row-height: 12rem;
+  --gallery-accent: #9ef01a;
+  --gallery-overlay: rgba(7, 11, 16, 0.94);
+  --gallery-control-size: 2.75rem;
+  --gallery-motion: 180ms;
+  color: #f8fafc;
+}
+
+.react-pic-gallery {
+  width: 100%;
+  min-width: 0;
+}
+
+.react-pic-gallery__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--gallery-gap);
+  width: 100%;
+}
+
+.react-pic-gallery__tile {
+  position: relative;
+  min-width: 0;
+  height: var(--gallery-row-height);
+  padding: 0;
+  overflow: hidden;
+  cursor: pointer;
+  border: 0;
+  border-radius: var(--gallery-radius);
+  background: #e2e8f0;
+  isolation: isolate;
+}
+
+.react-pic-gallery__tile::after {
+  position: absolute;
+  inset: 0;
+  content: '';
+  pointer-events: none;
+  border: 2px solid transparent;
+  border-radius: inherit;
+  transition: border-color var(--gallery-motion) ease;
+}
+
+.react-pic-gallery__tile:hover .react-pic-gallery__image-element,
+.react-pic-gallery__tile:focus-visible .react-pic-gallery__image-element {
+  transform: scale(1.04);
+}
+
+.react-pic-gallery__tile:focus-visible {
+  outline: 3px solid var(--gallery-accent);
+  outline-offset: 3px;
+}
+
+.react-pic-gallery__tile:focus-visible::after {
+  border-color: var(--gallery-accent);
+}
+
+.react-pic-gallery__tile:disabled {
+  cursor: default;
+}
+
+.react-pic-gallery__image {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+}
+
+.react-pic-gallery__image-element {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transition: transform var(--gallery-motion) ease, opacity var(--gallery-motion) ease;
+}
+
+.react-pic-gallery__image-loader,
+.react-pic-gallery__image-error {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+.react-pic-gallery__image-loader::after {
+  width: 1.5rem;
+  height: 1.5rem;
+  content: '';
+  border: 2px solid rgba(15, 23, 42, 0.16);
+  border-top-color: var(--gallery-accent);
+  border-radius: 50%;
+  animation: react-pic-gallery-spin 700ms linear infinite;
+}
+
+.react-pic-gallery__image-error {
+  padding: 1rem;
+  color: #475569;
+  font-size: 0.875rem;
+  text-align: center;
+  background: rgba(226, 232, 240, 0.9);
+}
+
+:where(dialog.react-pic-gallery__lightbox) {
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  display: grid;
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  margin: 0;
+  box-sizing: border-box;
+  place-items: center;
+  padding: max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right))
+    max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
+  overflow: hidden;
+  color: #f8fafc;
+  border: 0;
+  background: var(--gallery-overlay);
+  animation: react-pic-gallery-fade-in var(--gallery-motion) ease both;
+}
+
+dialog.react-pic-gallery__lightbox:not([open]) {
+  display: none;
+}
+
+dialog.react-pic-gallery__lightbox::backdrop {
+  background: transparent;
+}
+
+.react-pic-gallery__lightbox--closing {
+  animation: react-pic-gallery-fade-out var(--gallery-motion) ease both;
+}
+
+.react-pic-gallery__lightbox-content {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  width: min(100%, 90rem);
+  height: min(100%, 54rem);
+  min-height: 0;
+  animation: react-pic-gallery-rise-in var(--gallery-motion) ease both;
+}
+
+.react-pic-gallery__lightbox--closing .react-pic-gallery__lightbox-content {
+  animation: react-pic-gallery-rise-out var(--gallery-motion) ease both;
+}
+
+.react-pic-gallery__toolbar,
+.react-pic-gallery__custom-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 3.5rem;
+}
+
+.react-pic-gallery__toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+  color: #cbd5e1;
+  font-size: 0.875rem;
+}
+
+.react-pic-gallery__control {
+  display: inline-grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: var(--gallery-control-size);
+  height: var(--gallery-control-size);
+  padding: 0;
+  color: #f8fafc;
+  cursor: pointer;
+  border: 0;
+  border-radius: 0.7rem;
+  background: transparent;
+  font-size: 1.4rem;
+  line-height: 1;
+  transition: background var(--gallery-motion) ease, color var(--gallery-motion) ease,
+    transform var(--gallery-motion) ease;
+}
+
+.react-pic-gallery__control:hover {
+  background: rgba(248, 250, 252, 0.14);
+  transform: translateY(-1px);
+}
+
+.react-pic-gallery__control:focus-visible {
+  outline: 3px solid var(--gallery-accent);
+  outline-offset: 3px;
+}
+
+.react-pic-gallery__control svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+
+.react-pic-gallery__viewport {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 0;
+  padding: 0.75rem;
+  touch-action: pan-y;
+}
+
+.react-pic-gallery__viewport--has-navigation {
+  padding-inline: 3.5rem;
+}
+
+.react-pic-gallery__lightbox-image {
+  display: grid;
+  place-items: center;
+  width: min(100%, 82rem);
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: visible;
+  pointer-events: none;
+  background: transparent;
+  border-radius: var(--gallery-radius);
+  animation: react-pic-gallery-image-in var(--gallery-motion) ease both;
+}
+
+.react-pic-gallery__lightbox-image .react-pic-gallery__image-element {
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: 100%;
+  pointer-events: auto;
+  touch-action: none;
+  background: transparent;
+  border-radius: inherit;
+  object-fit: contain;
+}
+
+.react-pic-gallery__lightbox-image .react-pic-gallery__image-loader {
+  background: transparent;
+  pointer-events: none;
+}
+
+.react-pic-gallery__lightbox-image .react-pic-gallery__image-error {
+  pointer-events: none;
+}
+
+.react-pic-gallery__lightbox-image--swipe-next {
+  animation-name: react-pic-gallery-slide-in-from-right;
+}
+
+.react-pic-gallery__lightbox-image--swipe-previous {
+  animation-name: react-pic-gallery-slide-in-from-left;
+}
+
+.react-pic-gallery__control--previous,
+.react-pic-gallery__control--next {
+  position: absolute;
+  top: 50%;
+  z-index: 1;
+  transform: translateY(-50%);
+}
+
+.react-pic-gallery__control--previous:hover,
+.react-pic-gallery__control--next:hover {
+  transform: translateY(calc(-50% - 1px));
+}
+
+.react-pic-gallery__control--previous {
+  left: 0;
+}
+
+.react-pic-gallery__control--next {
+  right: 0;
+}
+
+.react-pic-gallery__caption {
+  max-height: 8rem;
+  overflow: hidden;
+  padding: 0.75rem 0 0;
+  color: #cbd5e1;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.react-pic-gallery__sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@keyframes react-pic-gallery-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes react-pic-gallery-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes react-pic-gallery-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes react-pic-gallery-rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes react-pic-gallery-rise-out {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(0.5rem) scale(0.99);
+  }
+}
+
+@keyframes react-pic-gallery-image-in {
+  from {
+    opacity: 0;
+    transform: scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes react-pic-gallery-slide-in-from-right {
+  from {
+    opacity: 0;
+    transform: translateX(18%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes react-pic-gallery-slide-in-from-left {
+  from {
+    opacity: 0;
+    transform: translateX(-18%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (max-width: 600px) {
+  :where(.react-pic-gallery, .react-pic-gallery__lightbox) {
+    --gallery-gap: 0.5rem;
+    --gallery-radius: 0.75rem;
+    --gallery-row-height: 8rem;
+  }
+
+  .react-pic-gallery__lightbox-content {
+    height: 100%;
+  }
+
+  .react-pic-gallery__viewport {
+    padding-inline: 0.25rem;
+  }
+
+  .react-pic-gallery__viewport--has-navigation {
+    padding-inline: 2.75rem;
+  }
+
+  .react-pic-gallery__control--previous {
+    left: -0.25rem;
+  }
+
+  .react-pic-gallery__control--next {
+    right: -0.25rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where(.react-pic-gallery, .react-pic-gallery__lightbox) {
+    --gallery-motion: 0ms;
+  }
+
+  .react-pic-gallery__image-loader::after {
+    animation: none;
+  }
+}

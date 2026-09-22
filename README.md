@@ -1,104 +1,203 @@
 # react-pic-gallery
 
->
+Small, accessible React image gallery and lightbox with a polished default UI and typed escape hatches for custom controls.
 
 [![NPM](https://img.shields.io/npm/v/react-pic-gallery.svg)](https://www.npmjs.com/package/react-pic-gallery)
 
-React library for a simple image gallery with lightbox implemented.
-
-## Features
-
-- 📱 Responsive
-- 🚵 Lazy load on pictures
-- ✏ Buttons and CSS customization classes are accessible
-- 💡 Lightbox implemented with pinch zoom by [react-zoom-pan-pinch](https://www.npmjs.com/package/react-zoom-pan-pinch)
-
-## Demo
-
-https://marcelrsoub.github.io/react-pic-gallery/
-
-![demo gif](https://i.imgur.com/qMhra73.gif)
+[Live playground and docs](https://marcelrsoub.github.io/react-pic-gallery/)
 
 ## Install
 
 ```bash
-npm install --save react-pic-gallery
+npm install react-pic-gallery
 ```
-
-or with yarn:
 
 ```bash
+pnpm add react-pic-gallery
 yarn add react-pic-gallery
+bun add react-pic-gallery
 ```
 
-## Usage
+React 18.3+ and React 19 are supported. The [Quick start docs](https://marcelrsoub.github.io/react-pic-gallery/docs/getting-started/) provide these commands in a package-manager switcher.
 
-A list of objects containing a thumbnail source and the full source is the only needed parameter.
+The package is intentionally lightweight: it has no runtime dependencies, React is a peer dependency, and the built JavaScript and CSS together are roughly 6 KB gzipped.
 
-```jsx
-import React from 'react'
-import PicGallery from 'react-pic-gallery'
-
-const listOfImages = [
-  {
-    thumbnailSrc: 'https://picsum.photos/id/237/200/300',
-    fullSrc: 'https://picsum.photos/id/237/800/600'
-  },
-  {
-    thumbnailSrc: 'https://picsum.photos/id/154/200/150',
-    fullSrc: 'https://picsum.photos/id/154/200/150'
-  }
-]
-
-const App = () => {
-  return (
-    <div>
-      <PicGallery imgList={listOfImages} />
-    </div>
-  )
-}
-
-export default App
-```
-
-## Options
-
-The options interface can be imported from the library and the object can be passed in the main component:
+## Quick start
 
 ```tsx
-import React from 'react'
-import PicGallery from 'react-pic-gallery'
+import { PicGallery } from 'react-pic-gallery'
+import 'react-pic-gallery/styles.css'
 
-const listOfImages = [
+const images = [
   {
-    thumbnailSrc: 'https://picsum.photos/id/237/200/300',
-    fullSrc: 'https://picsum.photos/id/237/800/600',
-    description: 'A Dog standing on a wooden floor'
-  },
-  {
-    thumbnailSrc: 'https://picsum.photos/id/154/200/150',
-    fullSrc: 'https://picsum.photos/id/154/200/150'
+    src: 'https://example.com/photo-large.jpg',
+    thumbnailSrc: 'https://example.com/photo-thumb.jpg',
+    alt: 'A mountain reflected in a lake',
+    caption: 'Morning at the lake'
   }
 ]
 
-const options = {
-  // customLoadComponent: () => <h3>Loading</h3>,
-  // hidePagination: false,
-  // externalLightbox: true,
-  // rowHeight: '100px',
-  // picsPerRow:3
+export function App() {
+  return <PicGallery images={images} />
 }
+```
 
-const App = () => {
+`src` and `alt` are required. `id`, `thumbnailSrc`, `caption`, `width`, and `height` are optional. Image objects can include application-specific fields; those fields remain available in renderer callbacks when using TypeScript generics.
+
+## Custom UI
+
+Add actions without rebuilding the lightbox:
+
+```tsx
+<PicGallery
+  images={images}
+  renderActions={({ image }) => (
+    <button type='button' onClick={() => saveImage(image)}>
+      Save
+    </button>
+  )}
+/>
+```
+
+Every renderer receives:
+
+```ts
+{
+  image,
+  index,
+  count,
+  close,
+  next,
+  previous,
+  canGoNext,
+  canGoPrevious
+}
+```
+
+Use `renderCaption` to replace the caption, or `renderControls` to replace the complete default control layer. When `renderControls` is provided, your controls are responsible for rendering close and navigation actions.
+
+## Standalone components
+
+Use the thumbnail grid and lightbox separately when your application owns selection state:
+
+```tsx
+import { useState } from 'react'
+import { Gallery, Lightbox } from 'react-pic-gallery'
+
+export function CustomViewer({ images }) {
+  const [index, setIndex] = useState<number | null>(null)
+
   return (
-    <div>
-      <PicGallery imgList={listOfImages} options={options} />
-    </div>
+    <>
+      <Gallery images={images} onImageClick={setIndex} />
+      <Lightbox images={images} index={index} onIndexChange={setIndex} />
+    </>
   )
 }
-
-export default App
 ```
+
+## Lightbox behavior
+
+The lightbox uses the native modal `<dialog>` element and includes:
+
+- Keyboard navigation, Escape-to-close, focus containment, and focus restoration.
+- Backdrop closing with stable page width while scrolling is locked.
+- Native lazy loading for thumbnails and explicit image loading/error states.
+- Horizontal swipe navigation on touch devices.
+- Pinch zoom up to 3x with one-finger panning while zoomed.
+- Reduced-motion support, safe-area padding, rounded image surfaces, and animated transitions.
+
+Native modal behavior targets modern browsers: Chrome 37+, Edge 79+, Firefox 98+, and Safari/iOS 15.4+. The package does not ship a dialog polyfill.
+
+## Styling
+
+The stylesheet uses namespaced classes and CSS variables. Import it once, then override variables globally or on the lightbox class:
+
+```css
+:root,
+.react-pic-gallery__lightbox {
+  --gallery-accent: #ff7a59;
+  --gallery-overlay: rgba(10, 10, 14, 0.98);
+  --gallery-control-size: 3rem;
+  --gallery-motion: 240ms;
+}
+```
+
+The default gallery uses three columns. Pass `columns` for a different fixed count; `rowHeight` accepts CSS height values or numeric pixels.
+
+## API
+
+### `PicGallery`
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `images` | `readonly GalleryImage[]` | Images to display. |
+| `columns` | `number` | Optional fixed column count. The default is three columns. |
+| `rowHeight` | `CSSProperties['height']` | Thumbnail height. |
+| `renderActions` | `LightboxRenderer` | Adds controls to the default toolbar. |
+| `renderCaption` | `LightboxRenderer` | Replaces the current caption. |
+| `renderControls` | `LightboxRenderer` | Replaces the complete default control layer. |
+| `showCounter` | `boolean` | Shows the current image count. Defaults to `true`. |
+| `showNavigation` | `boolean` | Shows previous/next controls. Defaults to `true`. |
+
+`Gallery` accepts `images`, `onImageClick`, `columns`, `rowHeight`, `className`, and `style`.
+
+`Lightbox` accepts `images`, controlled `index`, `onIndexChange`, the renderer props, `showCounter`, `showNavigation`, and `className`.
+
+## Migrating from v1
+
+v2 intentionally removes the old configuration and external lightbox workaround.
+
+| v1 | v2 |
+| --- | --- |
+| `imgList` | `images` |
+| `fullSrc` | `src` |
+| `thumbnailSrc` | `thumbnailSrc` |
+| `description` | `caption` |
+| default import | named `PicGallery` import (default import remains available) |
+| `options.picsPerRow` | `columns` |
+| `options.rowHeight` | `rowHeight` |
+| `topCustomContent` / `bottomCustomContent` | `renderActions`, `renderCaption`, or `renderControls` |
+| `externalLightbox` / `setExtLightboxChildren` | controlled `Lightbox` |
+| `customLoadComponent` | CSS overrides or your own `Gallery` composition |
+| `react-zoom-pan-pinch` | removed dependency; native lightbox pinch zoom |
+
+Before:
+
+```tsx
+<PicGallery
+  imgList={[{ fullSrc, thumbnailSrc }]}
+  options={{ picsPerRow: 4 }}
+/>
+```
+
+After:
+
+```tsx
+<PicGallery
+  images={[{ src: fullSrc, thumbnailSrc, alt: 'Description' }]}
+  columns={4}
+/>
+```
+
+The package is ESM-only in v2. Import `styles.css` explicitly in applications that do not automatically process CSS imported by JavaScript.
+
+## Development
+
+Node 22.12+ is required for the Astro documentation workflow.
+
+```bash
+npm install
+npm run dev
+npm run dev:library
+npm test
+npm run typecheck
+npm run build
+npm run build:docs
+npm pack --dry-run
+```
+
+`npm run dev` starts the Astro playground and docs site. `npm run dev:library` starts the standalone Vite library demo. Publishing runs the package build automatically through `prepack`.
 
 ## License
 

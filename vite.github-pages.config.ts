@@ -1,7 +1,9 @@
 import { defineConfig } from 'vite'
-// https://vitejs.dev/config/
+import react from '@vitejs/plugin-react'
+
 export default defineConfig({
-  base: 'https://marcelrsoub.github.io/react-pic-gallery/',
+  plugins: [react()],
+  base: '/react-pic-gallery/',
   build: {
     outDir: 'build'
   }

@@ -1,0 +1,86 @@
+---
+title: Quick start
+description: Install react-pic-gallery and render your first responsive gallery.
+---
+
+import { TabItem, Tabs } from '@astrojs/starlight/components'
+
+## Install
+
+<Tabs>
+  <TabItem label='npm'>
+
+  ```bash
+  npm install react-pic-gallery
+  ```
+
+  </TabItem>
+  <TabItem label='pnpm'>
+
+  ```bash
+  pnpm add react-pic-gallery
+  ```
+
+  </TabItem>
+  <TabItem label='Yarn'>
+
+  ```bash
+  yarn add react-pic-gallery
+  ```
+
+  </TabItem>
+  <TabItem label='Bun'>
+
+  ```bash
+  bun add react-pic-gallery
+  ```
+
+  </TabItem>
+</Tabs>
+
+React 18.3+ and React 19 are supported.
+
+## Create image data
+
+`src` and `alt` are required. Add `thumbnailSrc` when the thumbnail should be a smaller or separately optimized asset.
+
+```tsx
+import type { GalleryImage } from 'react-pic-gallery'
+
+const images: GalleryImage[] = [
+  {
+    src: 'https://example.com/mountain-large.jpg',
+    thumbnailSrc: 'https://example.com/mountain-thumb.jpg',
+    alt: 'A mountain reflected in a lake',
+    caption: 'Morning at the lake'
+  }
+]
+```
+
+Image objects can include application-specific fields. Use a generic image type when custom renderers need those fields.
+
+## Render the default gallery
+
+```tsx
+import { PicGallery } from 'react-pic-gallery'
+import 'react-pic-gallery/styles.css'
+
+export function App() {
+  return <PicGallery images={images} />
+}
+```
+
+The default gallery provides:
+
+- Responsive thumbnails with native lazy loading.
+- An image-focused lightbox with captions and image count.
+- Previous/next controls, Escape-to-close, and arrow-key navigation.
+- Focus restoration, focus containment, safe-area spacing, and reduced-motion support.
+
+## Choose a grid shape
+
+Use `columns` for a fixed number of columns or leave it unset for responsive auto-fill. `rowHeight` accepts CSS values and numeric pixel values.
+
+```tsx
+<PicGallery images={images} columns={4} rowHeight='10rem' />
+```

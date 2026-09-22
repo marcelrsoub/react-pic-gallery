@@ -1,31 +1,31 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
-import dts from 'vite-plugin-dts';
+import dts from 'vite-plugin-dts'
 
-// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(),
+  plugins: [
+    react(),
     dts({
-        insertTypesEntry: true,
-    }),],
+      entryRoot: 'src/lib',
+      include: ['src/lib'],
+      exclude: ['src/lib/**/__tests__/**'],
+      insertTypesEntry: true
+    })
+  ],
   build: {
     lib: {
-      entry: path.resolve(__dirname, 'src/lib/main.tsx'),
+      entry: path.resolve('src/lib/index.ts'),
       name: 'react-pic-gallery',
-      fileName: (format) => `react-pic-gallery.${format}.js`
+      formats: ['es'],
+      fileName: () => 'react-pic-gallery.js'
     },
     rollupOptions: {
-      // make sure to externalize deps that shouldn't be bundled
-      // into your library
-      external: ['react'],
+      external: ['react', 'react-dom', 'react/jsx-runtime'],
       output: {
-        // Provide global variables to use in the UMD build
-        // for externalized deps
-        globals: {
-          vue: 'React'
-        }
+        assetFileNames: 'styles.css'
       }
-    }
+    },
+    cssCodeSplit: false
   }
 })

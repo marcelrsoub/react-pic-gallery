@@ -1,169 +1,257 @@
-import React from 'react'
-import PicGallery from './lib/main'
-import { Options } from './lib/models/models'
-import SyntaxHighlighter from 'react-syntax-highlighter'
+import { useState } from 'react'
+import { PicGallery, type GalleryImage, type LightboxContext } from './lib'
 import './App.css'
 
-import icon from './favicon.svg'
-
-const listOfImages = [
+const images: GalleryImage[] = [
   {
-    thumbnailSrc: 'https://picsum.photos/id/237/200/300',
-    fullSrc: 'https://picsum.photos/id/237/800/600'
+    id: 'coast',
+    src: 'https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1800&q=85',
+    thumbnailSrc:
+      'https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=700&q=80',
+    alt: 'A calm blue coast under a bright sky',
+    caption: 'Blue hour on the coast'
   },
   {
-    thumbnailSrc: 'https://picsum.photos/id/154/200/150',
-    fullSrc: 'https://picsum.photos/id/154/200/150'
+    id: 'forest',
+    src: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1800&q=85',
+    thumbnailSrc:
+      'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=700&q=80',
+    alt: 'Sunlight through a dense green forest',
+    caption: 'A quiet path through the forest'
   },
   {
-    thumbnailSrc: 'https://picsum.photos/id/385/300/200',
-    fullSrc: 'https://picsum.photos/id/385/800/600'
+    id: 'mountain',
+    src: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1800&q=85',
+    thumbnailSrc:
+      'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=700&q=80',
+    alt: 'Snow-capped mountains reflected in a lake',
+    caption: 'Morning light in the mountains'
   },
   {
-    thumbnailSrc: 'https://picsum.photos/id/25/100/250',
-    fullSrc: 'https://picsum.photos/id/25/100/250'
+    id: 'desert',
+    src: 'https://images.unsplash.com/photo-1509316785289-025f5b846b35?auto=format&fit=crop&w=1800&q=85',
+    thumbnailSrc:
+      'https://images.unsplash.com/photo-1509316785289-025f5b846b35?auto=format&fit=crop&w=700&q=80',
+    alt: 'Layered desert dunes under a pale sky',
+    caption: 'Wind-shaped dunes'
   },
   {
-    thumbnailSrc: 'https://picsum.photos/id/35/120/200',
-    fullSrc: 'https://picsum.photos/id/35/800/600'
+    id: 'lake',
+    src: 'https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1800&q=85',
+    thumbnailSrc:
+      'https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=700&q=80',
+    alt: 'A mountain lake surrounded by green hills',
+    caption: 'Still water, early morning'
   },
   {
-    thumbnailSrc: 'https://picsum.photos/id/84/280/185',
-    fullSrc: 'https://picsum.photos/id/84/800/600'
+    id: 'cliffs',
+    src: 'https://images.unsplash.com/photo-1464278533981-50106e6176b1?auto=format&fit=crop&w=1800&q=85',
+    thumbnailSrc:
+      'https://images.unsplash.com/photo-1464278533981-50106e6176b1?auto=format&fit=crop&w=700&q=80',
+    alt: 'Dark cliffs beside a deep blue sea',
+    caption: 'Where the land meets the sea'
   },
   {
-    thumbnailSrc: 'https://picsum.photos/id/185/200/300',
-    fullSrc: 'https://picsum.photos/id/185/800/600'
+    id: 'canyon',
+    src: 'https://images.unsplash.com/photo-1474044159687-1ee9f3a51722?auto=format&fit=crop&w=1800&q=85',
+    thumbnailSrc:
+      'https://images.unsplash.com/photo-1474044159687-1ee9f3a51722?auto=format&fit=crop&w=700&q=80',
+    alt: 'Red canyon walls beneath a wide sky',
+    caption: 'Layers of red rock'
   },
   {
-    thumbnailSrc: 'https://picsum.photos/id/55/200/150',
-    fullSrc: 'https://picsum.photos/id/55/800/600'
+    id: 'waterfall',
+    src: 'https://images.unsplash.com/photo-1433086966358-54859d0ed716?auto=format&fit=crop&w=1800&q=85',
+    thumbnailSrc:
+      'https://images.unsplash.com/photo-1433086966358-54859d0ed716?auto=format&fit=crop&w=700&q=80',
+    alt: 'A waterfall flowing through a green valley',
+    caption: 'A clear mountain waterfall'
   },
   {
-    thumbnailSrc: 'https://picsum.photos/id/852/300/200',
-    fullSrc: 'https://picsum.photos/id/852/800/600'
+    id: 'meadow',
+    src: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1800&q=85',
+    thumbnailSrc:
+      'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=700&q=80',
+    alt: 'A grassy meadow beneath distant mountains',
+    caption: 'Open ground beneath the peaks'
   }
 ]
 
-const External = () => {
-  const [lightboxNode, setLightboxNode] = React.useState<
-    JSX.Element | undefined
-  >(<></>)
+const basicSnippet = `import { PicGallery } from 'react-pic-gallery'
+import 'react-pic-gallery/styles.css'
 
-  const options2 = {
-    hidePagination: true,
-    externalLightbox: true,
-    picsPerRow: 4
+<PicGallery images={images} />`
+
+const actionsSnippet = `<PicGallery
+  images={images}
+  renderActions={({ image }) => (
+    <button type="button" onClick={() => save(image)}>
+      Save
+    </button>
+  )}
+/>`
+
+const controlsSnippet = `<PicGallery
+  images={images}
+  renderControls={({ close, next, previous }) => (
+    <div>
+      <button type="button" onClick={previous}>Back</button>
+      <button type="button" onClick={next}>Next</button>
+      <button type="button" onClick={close}>Close</button>
+    </div>
+  )}
+/>`
+
+function CodeBlock({ code }: { code: string }) {
+  const [copied, setCopied] = useState(false)
+  const canCopy = typeof navigator !== 'undefined' && !!navigator.clipboard
+
+  const copyCode = async () => {
+    if (!canCopy) return
+
+    await navigator.clipboard.writeText(code)
+    setCopied(true)
+    window.setTimeout(() => setCopied(false), 1400)
   }
+
   return (
-    <>
-      <div children={lightboxNode}></div>
-      <PicGallery
-        imgList={listOfImages}
-        options={options2}
-        setExtLightboxChildren={(children) => setLightboxNode(children)}
-      />
-    </>
+    <div className='code-block'>
+      <div className='code-block__topline'>
+        <span className='code-block__language'>tsx</span>
+        <button type='button' onClick={copyCode} disabled={!canCopy}>
+          {copied ? 'Copied' : 'Copy'}
+        </button>
+      </div>
+      <pre><code>{code}</code></pre>
+    </div>
   )
 }
 
-const App = () => {
-  const options: Options = {
-    // customLoadComponent: () => <h3>Loading</h3>
-    // hidePagination: false,
-    // externalLightbox: true,
-  }
+function SaveAction({ image }: LightboxContext<GalleryImage>) {
+  const [saved, setSaved] = useState(false)
 
   return (
-    <>
-      <div className='card'>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            gap: '1rem',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}
-        >
-          <img src={icon} style={{ height: '2rem', marginBottom: -10 }} />
-          <h1>react-pic-gallery</h1>
-        </div>
-        <hr />
-        <p>Image gallery and lightbox</p>
-        <SyntaxHighlighter language='tsx' showLineNumbers>
-          {`import React from 'react'
-import PicGallery from 'react-pic-gallery'
-
-const listOfImages = [
-  {
-    thumbnailSrc: 'https://picsum.photos/id/237/200/300',
-    fullSrc: 'https://picsum.photos/id/237/800/600'
-  },
-  {
-    thumbnailSrc: 'https://picsum.photos/id/154/200/150',
-    fullSrc: 'https://picsum.photos/id/154/200/150'
-  }
-]
-
-const App = () => {
-  return (
-      <PicGallery
-        imgList={listOfImages}
-      />
+    <button
+      className='demo-action'
+      type='button'
+      onClick={() => setSaved((current) => !current)}
+      aria-label={`${saved ? 'Remove' : 'Save'} ${image.alt}`}
+    >
+      {saved ? 'Saved' : 'Save'}
+    </button>
   )
-}`}
-        </SyntaxHighlighter>
+}
 
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center'
-          }}
-        >
-          <div style={{ maxWidth: 300 }}>
-            <PicGallery imgList={listOfImages} options={options} />
+function CustomControls({
+  close,
+  next,
+  previous,
+  index,
+  count
+}: LightboxContext<GalleryImage>) {
+  return (
+    <div className='demo-custom-controls'>
+      <span>{index + 1} / {count}</span>
+      <div>
+        <button type='button' onClick={previous} aria-label='Previous image'>Back</button>
+        <button type='button' onClick={next} aria-label='Next image'>Next</button>
+        <button type='button' onClick={close}>Close</button>
+      </div>
+    </div>
+  )
+}
+
+function ExampleHeader({ title, description }: {
+  title: string
+  description: string
+}) {
+  return (
+    <div className='example-header'>
+      <div>
+        <h2>{title}</h2>
+        <p>{description}</p>
+      </div>
+    </div>
+  )
+}
+
+export default function App() {
+  return (
+    <main className='playground'>
+      <header className='site-header'>
+        <a className='brand' href='#top'>
+          react-pic-gallery <span>v2</span>
+        </a>
+        <nav aria-label='Primary navigation'>
+          <a href='#examples'>Examples</a>
+          <a href='./docs/'>Docs</a>
+          <a href='https://github.com/marcelrsoub/react-pic-gallery'>GitHub</a>
+        </nav>
+      </header>
+
+      <section className='intro' id='top'>
+        <h1>Simple by default.<br /><em>Yours when needed.</em></h1>
+        <p className='intro-copy'>
+          A small, runtime-dependency-free image viewer with a clean API for adding your own UI.
+        </p>
+      </section>
+
+      <section className='demo-section demo-section--hero' id='examples'>
+        <h2>Default gallery</h2>
+        <div className='gallery-frame gallery-frame--hero'>
+          <PicGallery images={images} />
+        </div>
+        <CodeBlock code={basicSnippet} />
+      </section>
+
+      <section className='install-section' id='install'>
+        <div>
+          <h2>Install</h2>
+          <p>Bring the gallery into any React 18.3+ or React 19 project.</p>
+        </div>
+        <CodeBlock code='npm install react-pic-gallery' />
+        <a href='./docs/getting-started/'>Using pnpm, Yarn, or Bun? See every install option -&gt;</a>
+      </section>
+
+      <div className='example-grid'>
+        <section className='demo-section example'>
+          <ExampleHeader
+            title='Add an action'
+            description='Add buttons without rebuilding the lightbox.'
+          />
+          <div className='gallery-frame'>
+            <PicGallery
+              images={images.slice(1, 4)}
+              renderActions={(context) => <SaveAction {...context} />}
+            />
           </div>
-        </div>
-      </div>
-      <div className='card'>
-        <h2>External Lightbox</h2>
-        <p>
-          If your PicGallery's lightbox is showing up inside an element instead
-          of taking up the full screen, you can use the External Lightbox
-          option. This option uses an external div, as shown below.
-        </p>
-        <SyntaxHighlighter language='tsx' showLineNumbers>
-          {`const App = () => {
-  const [lightboxNode, setLightboxNode] = React.useState<
-    JSX.Element | undefined
-  >(<></>)
+          <CodeBlock code={actionsSnippet} />
+        </section>
 
-  const options2 = {
-    hidePagination: true,
-    externalLightbox: true,
-    picsPerRow: 4
-  }
-  return (
-    <>
-      <div children={lightboxNode}></div>
-      <PicGallery
-        imgList={listOfImages}
-        options={options2}
-        setExtLightboxChildren={(children) => setLightboxNode(children)}
-      />
-    </>
-  )
-}`}
-        </SyntaxHighlighter>
-        <p>
-          Using <b>External Lightbox</b> brings a performance drop.
-        </p>
-        <External />
+        <section className='demo-section example'>
+          <ExampleHeader
+            title='Own the controls'
+            description='Replace the toolbar while keeping the viewer behavior.'
+          />
+          <div className='gallery-frame'>
+            <PicGallery
+              images={images.slice(2, 8)}
+              renderControls={(context) => <CustomControls {...context} />}
+            />
+          </div>
+          <CodeBlock code={controlsSnippet} />
+        </section>
       </div>
-    </>
+
+      <section className='docs-strip' id='docs'>
+        <p>API reference, theming, and the complete v1 to v2 migration guide.</p>
+        <a href='./docs/'>Read the docs <span aria-hidden='true'>-&gt;</span></a>
+      </section>
+
+      <footer className='site-footer'>
+        <span>MIT license</span>
+        <span>Made for React 18.3+ and 19</span>
+      </footer>
+    </main>
   )
 }
-
-export default App
