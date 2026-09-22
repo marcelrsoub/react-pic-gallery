@@ -36,7 +36,7 @@
     "dev:docs": "astro dev --config docs-site/astro.config.mjs",
     "build:docs": "astro build --config docs-site/astro.config.mjs",
     "preview:docs": "astro preview --config docs-site/astro.config.mjs",
-    "github-pages": "npm run build:docs && gh-pages -d build",
+    "github-pages": "npm run build:docs && gh-pages -d build --dotfiles",
     "prepack": "npm run build"
   },
   "devDependencies": {
