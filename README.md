@@ -6,6 +6,8 @@ Small, accessible React image gallery and lightbox with a polished default UI an
 
 [Live playground and docs](https://marcelrsoub.github.io/react-pic-gallery/)
 
+![react-pic-gallery displaying a three-column gallery of landscape photos](screenshot.png)
+
 ## Install
 
 ```bash
