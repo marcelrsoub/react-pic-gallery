@@ -3,7 +3,7 @@
 Small, accessible React image gallery and lightbox with a polished default UI and typed escape hatches for custom controls.
 
 [![NPM](https://img.shields.io/npm/v/react-pic-gallery.svg)](https://www.npmjs.com/package/react-pic-gallery)
-[![Minified + gzip size](https://badgen.net/static/minified%20%2B%20gzip/3.46%20KB/blue)](https://bundlephobia.com/package/react-pic-gallery@2.0.1)
+[![Minified + gzip size](https://badgen.net/static/minified%20%2B%20gzip/7.7%20KB/blue)](https://bundlephobia.com/package/react-pic-gallery@2.0.2)
 
 [Live playground and docs](https://marcelrsoub.github.io/react-pic-gallery/)
 
@@ -23,16 +23,17 @@ bun add react-pic-gallery
 
 React 18.3+ and React 19 are supported. The [Quick start docs](https://marcelrsoub.github.io/react-pic-gallery/docs/getting-started/) provide these commands in a package-manager switcher.
 
-The package is intentionally lightweight: it has no runtime dependencies, React is a peer dependency, and the built JavaScript and CSS together are about **5.9 KB gzipped** (4.0 KB JS + 1.9 KB CSS).
+The package is intentionally lightweight: it has no runtime dependencies and React is a peer dependency. The built JavaScript and CSS together are about **7.7 KB gzipped** (5.55 KB JS + 2.16 KB CSS).
 
 ## Why react-pic-gallery
 
-- **Tiny by design** — no runtime dependencies, no context providers, no polyfills; ~5.9 KB gzipped total.
+- **Tiny by design** — no runtime dependencies, no context providers, no polyfills; ~7.7 KB gzipped total.
 - **Simple by default** — one component, one stylesheet import, sensible accessible defaults.
 - **Yours when needed** — typed `renderActions`, `renderCaption`, and `renderControls` callbacks let you add custom UI without rebuilding the lightbox; extra fields on your image objects flow through fully typed.
 - **Accessible** — native modal `<dialog>`, focus containment and restoration, Escape to close, screen-reader announcements, `prefers-reduced-motion` support.
 - **Keyboard and touch friendly** — arrow-key navigation in the grid (roving tabindex) and in the lightbox, Enter to open, swipe navigation on touch devices.
 - **Themeable** — namespaced classes and CSS variables (`--gallery-accent`, `--gallery-overlay`, `--gallery-motion`, …).
+- **Three layouts** — choose a uniform grid, proportional justified rows, or an editorial mosaic.
 
 ## Quick start
 
@@ -55,6 +56,21 @@ export function App() {
 ```
 
 `src` and `alt` are required. `id`, `thumbnailSrc`, `caption`, `width`, and `height` are optional. Image objects can include application-specific fields; those fields remain available in renderer callbacks when using TypeScript generics.
+
+## Gallery layouts
+
+The default is the existing three-column grid. Choose another layout with `layout`:
+
+```tsx
+<PicGallery images={images} layout='justified' />
+<PicGallery images={images} layout='mosaic' />
+```
+
+- **`grid`** — consistent tiles with a configurable fixed column count.
+- **`justified`** — proportional photos arranged in aligned rows; the final row stays left-aligned.
+- **`mosaic`** — alternating featured photos and smaller supporting tiles.
+
+Image `width` and `height` are recommended, but optional. Justified rows use them when supplied and fall back to 3:2 when either dimension is missing or invalid. Accurate dimensions give the most faithful layout and help reserve space while images load. `rowHeight` sets the tile height for the grid, the base row height for the mosaic, and the target row height for justified galleries. `columns` applies to the grid only.
 
 ## Custom UI
 
@@ -119,7 +135,7 @@ The lightbox uses the native modal `<dialog>` element and includes:
 - Instagram-Stories-style edge taps on touch screens: tap the right edge of the image to go forward, the left edge to go back (navigation buttons are hidden on small screens where tap zones take over).
 - Reduced-motion support, safe-area padding, rounded image surfaces, and animated transitions.
 
-The thumbnail grid supports arrow-key navigation with a roving tabindex: Tab once to enter the grid, then move with Arrow keys (Left/Right step, Up/Down jump a row, Home/End jump to the ends), Enter to open, and focus is restored to the same tile when the lightbox closes.
+Gallery tiles use roving focus. Left/Right follow image order; in the grid, Up/Down jump a row, and in justified and mosaic layouts they follow the nearest tile position. Home/End move to the first/last image. Enter opens the lightbox, and focus returns to the same tile when it closes.
 
 Native modal behavior targets modern browsers: Chrome 37+, Edge 79+, Firefox 98+, and Safari/iOS 15.4+. The package does not ship a dialog polyfill.
 
@@ -137,7 +153,7 @@ The stylesheet uses namespaced classes and CSS variables. Import it once, then o
 }
 ```
 
-The default gallery uses three columns. Pass `columns` for a different fixed count; `rowHeight` accepts CSS height values or numeric pixels.
+The default grid uses three columns. Pass `columns` for a different fixed count. `rowHeight` accepts CSS height values or numeric pixels; its meaning depends on the selected layout as described above.
 
 ## API
 
@@ -146,15 +162,16 @@ The default gallery uses three columns. Pass `columns` for a different fixed cou
 | Prop | Type | Description |
 | --- | --- | --- |
 | `images` | `readonly GalleryImage[]` | Images to display. |
-| `columns` | `number` | Optional fixed column count. The default is three columns. |
-| `rowHeight` | `CSSProperties['height']` | Thumbnail height. |
+| `layout` | `'grid' \| 'justified' \| 'mosaic'` | Defaults to `'grid'`. |
+| `columns` | `number` | Optional fixed grid column count. Defaults to three; only applies to `grid`. |
+| `rowHeight` | `CSSProperties['height']` | Grid tile height, mosaic base row height, or justified target row height. |
 | `renderActions` | `LightboxRenderer` | Adds controls to the default toolbar. |
 | `renderCaption` | `LightboxRenderer` | Replaces the current caption. |
 | `renderControls` | `LightboxRenderer` | Replaces the complete default control layer. |
 | `showCounter` | `boolean` | Shows the current image count. Defaults to `true`. |
 | `showNavigation` | `boolean` | Shows previous/next controls. Defaults to `true`. |
 
-`Gallery` accepts `images`, `onImageClick`, `columns`, `rowHeight`, `className`, and `style`.
+`Gallery` accepts `images`, `onImageClick`, `layout`, `columns`, `rowHeight`, `className`, and `style`.
 
 `Lightbox` accepts `images`, controlled `index`, `onIndexChange`, the renderer props, `showCounter`, `showNavigation`, and `className`.
 

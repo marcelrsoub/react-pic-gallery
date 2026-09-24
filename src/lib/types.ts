@@ -10,6 +10,8 @@ export type GalleryImage = {
   height?: number
 }
 
+export type GalleryLayout = 'grid' | 'justified' | 'mosaic'
+
 export type LightboxContext<T extends GalleryImage = GalleryImage> = {
   image: T
   index: number
@@ -28,6 +30,7 @@ export type LightboxRenderer<T extends GalleryImage = GalleryImage> = (
 export type GalleryProps<T extends GalleryImage = GalleryImage> = {
   images: readonly T[]
   onImageClick?: (index: number) => void
+  layout?: GalleryLayout
   columns?: number
   rowHeight?: CSSProperties['height']
   className?: string
@@ -48,6 +51,7 @@ export type LightboxProps<T extends GalleryImage = GalleryImage> = {
 
 export type PicGalleryProps<T extends GalleryImage = GalleryImage> = {
   images: readonly T[]
+  layout?: GalleryLayout
   columns?: number
   rowHeight?: CSSProperties['height']
   className?: string

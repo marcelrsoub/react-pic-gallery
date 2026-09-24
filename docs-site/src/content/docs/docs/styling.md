@@ -26,7 +26,7 @@ Useful variables include:
 | --- | --- |
 | `--gallery-gap` | Space between gallery tiles. |
 | `--gallery-radius` | Tile corner radius. |
-| `--gallery-row-height` | Thumbnail height when `rowHeight` is not supplied. |
+| `--gallery-row-height` | Tile/base mosaic row height, or target justified-row height, when `rowHeight` is not supplied. |
 | `--gallery-accent` | Focus ring, loader, and interactive accent color. |
 | `--gallery-overlay` | Lightbox backdrop color. |
 | `--gallery-control-size` | Close and navigation target size. |
@@ -37,6 +37,8 @@ Useful variables include:
 All classes begin with `react-pic-gallery__`. The main extension points are:
 
 - `.react-pic-gallery__grid`
+- `.react-pic-gallery__gallery--justified` and `.react-pic-gallery__tile--justified`
+- `.react-pic-gallery__gallery--mosaic` and `.react-pic-gallery__mosaic-group`
 - `.react-pic-gallery__tile`
 - `.react-pic-gallery__lightbox`
 - `.react-pic-gallery__toolbar`

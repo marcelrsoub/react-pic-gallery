@@ -5,6 +5,7 @@ import type { GalleryImage, PicGalleryProps } from './types'
 
 export function PicGallery<T extends GalleryImage>({
   images,
+  layout,
   columns,
   rowHeight,
   className,
@@ -22,6 +23,7 @@ export function PicGallery<T extends GalleryImage>({
     <div className={`react-pic-gallery ${className ?? ''}`.trim()} style={style}>
       <Gallery
         images={images}
+        layout={layout}
         columns={columns}
         rowHeight={rowHeight}
         className={galleryClassName}

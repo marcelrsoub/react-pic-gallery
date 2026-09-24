@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.0.2] (2026-09-24)
+
+This patch adds proportional and editorial gallery layouts while preserving the default grid and lightweight, dependency-free package.
+
+### Added
+
+- `layout='justified'` for responsive, proportion-preserving rows and `layout='mosaic'` for alternating featured-photo compositions.
+- Optional image-dimension support for justified rows, with a documented 3:2 fallback.
+
+### Fixed
+
+- Preserved image reading order in both mosaic patterns and improved spatial arrow-key movement between featured and supporting tiles.
+- Kept justified gallery buttons in a stable DOM order when container sizes reflow rows.
+
 ## [2.0.1] (2026-09-22)
 
 This patch release polishes the lightbox, adds keyboard grid navigation, and refreshes the demo site.

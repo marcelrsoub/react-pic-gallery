@@ -1,5 +1,10 @@
 import { useState } from 'react'
-import { PicGallery, type GalleryImage, type LightboxContext } from './lib'
+import {
+  PicGallery,
+  type GalleryImage,
+  type GalleryLayout,
+  type LightboxContext
+} from './lib'
 import './App.css'
 
 type ExifImage = GalleryImage & {
@@ -21,6 +26,8 @@ const images: ExifImage[] = [
     thumbnailSrc:
       'https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=700&q=80',
     alt: 'A calm blue coast under a bright sky',
+    width: 1800,
+    height: 1200,
     caption: 'Blue hour on the coast'
   },
   {
@@ -29,6 +36,8 @@ const images: ExifImage[] = [
     thumbnailSrc:
       'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=700&q=80',
     alt: 'Sunlight through a dense green forest',
+    width: 1200,
+    height: 1800,
     caption: 'A quiet path through the forest'
   },
   {
@@ -37,6 +46,8 @@ const images: ExifImage[] = [
     thumbnailSrc:
       'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=700&q=80',
     alt: 'Snow-capped mountains reflected in a lake',
+    width: 1800,
+    height: 1200,
     caption: 'Morning light in the mountains'
   },
   {
@@ -45,6 +56,8 @@ const images: ExifImage[] = [
     thumbnailSrc:
       'https://images.unsplash.com/photo-1509316785289-025f5b846b35?auto=format&fit=crop&w=700&q=80',
     alt: 'Layered desert dunes under a pale sky',
+    width: 1200,
+    height: 1800,
     caption: 'Wind-shaped dunes'
   },
   {
@@ -53,6 +66,8 @@ const images: ExifImage[] = [
     thumbnailSrc:
       'https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=700&q=80',
     alt: 'A mountain lake surrounded by green hills',
+    width: 1800,
+    height: 1200,
     caption: 'Still water, early morning'
   },
   {
@@ -61,6 +76,8 @@ const images: ExifImage[] = [
     thumbnailSrc:
       'https://images.unsplash.com/photo-1464278533981-50106e6176b1?auto=format&fit=crop&w=700&q=80',
     alt: 'Dark cliffs beside a deep blue sea',
+    width: 1800,
+    height: 1200,
     caption: 'Where the land meets the sea'
   },
   {
@@ -69,6 +86,8 @@ const images: ExifImage[] = [
     thumbnailSrc:
       'https://images.unsplash.com/photo-1474044159687-1ee9f3a51722?auto=format&fit=crop&w=700&q=80',
     alt: 'Red canyon walls beneath a wide sky',
+    width: 1200,
+    height: 1800,
     caption: 'Layers of red rock'
   },
   {
@@ -77,6 +96,8 @@ const images: ExifImage[] = [
     thumbnailSrc:
       'https://images.unsplash.com/photo-1433086966358-54859d0ed716?auto=format&fit=crop&w=700&q=80',
     alt: 'A waterfall flowing through a green valley',
+    width: 1200,
+    height: 1800,
     caption: 'A clear mountain waterfall'
   },
   {
@@ -85,6 +106,8 @@ const images: ExifImage[] = [
     thumbnailSrc:
       'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=700&q=80',
     alt: 'A grassy meadow beneath distant mountains',
+    width: 1800,
+    height: 1200,
     caption: 'Open ground beneath the peaks'
   }
 ]
@@ -287,6 +310,13 @@ function ExampleHeader({ title, description }: {
 }
 
 export default function App() {
+  const [layout, setLayout] = useState<GalleryLayout>('grid')
+  const layouts: Array<{ value: GalleryLayout; label: string }> = [
+    { value: 'grid', label: 'Grid' },
+    { value: 'justified', label: 'Justified' },
+    { value: 'mosaic', label: 'Mosaic' }
+  ]
+
   return (
     <main className='playground'>
       <header className='site-header'>
@@ -307,7 +337,7 @@ export default function App() {
         </p>
         <ul className='feature-strip' aria-label='Key features'>
           <li className='feature-strip__stat'>
-            <strong>5.9 kB</strong>
+            <strong>7.7 kB</strong>
             <span>gzipped, JS + CSS</span>
           </li>
           <li className='feature-strip__stat'>
@@ -324,10 +354,26 @@ export default function App() {
 
       <section className='demo-section demo-section--hero' id='examples'>
         <h2>Default gallery</h2>
-        <div className='gallery-frame gallery-frame--hero'>
-          <PicGallery images={images} />
+        <div className='layout-switcher' role='group' aria-label='Gallery layout'>
+          {layouts.map((option) => (
+            <button
+              type='button'
+              key={option.value}
+              aria-pressed={layout === option.value}
+              onClick={() => setLayout(option.value)}
+            >
+              {option.label}
+            </button>
+          ))}
         </div>
-        <CodeBlock code={basicSnippet} />
+        <div className='gallery-frame gallery-frame--hero'>
+          <PicGallery images={images} layout={layout} />
+        </div>
+        <CodeBlock
+          code={layout === 'grid'
+            ? basicSnippet
+            : `<PicGallery images={images} layout="${layout}" />`}
+        />
       </section>
 
       <section className='install-section' id='install'>

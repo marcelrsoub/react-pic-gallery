@@ -14,22 +14,91 @@
   min-width: 0;
 }
 
+.react-pic-gallery__gallery {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+}
+
 .react-pic-gallery__grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--gallery-gap);
+  gap: var(--gallery-gap, 0.75rem);
   width: 100%;
+}
+
+.react-pic-gallery__gallery--justified {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: var(--gallery-gap, 0.75rem);
+}
+
+.react-pic-gallery__gallery--justified > .react-pic-gallery__tile--justified {
+  flex: 0 0 auto;
+  height: auto;
+}
+
+.react-pic-gallery__row-height-probe {
+  position: absolute;
+  width: var(--gallery-gap, 0.75rem);
+  height: var(--gallery-row-height, 12rem);
+  overflow: hidden;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.react-pic-gallery__gallery--mosaic {
+  display: grid;
+  gap: var(--gallery-gap, 0.75rem);
+}
+
+.react-pic-gallery__mosaic-group {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  grid-template-rows: repeat(2, minmax(0, var(--gallery-row-height, 12rem)));
+  gap: var(--gallery-gap, 0.75rem);
+  min-width: 0;
+}
+
+.react-pic-gallery__mosaic-group--top {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.react-pic-gallery__mosaic-group .react-pic-gallery__tile--mosaic {
+  min-width: 0;
+  height: auto;
+}
+
+.react-pic-gallery__mosaic-group--left .react-pic-gallery__tile--mosaic-featured {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+}
+
+.react-pic-gallery__mosaic-group--top .react-pic-gallery__tile--mosaic-featured {
+  grid-column: 1 / -1;
+  grid-row: 1;
+}
+
+.react-pic-gallery__mosaic-group--count-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: minmax(0, var(--gallery-row-height, 12rem));
+}
+
+.react-pic-gallery__mosaic-group--count-1 {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, var(--gallery-row-height, 12rem));
 }
 
 .react-pic-gallery__tile {
   position: relative;
   min-width: 0;
-  height: var(--gallery-row-height);
+  height: var(--gallery-row-height, 12rem);
   padding: 0;
   overflow: hidden;
   cursor: pointer;
   border: 0;
-  border-radius: var(--gallery-radius);
+  border-radius: var(--gallery-radius, 1rem);
   background: #e2e8f0;
   isolation: isolate;
 }
@@ -41,7 +110,7 @@
   pointer-events: none;
   border: 2px solid transparent;
   border-radius: inherit;
-  transition: border-color var(--gallery-motion) ease;
+  transition: border-color var(--gallery-motion, 180ms) ease;
 }
 
 .react-pic-gallery__tile:hover .react-pic-gallery__image-element,
@@ -50,12 +119,12 @@
 }
 
 .react-pic-gallery__tile:focus-visible {
-  outline: 3px solid var(--gallery-accent);
+  outline: 3px solid var(--gallery-accent, #9ef01a);
   outline-offset: 3px;
 }
 
 .react-pic-gallery__tile:focus-visible::after {
-  border-color: var(--gallery-accent);
+  border-color: var(--gallery-accent, #9ef01a);
 }
 
 .react-pic-gallery__tile:disabled {
@@ -75,7 +144,7 @@
   display: block;
   width: 100%;
   height: 100%;
-  transition: transform var(--gallery-motion) ease, opacity var(--gallery-motion) ease;
+  transition: transform var(--gallery-motion, 180ms) ease, opacity var(--gallery-motion, 180ms) ease;
 }
 
 .react-pic-gallery__image-loader,
@@ -91,7 +160,7 @@
   height: 1.5rem;
   content: '';
   border: 2px solid rgba(15, 23, 42, 0.16);
-  border-top-color: var(--gallery-accent);
+  border-top-color: var(--gallery-accent, #9ef01a);
   border-radius: 50%;
   animation: react-pic-gallery-spin 700ms linear infinite;
 }
@@ -410,6 +479,16 @@ dialog.react-pic-gallery__lightbox::backdrop {
   :where(dialog.react-pic-gallery__lightbox) {
     padding: max(0.375rem, env(safe-area-inset-top)) max(0.375rem, env(safe-area-inset-right))
       max(0.375rem, env(safe-area-inset-bottom)) max(0.375rem, env(safe-area-inset-left));
+  }
+
+  .react-pic-gallery__mosaic-group--count-3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: minmax(8rem, var(--gallery-row-height, 12rem)) minmax(5rem, 0.65fr);
+  }
+
+  .react-pic-gallery__mosaic-group--count-3 .react-pic-gallery__tile--mosaic-featured {
+    grid-column: 1 / -1;
+    grid-row: 1;
   }
 
   .react-pic-gallery__lightbox-content {

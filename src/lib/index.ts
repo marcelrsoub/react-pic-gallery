@@ -5,6 +5,7 @@ export { Lightbox } from './Lightbox'
 export { PicGallery } from './PicGallery'
 export type {
   GalleryImage,
+  GalleryLayout,
   GalleryProps,
   LightboxContext,
   LightboxProps,

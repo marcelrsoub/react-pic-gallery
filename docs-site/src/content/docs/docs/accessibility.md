@@ -9,6 +9,7 @@ Accessibility is part of the default component rather than an optional wrapper.
 
 - Every image requires useful `alt` text.
 - Each thumbnail is a keyboard-focusable button.
+- Layouts preserve source order and a single roving tab stop; irregular rows and mosaics use tile position for Up/Down movement.
 - Controls have accessible labels independent of their visual icons.
 - Loading and failed-image states expose status information.
 

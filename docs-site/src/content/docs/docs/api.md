@@ -12,6 +12,7 @@ type GalleryImage = {
   thumbnailSrc?: string
   alt: string
   caption?: ReactNode
+  /** Recommended for justified layouts; if omitted, they use a 3:2 ratio. */
   width?: number
   height?: number
 }
@@ -22,10 +23,11 @@ type GalleryImage = {
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `images` | `readonly T[]` | required | Images to display. |
-| `columns` | `number` | responsive | Fixed column count. |
-| `rowHeight` | `CSSProperties['height']` | CSS default | Thumbnail height. Numbers are pixels. |
+| `layout` | `'grid' \| 'justified' \| 'mosaic'` | `'grid'` | Gallery presentation. |
+| `columns` | `number` | `3` | Fixed grid column count; only applies to `grid`. |
+| `rowHeight` | `CSSProperties['height']` | CSS default | Grid tile height, mosaic base row height, or justified target row height. Numbers are pixels. |
 | `className` | `string` | — | Class on the gallery wrapper. |
-| `galleryClassName` | `string` | — | Class on the thumbnail grid. |
+| `galleryClassName` | `string` | — | Class on the selected gallery layout container. |
 | `renderActions` | `LightboxRenderer<T>` | — | Adds actions to the default toolbar. |
 | `renderCaption` | `LightboxRenderer<T>` | image caption | Replaces the caption. |
 | `renderControls` | `LightboxRenderer<T>` | — | Replaces the complete default control layer. |
@@ -34,7 +36,9 @@ type GalleryImage = {
 
 ## `Gallery`
 
-`Gallery` accepts `images`, `onImageClick`, `columns`, `rowHeight`, `className`, and `style`. It renders only the responsive thumbnail grid.
+`Gallery` accepts `images`, `onImageClick`, `layout`, `columns`, `rowHeight`, `className`, and `style`. It renders only the thumbnail presentation; its layout defaults to the three-column grid.
+
+For `justified`, `GalleryImage.width` and `height` are recommended but optional. When either is missing or not positive, the layout assumes a 3:2 aspect ratio. Supplying accurate dimensions gives the most faithful proportions and reduces layout shifts.
 
 ## `Lightbox`
 
