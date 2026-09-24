@@ -93,9 +93,9 @@
 </tr>
 <tr>
 <td><code dir="auto">layout</code></td>
-<td><code dir="auto">'grid' | 'justified' | 'mosaic'</code></td>
+<td><code dir="auto">'grid' | 'justified' | 'mosaic' | 'carousel'</code></td>
 <td><code dir="auto">'grid'</code></td>
-<td>Gallery presentation.</td>
+<td>Gallery presentation. The carousel shows one image at a time with bounded previous/next navigation; <code dir="auto">columns</code> and <code dir="auto">rowHeight</code> do not apply to it.</td>
 </tr>
 <tr>
 <td><code dir="auto">columns</code></td>
@@ -131,7 +131,7 @@
 <td><code dir="auto">renderCaption</code></td>
 <td><code dir="auto">LightboxRenderer&lt;T&gt;</code></td>
 <td>image caption</td>
-<td>Replaces the caption.</td>
+<td>Replaces the lightbox caption, and the carousel caption when <code dir="auto">layout="carousel"</code>. Uses the same renderer context; <code dir="auto">context.close</code> is a no-op in the carousel.</td>
 </tr>
 <tr>
 <td><code dir="auto">renderControls</code></td>
@@ -143,18 +143,18 @@
 <td><code dir="auto">showCounter</code></td>
 <td><code dir="auto">boolean</code></td>
 <td><code dir="auto">true</code></td>
-<td>Shows the current image count.</td>
+<td>Shows the current image count in the lightbox and carousel.</td>
 </tr>
 <tr>
 <td><code dir="auto">showNavigation</code></td>
 <td><code dir="auto">boolean</code></td>
 <td><code dir="auto">true</code></td>
-<td>Shows previous/next controls.</td>
+<td>Shows previous/next controls in the lightbox and carousel.</td>
 </tr>
 </tbody>
 </table>
 <div class="sl-heading-wrapper level-h2"><h2 id="gallery"><code dir="auto">Gallery</code></h2><a class="sl-anchor-link" href="#gallery"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Gallery”</span></a></div>
-<p><code dir="auto">Gallery</code> accepts <code dir="auto">images</code>, <code dir="auto">onImageClick</code>, <code dir="auto">layout</code>, <code dir="auto">columns</code>, <code dir="auto">rowHeight</code>, <code dir="auto">className</code>, and <code dir="auto">style</code>. It renders only the thumbnail presentation; its layout defaults to the three-column grid.</p>
+<p><code dir="auto">Gallery</code> accepts <code dir="auto">images</code>, <code dir="auto">onImageClick</code>, <code dir="auto">layout</code>, <code dir="auto">columns</code>, <code dir="auto">rowHeight</code>, <code dir="auto">className</code>, <code dir="auto">style</code>, <code dir="auto">renderCaption</code>, <code dir="auto">showCounter</code>, and <code dir="auto">showNavigation</code>. Its layout defaults to the three-column grid. The <code dir="auto">carousel</code> layout displays one image at a time, starting at the first image, with bounded previous/next navigation, touch swipe, arrow-key navigation when the carousel region has focus, and edge-tap zones on coarse-pointer/small screens. <code dir="auto">columns</code> and <code dir="auto">rowHeight</code> do not apply to the carousel. Clicking its displayed image calls <code dir="auto">onImageClick(activeIndex)</code>; without an <code dir="auto">onImageClick</code> handler, clicking does nothing. With <code dir="auto">PicGallery</code>, this opens the lightbox at that image, as thumbnail clicks do in the other layouts.</p>
 <p>For <code dir="auto">justified</code>, <code dir="auto">GalleryImage.width</code> and <code dir="auto">height</code> are recommended but optional. When either is missing or not positive, the layout assumes a 3:2 aspect ratio. Supplying accurate dimensions gives the most faithful proportions and reduces layout shifts.</p>
 <div class="sl-heading-wrapper level-h2"><h2 id="lightbox"><code dir="auto">Lightbox</code></h2><a class="sl-anchor-link" href="#lightbox"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Lightbox”</span></a></div>
 <p><code dir="auto">Lightbox</code> accepts:</p>
