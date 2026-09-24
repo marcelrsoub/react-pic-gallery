@@ -338,7 +338,7 @@ export default function App() {
         </p>
         <ul className='feature-strip' aria-label='Key features'>
           <li className='feature-strip__stat'>
-            <strong>8.4 kB</strong>
+            <strong>8.5 kB</strong>
             <span>gzipped, JS + CSS</span>
           </li>
           <li className='feature-strip__stat'>

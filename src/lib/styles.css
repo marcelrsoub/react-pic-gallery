@@ -1,4 +1,4 @@
-:where(.react-pic-gallery, .react-pic-gallery__lightbox) {
+:where(.react-pic-gallery, .react-pic-gallery__gallery, .react-pic-gallery__carousel, .react-pic-gallery__lightbox) {
   --gallery-gap: 0.75rem;
   --gallery-radius: 1rem;
   --gallery-row-height: 12rem;
@@ -8,6 +8,8 @@
   --gallery-control-size: 2.75rem;
   --gallery-motion: 180ms;
   color: #f8fafc;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .react-pic-gallery {
