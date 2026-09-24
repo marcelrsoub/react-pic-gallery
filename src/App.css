@@ -186,6 +186,15 @@ body {
   color: var(--page-accent);
 }
 
+.install-command {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.install-command .layout-switcher {
+  margin-top: 0;
+}
+
 .example-header {
   display: flex;
   align-items: baseline;
@@ -323,10 +332,19 @@ body {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 2rem;
+  margin-top: 2rem;
 }
 
 .example {
   min-width: 0;
+}
+
+.example--wide {
+  margin-top: 2rem;
+}
+
+.example--wide .example-header p {
+  max-width: 30rem;
 }
 
 .example-header {
@@ -341,6 +359,14 @@ body {
   margin: 0;
   color: var(--page-ink);
   font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+
+.demo-section h3 {
+  margin: 0;
+  color: var(--page-ink);
+  font-size: 1.05rem;
   font-weight: 600;
   letter-spacing: -0.03em;
 }
@@ -382,7 +408,7 @@ body {
   gap: 0.4rem;
 }
 
-.exif-intro {
+.section-intro {
   max-width: 30rem;
   margin: 0.5rem 0 0;
   color: var(--page-muted);
@@ -390,7 +416,7 @@ body {
   line-height: 1.55;
 }
 
-.exif-intro code {
+.section-intro code {
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
   font-size: 0.78rem;
 }

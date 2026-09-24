@@ -27,8 +27,7 @@
 }
 
 .react-pic-gallery__carousel:focus-visible {
-  outline: 3px solid var(--gallery-accent, #9ef01a);
-  outline-offset: 3px;
+  outline: none;
 }
 
 .react-pic-gallery__carousel .react-pic-gallery__lightbox-content {

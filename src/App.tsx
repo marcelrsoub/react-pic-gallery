@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 import {
   PicGallery,
   type GalleryImage,
@@ -198,7 +198,7 @@ const controlsSnippet = `<PicGallery
   )}
 />`
 
-function CodeBlock({ code }: { code: string }) {
+function CodeBlock({ code, language = 'tsx' }: { code: string; language?: string }) {
   const [copied, setCopied] = useState(false)
   const canCopy = typeof navigator !== 'undefined' && !!navigator.clipboard
 
@@ -213,12 +213,43 @@ function CodeBlock({ code }: { code: string }) {
   return (
     <div className='code-block'>
       <div className='code-block__topline'>
-        <span className='code-block__language'>tsx</span>
+        <span className='code-block__language'>{language}</span>
         <button type='button' onClick={copyCode} disabled={!canCopy}>
           {copied ? 'Copied' : 'Copy'}
         </button>
       </div>
       <pre><code>{code}</code></pre>
+    </div>
+  )
+}
+
+const installCommands: Array<{ value: string; label: string; command: string }> = [
+  { value: 'npm', label: 'npm', command: 'npm install react-pic-gallery' },
+  { value: 'pnpm', label: 'pnpm', command: 'pnpm add react-pic-gallery' },
+  { value: 'yarn', label: 'Yarn', command: 'yarn add react-pic-gallery' },
+  { value: 'bun', label: 'Bun', command: 'bun add react-pic-gallery' }
+]
+
+function InstallCommand() {
+  const [manager, setManager] = useState('npm')
+  const active =
+    installCommands.find((option) => option.value === manager) ?? installCommands[0]
+
+  return (
+    <div className='install-command'>
+      <div className='layout-switcher' role='group' aria-label='Package manager'>
+        {installCommands.map((option) => (
+          <button
+            type='button'
+            key={option.value}
+            aria-pressed={manager === option.value}
+            onClick={() => setManager(option.value)}
+          >
+            {option.label}
+          </button>
+        ))}
+      </div>
+      <CodeBlock code={active.command} language='bash' />
     </div>
   )
 }
@@ -295,14 +326,17 @@ function ExifCaption({ image }: { image: ExifImage }) {
   )
 }
 
-function ExampleHeader({ title, description }: {
+function ExampleHeader({ title, description, level = 2 }: {
   title: string
-  description: string
+  description: ReactNode
+  level?: 2 | 3
 }) {
+  const Heading = (level === 3 ? 'h3' : 'h2') as 'h2' | 'h3'
+
   return (
     <div className='example-header'>
       <div>
-        <h2>{title}</h2>
+        <Heading>{title}</Heading>
         <p>{description}</p>
       </div>
     </div>
@@ -353,6 +387,15 @@ export default function App() {
         </ul>
       </section>
 
+      <section className='install-section' id='install'>
+        <div>
+          <h2>Install</h2>
+          <p>Bring the gallery into any React 18.3+ or React 19 project.</p>
+        </div>
+        <InstallCommand />
+        <a href='./docs/getting-started/'>See the full quick start -&gt;</a>
+      </section>
+
       <section className='demo-section demo-section--hero' id='examples'>
         <h2>Default gallery</h2>
         <div className='layout-switcher' role='group' aria-label='Gallery layout'>
@@ -377,58 +420,64 @@ export default function App() {
         />
       </section>
 
-      <section className='install-section' id='install'>
-        <div>
-          <h2>Install</h2>
-          <p>Bring the gallery into any React 18.3+ or React 19 project.</p>
-        </div>
-        <CodeBlock code='npm install react-pic-gallery' />
-        <a href='./docs/getting-started/'>Using pnpm, Yarn, or Bun? See every install option -&gt;</a>
-      </section>
-
-      <div className='example-grid'>
-        <section className='demo-section example'>
-          <ExampleHeader
-            title='Add an action'
-            description='Add buttons without rebuilding the lightbox.'
-          />
-          <div className='gallery-frame'>
-            <PicGallery
-              images={images.slice(1, 4)}
-              renderActions={(context) => <SaveAction {...context} />}
-            />
-          </div>
-          <CodeBlock code={actionsSnippet} />
-        </section>
-
-        <section className='demo-section example'>
-          <ExampleHeader
-            title='Own the controls'
-            description='Replace the toolbar while keeping the viewer behavior.'
-          />
-          <div className='gallery-frame'>
-            <PicGallery
-              images={images.slice(2, 8)}
-              renderControls={(context) => <CustomControls {...context} />}
-            />
-          </div>
-          <CodeBlock code={controlsSnippet} />
-        </section>
-      </div>
-
-      <section className='demo-section' id='exif'>
-        <h2>EXIF in the lightbox</h2>
-        <p className='exif-intro'>
-          Extend the image type with your own metadata and render it with
-          <code> renderCaption</code> — the library stays out of the way.
+      <section className='demo-section' id='customize'>
+        <h2>Customize Your Lightbox</h2>
+        <p className='section-intro'>
+          Typed render callbacks —<code> renderActions</code>,<code> renderCaption</code>, and
+          <code> renderControls</code> — add actions beside the counter, replace the caption, or
+          own the entire control layer.
         </p>
-        <div className='gallery-frame'>
-          <PicGallery
-            images={exifImages}
-            renderCaption={(context) => <ExifCaption image={context.image} />}
-          />
+        <div className='example-grid'>
+          <section className='example'>
+            <ExampleHeader
+              title='Add an action'
+              description='Add buttons without rebuilding the lightbox.'
+              level={3}
+            />
+            <div className='gallery-frame'>
+              <PicGallery
+                images={images.slice(1, 4)}
+                renderActions={(context) => <SaveAction {...context} />}
+              />
+            </div>
+            <CodeBlock code={actionsSnippet} />
+          </section>
+
+          <section className='example'>
+            <ExampleHeader
+              title='Own the controls'
+              description='Replace the toolbar while keeping the viewer behavior.'
+              level={3}
+            />
+            <div className='gallery-frame'>
+              <PicGallery
+                images={images.slice(2, 8)}
+                renderControls={(context) => <CustomControls {...context} />}
+              />
+            </div>
+            <CodeBlock code={controlsSnippet} />
+          </section>
         </div>
-        <CodeBlock code={exifSnippet} />
+
+        <section className='example example--wide'>
+          <ExampleHeader
+            title='EXIF in the lightbox'
+            level={3}
+            description={
+              <>
+                Extend the image type with your own metadata and render it with
+                <code> renderCaption</code> — the library stays out of the way.
+              </>
+            }
+          />
+          <div className='gallery-frame'>
+            <PicGallery
+              images={exifImages}
+              renderCaption={(context) => <ExifCaption image={context.image} />}
+            />
+          </div>
+          <CodeBlock code={exifSnippet} />
+        </section>
       </section>
 
       <section className='docs-strip' id='docs'>
