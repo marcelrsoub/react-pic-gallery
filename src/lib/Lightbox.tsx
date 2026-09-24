@@ -5,14 +5,14 @@ import {
   useRef,
   useState,
   type AnimationEvent as ReactAnimationEvent,
-  type KeyboardEvent as ReactKeyboardEvent,
   type MouseEvent as ReactMouseEvent,
-  type SyntheticEvent,
-  type TouchEvent as ReactTouchEvent
+  type SyntheticEvent
 } from 'react'
 import { createPortal } from 'react-dom'
-import { Image } from './Image'
-import type { GalleryImage, LightboxContext, LightboxProps } from './types'
+import { Carousel } from './Carousel'
+import { useCarouselNavigation } from './useCarouselNavigation'
+import { joinClassNames } from './utils'
+import type { GalleryImage, LightboxProps } from './types'
 
 type BodyLockToken = object
 
@@ -23,16 +23,6 @@ type BodyLockSnapshot = {
 
 const bodyLocks = new Set<BodyLockToken>()
 let bodyLockSnapshot: BodyLockSnapshot | null = null
-const interactiveControlSelector =
-  'a[href], button, input, select, textarea, [role="combobox"], [role="menu"], [role="slider"], [role="spinbutton"], [role="tab"]'
-const keyboardInteractiveControlSelector =
-  'input, select, textarea, [role="combobox"], [role="menu"], [role="slider"], [role="spinbutton"], [role="tab"]'
-const edgeTapMediaQuery = '(max-width: 600px), (pointer: coarse)'
-const edgeTapZoneRatio = 0.3
-
-function isInteractiveTarget(target: EventTarget | null) {
-  return target instanceof Element && target.closest(interactiveControlSelector) !== null
-}
 
 function lockBodyScroll(token: BodyLockToken) {
   if (bodyLocks.has(token)) return
@@ -88,26 +78,6 @@ function getAnimationDuration(element: HTMLElement) {
   )
 }
 
-function CloseIcon() {
-  return (
-    <svg viewBox='0 0 24 24' aria-hidden='true' focusable='false'>
-      <path d='M6 6l12 12M18 6L6 18' />
-    </svg>
-  )
-}
-
-function ChevronIcon({ direction }: { direction: 'left' | 'right' }) {
-  return (
-    <svg viewBox='0 0 24 24' aria-hidden='true' focusable='false'>
-      <path d={direction === 'left' ? 'M14.5 5l-7 7 7 7' : 'M9.5 5l7 7-7 7'} />
-    </svg>
-  )
-}
-
-function joinClassNames(...names: Array<string | undefined>) {
-  return names.filter(Boolean).join(' ')
-}
-
 export function Lightbox<T extends GalleryImage>({
   images,
   index,
@@ -124,22 +94,24 @@ export function Lightbox<T extends GalleryImage>({
   const closeTimerRef = useRef<number | null>(null)
   const closeRequestRef = useRef<{ index: number } | null>(null)
   const activeIndexRef = useRef<number | null>(null)
-  const isClosingRef = useRef(false)
   const suppressNativeCloseRef = useRef(false)
   const bodyLockTokenRef = useRef<BodyLockToken>({})
-  const imagesRef = useRef(images)
-  const touchStartRef = useRef<{ x: number; y: number } | null>(null)
   const titleId = useId()
   const [isClosing, setIsClosing] = useState(false)
-  const [swipeDirection, setSwipeDirection] = useState<'next' | 'previous' | null>(null)
   const activeIndex =
     index !== null && index >= 0 && index < images.length ? index : null
   const image = activeIndex === null ? undefined : images[activeIndex]
 
   changeIndexRef.current = onIndexChange
   activeIndexRef.current = activeIndex
-  isClosingRef.current = isClosing
-  imagesRef.current = images
+
+  const navigation = useCarouselNavigation({
+    images,
+    index: activeIndex,
+    onIndexChange,
+    disabled: isClosing,
+    showNavigation: showNavigation && !renderControls
+  })
 
   const cancelPendingClose = useCallback(() => {
     if (closeTimerRef.current !== null) {
@@ -162,48 +134,7 @@ export function Lightbox<T extends GalleryImage>({
     }
 
     closeRequestRef.current = { index: currentIndex }
-    isClosingRef.current = true
     setIsClosing(true)
-  }, [])
-
-  const previous = useCallback(() => {
-    const currentIndex = activeIndexRef.current
-    if (!isClosingRef.current && currentIndex !== null && currentIndex > 0) {
-      changeIndexRef.current(currentIndex - 1)
-    }
-  }, [])
-
-  const next = useCallback(() => {
-    const currentIndex = activeIndexRef.current
-    if (
-      !isClosingRef.current &&
-      currentIndex !== null &&
-      currentIndex < imagesRef.current.length - 1
-    ) {
-      changeIndexRef.current(currentIndex + 1)
-    }
-  }, [])
-
-  const swipePrevious = useCallback(() => {
-    const currentIndex = activeIndexRef.current
-    if (isClosingRef.current || currentIndex === null || currentIndex === 0) return
-
-    setSwipeDirection('previous')
-    changeIndexRef.current(currentIndex - 1)
-  }, [])
-
-  const swipeNext = useCallback(() => {
-    const currentIndex = activeIndexRef.current
-    if (
-      isClosingRef.current ||
-      currentIndex === null ||
-      currentIndex >= imagesRef.current.length - 1
-    ) {
-      return
-    }
-
-    setSwipeDirection('next')
-    changeIndexRef.current(currentIndex + 1)
   }, [])
 
   const handleCancel = useCallback(
@@ -220,83 +151,14 @@ export function Lightbox<T extends GalleryImage>({
 
     if (activeIndexRef.current !== request.index) {
       cancelPendingClose()
-      isClosingRef.current = false
       setIsClosing(false)
       return
     }
 
     cancelPendingClose()
-    isClosingRef.current = false
     setIsClosing(false)
     changeIndexRef.current(null)
   }, [cancelPendingClose])
-
-  const handleKeyDown = useCallback(
-    (event: ReactKeyboardEvent<HTMLDialogElement>) => {
-      if (event.defaultPrevented) return
-
-      const target = event.target
-      if (
-        target instanceof HTMLElement &&
-        (target.isContentEditable ||
-          target.closest(keyboardInteractiveControlSelector))
-      ) {
-        return
-      }
-
-      if (event.key === 'ArrowLeft') {
-        event.preventDefault()
-        previous()
-      } else if (event.key === 'ArrowRight') {
-        event.preventDefault()
-        next()
-      }
-    },
-    [next, previous]
-  )
-
-  const handleTouchStart = useCallback((event: ReactTouchEvent<HTMLDivElement>) => {
-    if (event.touches.length !== 1 || isInteractiveTarget(event.target)) {
-      touchStartRef.current = null
-      return
-    }
-
-    const touch = event.touches[0]
-    touchStartRef.current = { x: touch.clientX, y: touch.clientY }
-  }, [])
-
-  const handleTouchEnd = useCallback(
-    (event: ReactTouchEvent<HTMLDivElement>) => {
-      const start = touchStartRef.current
-      touchStartRef.current = null
-      if (!start || event.changedTouches.length === 0) return
-
-      const touch = event.changedTouches[0]
-      const deltaX = touch.clientX - start.x
-      const deltaY = touch.clientY - start.y
-      const horizontalDistance = Math.abs(deltaX)
-
-      if (horizontalDistance < 48 || horizontalDistance <= Math.abs(deltaY)) return
-
-      if (deltaX < 0) {
-        swipeNext()
-      } else {
-        swipePrevious()
-      }
-    },
-    [swipeNext, swipePrevious]
-  )
-
-  const handleTouchCancel = useCallback(() => {
-    touchStartRef.current = null
-  }, [])
-
-  const handleImageAnimationEnd = useCallback(
-    (event: ReactAnimationEvent<HTMLSpanElement>) => {
-      if (event.target === event.currentTarget) setSwipeDirection(null)
-    },
-    []
-  )
 
   const handleAnimationEnd = useCallback(
     (event: ReactAnimationEvent<HTMLDialogElement>) => {
@@ -314,7 +176,6 @@ export function Lightbox<T extends GalleryImage>({
     if (suppressNativeCloseRef.current) return
 
     cancelPendingClose()
-    isClosingRef.current = false
     setIsClosing(false)
     if (activeIndexRef.current !== null) {
       changeIndexRef.current(null)
@@ -326,7 +187,6 @@ export function Lightbox<T extends GalleryImage>({
     if (!request || activeIndex === request.index) return
 
     cancelPendingClose()
-    isClosingRef.current = false
     setIsClosing(false)
   }, [activeIndex, cancelPendingClose])
 
@@ -374,39 +234,8 @@ export function Lightbox<T extends GalleryImage>({
     return null
   }
 
-  const context: LightboxContext<T> = {
-    image,
-    index: activeIndex,
-    count: images.length,
-    close,
-    next,
-    previous,
-    canGoNext: activeIndex < images.length - 1,
-    canGoPrevious: activeIndex > 0
-  }
-  const showPrevious = showNavigation && !renderControls && context.canGoPrevious
-  const showNext = showNavigation && !renderControls && context.canGoNext
-  const hasNavigation = showNavigation && !renderControls && images.length > 1
-
-  const handleBackdropClick = (event: ReactMouseEvent) => {
+  const handleBackdropClick = (event: ReactMouseEvent<HTMLDialogElement>) => {
     if (event.target === event.currentTarget) close()
-  }
-
-  const handleViewportClick = (event: ReactMouseEvent<HTMLDivElement>) => {
-    if (!hasNavigation || isClosingRef.current) return
-    if (!(event.target instanceof Element)) return
-    if (event.target.closest('button')) return
-    if (window.matchMedia?.(edgeTapMediaQuery)?.matches !== true) return
-
-    const rect = event.currentTarget.getBoundingClientRect()
-    if (rect.width <= 0) return
-
-    const ratio = (event.clientX - rect.left) / rect.width
-    if (ratio < edgeTapZoneRatio) {
-      previous()
-    } else if (ratio > 1 - edgeTapZoneRatio) {
-      next()
-    }
   }
 
   return createPortal(
@@ -422,93 +251,23 @@ export function Lightbox<T extends GalleryImage>({
       onClose={handleNativeClose}
       onMouseDown={handleBackdropClick}
       onCancel={handleCancel}
-      onKeyDown={handleKeyDown}
+      onKeyDown={navigation.handleKeyDown}
     >
       <h2 className='react-pic-gallery__sr-only' id={titleId}>
         Image viewer
       </h2>
-      <p className='react-pic-gallery__sr-only' aria-live='polite'>
-        {image.alt}, image {activeIndex + 1} of {images.length}
-      </p>
-      <div className='react-pic-gallery__lightbox-content'>
-        {renderControls ? (
-          <div className='react-pic-gallery__custom-controls'>
-            {renderControls(context)}
-          </div>
-        ) : (
-          <div className='react-pic-gallery__toolbar'>
-            <div className='react-pic-gallery__toolbar-actions'>
-              {showCounter && (
-                <span aria-live='polite'>
-                  {activeIndex + 1} / {images.length}
-                </span>
-              )}
-              {renderActions?.(context)}
-            </div>
-            <button
-              className='react-pic-gallery__control'
-              type='button'
-              onClick={close}
-              aria-label='Close image viewer'
-            >
-              <CloseIcon />
-            </button>
-          </div>
-        )}
-
-        <div
-          className={joinClassNames(
-            'react-pic-gallery__viewport',
-            hasNavigation ? 'react-pic-gallery__viewport--has-navigation' : undefined
-          )}
-          onMouseDown={handleBackdropClick}
-          onClick={handleViewportClick}
-          onTouchCancel={handleTouchCancel}
-          onTouchEnd={handleTouchEnd}
-          onTouchStart={handleTouchStart}
-        >
-          {showPrevious && (
-            <button
-              className='react-pic-gallery__control react-pic-gallery__control--previous'
-              type='button'
-              onClick={previous}
-              aria-label='Previous image'
-            >
-              <ChevronIcon direction='left' />
-            </button>
-          )}
-          <Image
-            key={image.src}
-            src={image.src}
-            alt={image.alt}
-            eager
-            objectFit='contain'
-            className={joinClassNames(
-              'react-pic-gallery__lightbox-image',
-              swipeDirection
-                ? `react-pic-gallery__lightbox-image--swipe-${swipeDirection}`
-                : undefined
-            )}
-            onAnimationEnd={handleImageAnimationEnd}
-          />
-          {showNext && (
-            <button
-              className='react-pic-gallery__control react-pic-gallery__control--next'
-              type='button'
-              onClick={next}
-              aria-label='Next image'
-            >
-              <ChevronIcon direction='right' />
-            </button>
-          )}
-        </div>
-
-        {(renderCaption || image.caption) && (
-          <div className='react-pic-gallery__caption'>
-            {renderCaption ? renderCaption(context) : image.caption}
-          </div>
-        )}
-      </div>
+      <Carousel
+        images={images}
+        index={activeIndex}
+        navigation={navigation}
+        renderActions={renderActions}
+        renderCaption={renderCaption}
+        renderControls={renderControls}
+        showCounter={showCounter}
+        showNavigation={showNavigation && !renderControls}
+        close={close}
+        onEmptyAreaClick={close}
+      />
     </dialog>,
     document.body
   )

@@ -30,6 +30,7 @@ Useful variables include:
 | `--gallery-accent` | Focus ring, loader, and interactive accent color. |
 | `--gallery-overlay` | Lightbox backdrop color. |
 | `--gallery-control-size` | Close and navigation target size. |
+| `--gallery-carousel-height` | Height of the inline carousel (defaults to `24rem`, or `14rem` at screen widths up to `600px`). |
 | `--gallery-motion` | Transition and animation duration. |
 
 ## Stable class names
@@ -39,6 +40,7 @@ All classes begin with `react-pic-gallery__`. The main extension points are:
 - `.react-pic-gallery__grid`
 - `.react-pic-gallery__gallery--justified` and `.react-pic-gallery__tile--justified`
 - `.react-pic-gallery__gallery--mosaic` and `.react-pic-gallery__mosaic-group`
+- `.react-pic-gallery__carousel`
 - `.react-pic-gallery__tile`
 - `.react-pic-gallery__lightbox`
 - `.react-pic-gallery__toolbar`

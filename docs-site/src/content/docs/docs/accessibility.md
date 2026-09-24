@@ -25,6 +25,12 @@ Accessibility is part of the default component rather than an optional wrapper.
 
 The native modal behavior targets modern browsers: Chrome 37+, Edge 79+, Firefox 98+, and Safari/iOS 15.4+. The package does not ship a dialog polyfill.
 
+## Carousel behavior
+
+- The inline carousel is a labelled `region` with `aria-roledescription="carousel"`.
+- It uses the same polite live-region announcement as the lightbox: “alt, image n of total.”
+- Previous/next controls retain their accessible labels.
+
 ## Custom controls
 
 When using `renderControls`, include a clearly labelled close button. The library still owns the dialog, focus containment, and image semantics, but your custom UI owns the actions the user can see.

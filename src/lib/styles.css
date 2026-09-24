@@ -2,6 +2,7 @@
   --gallery-gap: 0.75rem;
   --gallery-radius: 1rem;
   --gallery-row-height: 12rem;
+  --gallery-carousel-height: 24rem;
   --gallery-accent: #9ef01a;
   --gallery-overlay: rgba(7, 11, 16, 0.94);
   --gallery-control-size: 2.75rem;
@@ -12,6 +13,43 @@
 .react-pic-gallery {
   width: 100%;
   min-width: 0;
+}
+
+.react-pic-gallery__carousel {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: var(--gallery-carousel-height, 24rem);
+  position: relative;
+  min-width: 0;
+}
+
+.react-pic-gallery__carousel:focus-visible {
+  outline: 3px solid var(--gallery-accent, #9ef01a);
+  outline-offset: 3px;
+}
+
+.react-pic-gallery__carousel .react-pic-gallery__lightbox-content {
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+}
+
+.react-pic-gallery__carousel .react-pic-gallery__toolbar {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 1;
+  min-height: 0;
+  gap: 0.5rem;
+  pointer-events: none;
+}
+
+.react-pic-gallery__carousel .react-pic-gallery__toolbar-actions {
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(7, 11, 16, 0.55);
 }
 
 .react-pic-gallery__gallery {
@@ -474,6 +512,7 @@ dialog.react-pic-gallery__lightbox::backdrop {
     --gallery-gap: 0.5rem;
     --gallery-radius: 0.75rem;
     --gallery-row-height: 8rem;
+    --gallery-carousel-height: 14rem;
   }
 
   :where(dialog.react-pic-gallery__lightbox) {

@@ -314,7 +314,8 @@ export default function App() {
   const layouts: Array<{ value: GalleryLayout; label: string }> = [
     { value: 'grid', label: 'Grid' },
     { value: 'justified', label: 'Justified' },
-    { value: 'mosaic', label: 'Mosaic' }
+    { value: 'mosaic', label: 'Mosaic' },
+    { value: 'carousel', label: 'Carousel' }
   ]
 
   return (
@@ -337,7 +338,7 @@ export default function App() {
         </p>
         <ul className='feature-strip' aria-label='Key features'>
           <li className='feature-strip__stat'>
-            <strong>7.7 kB</strong>
+            <strong>8.4 kB</strong>
             <span>gzipped, JS + CSS</span>
           </li>
           <li className='feature-strip__stat'>

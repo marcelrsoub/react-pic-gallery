@@ -28,6 +28,9 @@ export function PicGallery<T extends GalleryImage>({
         rowHeight={rowHeight}
         className={galleryClassName}
         onImageClick={setIndex}
+        renderCaption={renderCaption}
+        showCounter={showCounter}
+        showNavigation={showNavigation}
       />
       <Lightbox
         images={images}

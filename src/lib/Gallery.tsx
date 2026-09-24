@@ -9,8 +9,10 @@ import {
   type KeyboardEvent as ReactKeyboardEvent
 } from 'react'
 import { Image } from './Image'
+import { Carousel } from './Carousel'
 import { buildJustifiedRows } from './layout'
 import type { GalleryImage, GalleryProps } from './types'
+import { useCarouselNavigation } from './useCarouselNavigation'
 
 const DEFAULT_COLUMNS = 3
 const DEFAULT_ROW_HEIGHT = 192
@@ -23,6 +25,53 @@ type TileOptions = {
   style?: CSSProperties
 }
 
+type CarouselLayoutProps<T extends GalleryImage> = Pick<
+  GalleryProps<T>,
+  'images' | 'onImageClick' | 'renderCaption' | 'showCounter' | 'showNavigation'
+>
+
+function CarouselLayout<T extends GalleryImage>({
+  images,
+  onImageClick,
+  renderCaption,
+  showCounter,
+  showNavigation
+}: CarouselLayoutProps<T>) {
+  const [carouselIndex, setCarouselIndex] = useState(0)
+  const index = Math.max(0, Math.min(carouselIndex, images.length - 1))
+  const navigation = useCarouselNavigation({
+    images,
+    index: images.length > 0 ? index : null,
+    onIndexChange: (value) => {
+      if (value !== null) setCarouselIndex(value)
+    },
+    showNavigation
+  })
+
+  if (images.length === 0) return null
+
+  return (
+    <div
+      className='react-pic-gallery__carousel'
+      role='region'
+      aria-roledescription='carousel'
+      aria-label='Image carousel'
+      tabIndex={0}
+      onKeyDown={navigation.handleKeyDown}
+    >
+      <Carousel
+        images={images}
+        index={index}
+        navigation={navigation}
+        renderCaption={renderCaption}
+        showCounter={showCounter}
+        showNavigation={showNavigation}
+        onImageClick={() => onImageClick?.(index)}
+      />
+    </div>
+  )
+}
+
 function GalleryComponent<T extends GalleryImage>({
   images,
   onImageClick,
@@ -30,7 +79,10 @@ function GalleryComponent<T extends GalleryImage>({
   columns,
   rowHeight,
   className = '',
-  style
+  style,
+  renderCaption,
+  showCounter,
+  showNavigation
 }: GalleryProps<T>) {
   const tileRefs = useRef<Array<HTMLButtonElement | null>>([])
   const galleryRef = useRef<HTMLDivElement>(null)
@@ -270,6 +322,16 @@ function GalleryComponent<T extends GalleryImage>({
       data-layout={layout}
     >
       {layout === 'grid' && images.map((image, index) => renderTile(image, index))}
+
+      {layout === 'carousel' && (
+        <CarouselLayout
+          images={images}
+          onImageClick={onImageClick}
+          renderCaption={renderCaption}
+          showCounter={showCounter}
+          showNavigation={showNavigation}
+        />
+      )}
 
       {layout === 'justified' && (
         <>

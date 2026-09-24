@@ -3,7 +3,7 @@
 Small, accessible React image gallery and lightbox with a polished default UI and typed escape hatches for custom controls.
 
 [![NPM](https://img.shields.io/npm/v/react-pic-gallery.svg)](https://www.npmjs.com/package/react-pic-gallery)
-[![Minified + gzip size](https://badgen.net/static/minified%20%2B%20gzip/7.7%20KB/blue)](https://bundlephobia.com/package/react-pic-gallery@2.0.2)
+[![Minified + gzip size](https://badgen.net/static/minified%20%2B%20gzip/8.4%20KB/blue)](https://bundlephobia.com/package/react-pic-gallery@2.0.2)
 
 [Live playground and docs](https://marcelrsoub.github.io/react-pic-gallery/)
 
@@ -23,11 +23,11 @@ bun add react-pic-gallery
 
 React 18.3+ and React 19 are supported. The [Quick start docs](https://marcelrsoub.github.io/react-pic-gallery/docs/getting-started/) provide these commands in a package-manager switcher.
 
-The package is intentionally lightweight: it has no runtime dependencies and React is a peer dependency. The built JavaScript and CSS together are about **7.7 KB gzipped** (5.55 KB JS + 2.16 KB CSS).
+The package is intentionally lightweight: it has no runtime dependencies and React is a peer dependency. The built JavaScript and CSS together are about **8.4 KB gzipped** (6.13 KB JS + 2.31 KB CSS).
 
 ## Why react-pic-gallery
 
-- **Tiny by design** — no runtime dependencies, no context providers, no polyfills; ~7.7 KB gzipped total.
+- **Tiny by design** — no runtime dependencies, no context providers, no polyfills; ~8.4 KB gzipped total.
 - **Simple by default** — one component, one stylesheet import, sensible accessible defaults.
 - **Yours when needed** — typed `renderActions`, `renderCaption`, and `renderControls` callbacks let you add custom UI without rebuilding the lightbox; extra fields on your image objects flow through fully typed.
 - **Accessible** — native modal `<dialog>`, focus containment and restoration, Escape to close, screen-reader announcements, `prefers-reduced-motion` support.

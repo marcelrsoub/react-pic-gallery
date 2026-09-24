@@ -3,7 +3,8 @@ import {
   useRef,
   useState,
   type AnimationEventHandler,
-  type CSSProperties
+  type CSSProperties,
+  type MouseEventHandler
 } from 'react'
 
 type ImageProps = {
@@ -14,6 +15,7 @@ type ImageProps = {
   style?: CSSProperties
   imageStyle?: CSSProperties
   onAnimationEnd?: AnimationEventHandler<HTMLSpanElement>
+  onClick?: MouseEventHandler<HTMLSpanElement>
   eager?: boolean
   objectFit?: 'cover' | 'contain'
   width?: number
@@ -28,6 +30,7 @@ export function Image({
   style,
   imageStyle,
   onAnimationEnd,
+  onClick,
   eager = false,
   objectFit = 'cover',
   width,
@@ -51,6 +54,7 @@ export function Image({
       style={style}
       aria-busy={state === 'loading'}
       onAnimationEnd={onAnimationEnd}
+      onClick={onClick}
     >
       <img
         ref={imageRef}

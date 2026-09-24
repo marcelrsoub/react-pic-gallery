@@ -564,3 +564,112 @@ describe('Lightbox', () => {
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
   })
 })
+
+describe('Carousel layout', () => {
+  const carouselImages: GalleryImage[] = [
+    { src: 'carousel-one.jpg', alt: 'Carousel first', caption: 'Carousel caption one' },
+    { src: 'carousel-two.jpg', alt: 'Carousel second', caption: 'Carousel caption two' },
+    { src: 'carousel-three.jpg', alt: 'Carousel third', caption: 'Carousel caption three' }
+  ]
+
+  it('renders the first image, counter, caption, and carousel region', () => {
+    render(<Gallery images={carouselImages} layout='carousel' />)
+
+    expect(screen.getByRole('region', { name: 'Image carousel' })).toHaveAttribute(
+      'aria-roledescription',
+      'carousel'
+    )
+    expect(screen.getByRole('img', { name: 'Carousel first' })).toBeVisible()
+    expect(screen.getByText('1 / 3')).toBeVisible()
+    expect(screen.getByText('Carousel caption one')).toBeVisible()
+    expect(screen.queryByRole('button', { name: 'Previous image' })).not.toBeInTheDocument()
+  })
+
+  it('advances, exposes previous navigation, and bounds the chevrons', () => {
+    render(<Gallery images={carouselImages} layout='carousel' />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Next image' }))
+    expect(screen.getByText('2 / 3')).toBeVisible()
+    expect(screen.getByRole('img', { name: 'Carousel second' })).toBeVisible()
+    expect(screen.getByRole('button', { name: 'Previous image' })).toBeVisible()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Next image' }))
+    expect(screen.getByRole('img', { name: 'Carousel third' })).toBeVisible()
+    expect(screen.queryByRole('button', { name: 'Next image' })).not.toBeInTheDocument()
+  })
+
+  it('navigates with arrow keys on the carousel region', () => {
+    render(<Gallery images={carouselImages} layout='carousel' />)
+    const region = screen.getByRole('region', { name: 'Image carousel' })
+
+    fireEvent.keyDown(region, { key: 'ArrowRight' })
+    expect(screen.getByRole('img', { name: 'Carousel second' })).toBeVisible()
+    fireEvent.keyDown(region, { key: 'ArrowLeft' })
+    expect(screen.getByRole('img', { name: 'Carousel first' })).toBeVisible()
+  })
+
+  it('hides the counter and both chevrons when disabled', () => {
+    render(
+      <Gallery
+        images={carouselImages}
+        layout='carousel'
+        showCounter={false}
+        showNavigation={false}
+      />
+    )
+
+    expect(screen.queryByText('1 / 3')).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Previous image' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Next image' })).not.toBeInTheDocument()
+  })
+
+  it('uses renderCaption with the current image context', () => {
+    const renderCaption = vi.fn(({ image, index, count }) =>
+      `${index + 1}/${count}: ${image.caption}`
+    )
+    render(
+      <Gallery
+        images={carouselImages}
+        layout='carousel'
+        renderCaption={renderCaption}
+      />
+    )
+
+    expect(screen.getByText('1/3: Carousel caption one')).toBeVisible()
+    expect(renderCaption).toHaveBeenCalledWith(expect.objectContaining({
+      image: carouselImages[0],
+      index: 0,
+      count: 3
+    }))
+  })
+
+  it('calls onImageClick with the current index', () => {
+    const onImageClick = vi.fn()
+    render(
+      <Gallery images={carouselImages} layout='carousel' onImageClick={onImageClick} />
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: 'Next image' }))
+    fireEvent.click(screen.getByRole('img', { name: 'Carousel second' }))
+    expect(onImageClick).toHaveBeenCalledWith(1)
+  })
+
+  it('opens the lightbox when the displayed PicGallery carousel image is clicked', () => {
+    render(<PicGallery images={carouselImages} layout='carousel' />)
+
+    fireEvent.click(screen.getByRole('img', { name: 'Carousel first' }))
+    expect(screen.getByRole('dialog')).toBeVisible()
+  })
+
+  it('clamps the selected image after the image list shrinks', () => {
+    const { rerender } = render(<Gallery images={carouselImages} layout='carousel' />)
+    fireEvent.click(screen.getByRole('button', { name: 'Next image' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Next image' }))
+
+    rerender(<Gallery images={carouselImages.slice(0, 2)} layout='carousel' />)
+
+    expect(screen.getByRole('img', { name: 'Carousel second' })).toBeVisible()
+    expect(screen.getByText('2 / 2')).toBeVisible()
+    expect(screen.queryByRole('button', { name: 'Next image' })).not.toBeInTheDocument()
+  })
+})
