@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.0.3] (2026-09-24)
+
+This patch removes visual friction in the gallery and lightbox: cleaner rounded corners, no accidental selection, and no lingering carousel focus ring.
+
+### Added
+
+- Package-manager tabs (npm, pnpm, Yarn, Bun) in the demo install section, now placed directly under the hero.
+- A "Customize Your Lightbox" demo section grouping the `renderActions`, `renderControls`, and `renderCaption` examples.
+
+### Fixed
+
+- Rounded tiles no longer show a light placeholder edge along the corner curves, most visible while the hover zoom animates.
+- Gallery and lightbox content is no longer selectable, so rapid clicks on the navigation arrows can no longer select the image and paint it blue.
+- Closing the lightbox with Escape no longer leaves the carousel framed by a green focus ring.
+
 ## [2.0.2] (2026-09-24)
 
 This patch adds proportional and editorial gallery layouts while preserving the default grid and lightweight, dependency-free package.
