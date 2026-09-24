@@ -3,7 +3,7 @@
 Small, accessible React image gallery and lightbox with a polished default UI and typed escape hatches for custom controls.
 
 [![NPM](https://img.shields.io/npm/v/react-pic-gallery.svg)](https://www.npmjs.com/package/react-pic-gallery)
-[![Minified + gzip size](https://img.shields.io/bundlephobia/minzip/react-pic-gallery?label=minified%20%2B%20gzip)](https://bundlephobia.com/package/react-pic-gallery@2.0.1)
+[![Minified + gzip size](https://badgen.net/static/minified%20%2B%20gzip/3.46%20KB/blue)](https://bundlephobia.com/package/react-pic-gallery@2.0.1)
 
 [Live playground and docs](https://marcelrsoub.github.io/react-pic-gallery/)
 
