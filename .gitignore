@@ -6,3 +6,5 @@ dist-ssr
 build
 .astro
 .opencode/
+AGENTS.md
+@eaDir/
