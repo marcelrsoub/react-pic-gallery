@@ -15,7 +15,7 @@ export default defineConfig({
       description: 'A small, accessible React image gallery and lightbox.',
       sidebar: [
         { label: 'Quick start', slug: 'docs/getting-started' },
-        { label: 'Playground', link: '/react-pic-gallery/' },
+        { label: 'Playground', link: '/' },
         { label: 'Overview', slug: 'docs' },
         {
           label: 'Guides',
