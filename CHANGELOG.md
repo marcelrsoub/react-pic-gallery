@@ -2,9 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
-## [2.0.4] (2026-10-01)
+## [2.1.0] (2026-10-01)
 
-This patch makes images load faster, preloads adjacent lightbox images, and ships the polished demo frame as the default gallery surface. The default appearance change is visually breaking; see the migration note below.
+This release makes images load faster, preloads adjacent lightbox images, and ships the polished demo frame as the default gallery surface. The default appearance change is visually breaking; see the migration note below.
 
 ### Added
 
