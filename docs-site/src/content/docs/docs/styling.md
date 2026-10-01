@@ -9,29 +9,31 @@ Import the default stylesheet once:
 import 'react-pic-gallery/styles.css'
 ```
 
-The library uses namespaced classes and CSS variables. Set gallery variables on the `PicGallery` wrapper or on a standalone `Gallery`; the inner gallery layout inherits wrapper customization. Because the lightbox is rendered in a portal, theme lightbox variables globally or on `.react-pic-gallery__lightbox`.
+The library uses namespaced classes and CSS variables. **No variable is required** — the stylesheet ships sensible defaults for every one — so you only override what you want to change.
+
+Minimal override: change a single value.
 
 ```css
-.portfolio-gallery {
-  --gallery-background: #111a24;
-  --gallery-padding: 0.65rem;
-  --gallery-border: 1px solid rgba(148, 163, 184, 0.18);
-  --gallery-frame-radius: 1.1rem;
+.brand-gallery {
   --gallery-accent: #ff7a59;
-}
-
-.react-pic-gallery__lightbox {
-  --gallery-overlay: rgba(10, 10, 14, 0.98);
-  --gallery-control-size: 3rem;
 }
 ```
 
 ```tsx
-<PicGallery className='portfolio-gallery' images={images} />
-<PicGallery className='portfolio-gallery' images={images} appearance='bare' />
+<PicGallery className='brand-gallery' images={images} />
 ```
 
-The default appearance is `framed`. The `bare` appearance removes the gallery's background, outer padding, border, and outer radius. Tile gap (`--gallery-gap`) and tile radius (`--gallery-radius`) remain in effect. The frame properties are:
+The default appearance is `framed`. Set `appearance='bare'` to remove the frame surface (background, outer padding, border, and outer radius) while keeping the tile gap (`--gallery-gap`) and tile radius (`--gallery-radius`).
+
+## Variable scope
+
+Set gallery variables on the `PicGallery` wrapper (or a standalone `Gallery`); the inner layout container inherits them. The lightbox is rendered in a portal outside the wrapper, so lightbox variables must be set on `.react-pic-gallery__lightbox` or globally on `:root`.
+
+## Variables
+
+Every variable below is optional and falls back to the listed default.
+
+### Gallery
 
 | Variable | Default | Purpose |
 | --- | --- | --- |
@@ -39,23 +41,23 @@ The default appearance is `framed`. The `bare` appearance removes the gallery's 
 | `--gallery-padding` | `0.65rem` | Space inside the frame around the tiles. |
 | `--gallery-border` | `1px solid rgba(148, 163, 184, 0.18)` | Frame border. |
 | `--gallery-frame-radius` | `1.1rem` | Outer frame corner radius; separate from tile radius. |
+| `--gallery-gap` | `0.75rem` | Space between gallery tiles. |
+| `--gallery-radius` | `1rem` | Tile corner radius. |
+| `--gallery-row-height` | `12rem` | Tile/base mosaic row height, or target justified-row height, when `rowHeight` is not supplied. |
+| `--gallery-accent` | `#9ef01a` | Focus ring, loader, and interactive accent color. |
+| `--gallery-carousel-height` | `24rem` | Height of the inline carousel (`14rem` at screen widths up to `600px`). |
+| `--gallery-motion` | `180ms` | Transition and animation duration. |
 
-Useful variables include:
+### Lightbox
 
-| Variable | Purpose |
-| --- | --- |
-| `--gallery-gap` | Space between gallery tiles. |
-| `--gallery-radius` | Tile corner radius. |
-| `--gallery-row-height` | Tile/base mosaic row height, or target justified-row height, when `rowHeight` is not supplied. |
-| `--gallery-accent` | Focus ring, loader, and interactive accent color. |
-| `--gallery-overlay` | Lightbox backdrop color. |
-| `--gallery-control-size` | Close and navigation target size. |
-| `--gallery-carousel-height` | Height of the inline carousel (defaults to `24rem`, or `14rem` at screen widths up to `600px`). |
-| `--gallery-motion` | Transition and animation duration. |
-| `--gallery-background` | Framed gallery surface color. |
-| `--gallery-padding` | Space between the frame and its tiles. |
-| `--gallery-border` | Framed gallery border. |
-| `--gallery-frame-radius` | Outer frame radius. |
+Set these on `.react-pic-gallery__lightbox` or `:root`, because the lightbox is portaled.
+
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `--gallery-overlay` | `rgba(7, 11, 16, 0.94)` | Lightbox backdrop color. |
+| `--gallery-control-size` | `2.75rem` | Close and navigation target size. |
+
+`--gallery-accent` and `--gallery-motion` also affect the lightbox. Set them on `:root` (or on both the wrapper and `.react-pic-gallery__lightbox`) when you want the change to apply everywhere.
 
 ## Stable class names
 

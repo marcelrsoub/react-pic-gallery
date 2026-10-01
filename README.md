@@ -43,12 +43,7 @@ import 'react-pic-gallery/styles.css'
 
 const images = [
   {
-    src: 'https://example.com/mountain-1600.jpg',
-    srcSet: 'https://example.com/mountain-960.jpg 960w, https://example.com/mountain-1600.jpg 1600w',
-    sizes: '(max-width: 48rem) 100vw, 80rem',
-    thumbnailSrc: 'https://example.com/mountain-thumb-480.jpg',
-    thumbnailSrcSet: 'https://example.com/mountain-thumb-320.jpg 320w, https://example.com/mountain-thumb-640.jpg 640w',
-    thumbnailSizes: '(max-width: 48rem) 100vw, 33vw',
+    src: 'https://example.com/mountain.jpg',
     alt: 'A mountain reflected in a lake',
     caption: 'Morning at the lake'
   }
@@ -59,7 +54,27 @@ export function App() {
 }
 ```
 
-`src` and `alt` are required. `srcSet` and `sizes` describe responsive full-size sources; `thumbnailSrc`, `thumbnailSrcSet`, and `thumbnailSizes` optionally provide a separate responsive thumbnail family. If neither `thumbnailSrc` nor `thumbnailSrcSet` is provided, thumbnails use the full-size source family. `id`, `caption`, `width`, and `height` are optional. Image objects can include application-specific fields; those fields remain available in renderer callbacks when using TypeScript generics.
+`src` and `alt` are required; `id`, `caption`, `width`, and `height` are optional. Image objects can include application-specific fields; those remain available in renderer callbacks when using TypeScript generics.
+
+## Responsive images
+
+`src` alone is enough to start. When you have multiple sizes, add native `srcSet` and `sizes` for the full-size image and optionally a separate thumbnail family:
+
+```tsx
+const images = [
+  {
+    src: 'https://example.com/mountain-1600.jpg',
+    srcSet: 'https://example.com/mountain-960.jpg 960w, https://example.com/mountain-1600.jpg 1600w',
+    sizes: '(max-width: 48rem) 100vw, 80rem',
+    thumbnailSrc: 'https://example.com/mountain-thumb-480.jpg',
+    thumbnailSrcSet: 'https://example.com/mountain-thumb-320.jpg 320w, https://example.com/mountain-thumb-640.jpg 640w',
+    thumbnailSizes: '(max-width: 48rem) 100vw, 33vw',
+    alt: 'A mountain reflected in a lake'
+  }
+]
+```
+
+A dedicated thumbnail family is used when either `thumbnailSrc` or `thumbnailSrcSet` is set; if only `thumbnailSrcSet` is set, `src` is its fallback URL. Otherwise thumbnails reuse `src`, `srcSet`, and `sizes`, so you can omit thumbnails entirely. `sizes` is optional, but accurate values let the browser avoid downloading larger candidates than needed.
 
 ## Gallery layouts
 
@@ -77,8 +92,6 @@ The default is the existing three-column grid. Choose another layout with `layou
 - **`carousel`** — one image at a time with inline previous/next controls.
 
 The default appearance is `framed`; use `appearance='bare'` to remove the outer surface while retaining tile spacing and rounded corners. Image `width` and `height` are recommended, but optional. Justified rows use them when supplied and fall back to 3:2 when either dimension is missing or invalid. Accurate dimensions give the most faithful layout and help reserve space while images load. `rowHeight` sets the tile height for the grid, the base row height for the mosaic, and the target row height for justified galleries. `columns` applies to the grid only and defaults to three.
-
-Responsive image selection uses native `srcSet` and `sizes`. A dedicated thumbnail family is selected when either `thumbnailSrc` or `thumbnailSrcSet` is set; otherwise thumbnails use `src`, `srcSet`, and `sizes`. For example, `srcSet` alone works as a responsive source for both thumbnails and the lightbox. If `thumbnailSrcSet` is supplied without `thumbnailSrc`, `src` is used as its fallback URL.
 
 ## Custom UI
 
@@ -152,30 +165,36 @@ Adjacent preloading is enabled by default and considers only the immediate previ
 
 ## Styling
 
-The stylesheet uses namespaced classes and CSS variables. Import it once. Set gallery variables on the `PicGallery` wrapper (for example, through its `className`) so the layout container inherits them; the lightbox is portaled, so lightbox colors should be set globally or on `.react-pic-gallery__lightbox`.
+The stylesheet uses namespaced classes and CSS variables. Import it once. **No variable is required** — every one ships with a default — so override only what you need.
 
 ```css
 .brand-gallery {
-  --gallery-background: #111a24;
-  --gallery-padding: 0.65rem;
-  --gallery-border: 1px solid rgba(148, 163, 184, 0.18);
-  --gallery-frame-radius: 1.1rem;
   --gallery-accent: #ff7a59;
-}
-
-.react-pic-gallery__lightbox {
-  --gallery-overlay: rgba(10, 10, 14, 0.98);
-  --gallery-control-size: 3rem;
-  --gallery-motion: 240ms;
 }
 ```
 
 ```tsx
 <PicGallery className='brand-gallery' images={images} />
-<PicGallery className='brand-gallery' images={images} appearance='bare' />
 ```
 
-The default frame variables are `--gallery-background`, `--gallery-padding`, `--gallery-border`, and `--gallery-frame-radius`. The default grid uses three columns. Pass `columns` for a different fixed count. `rowHeight` accepts CSS height values or numeric pixels; its meaning depends on the selected layout as described above.
+Set gallery variables on the `PicGallery` wrapper (for example through its `className`) so the layout container inherits them. The lightbox is portaled, so lightbox variables must be set globally or on `.react-pic-gallery__lightbox`. The default appearance is `framed`; set `appearance='bare'` to remove the frame surface while keeping the tile gap and tile radius.
+
+| Variable | Default | Scope | Purpose |
+| --- | --- | --- | --- |
+| `--gallery-background` | `#111a24` | Gallery | Framed gallery surface color. |
+| `--gallery-padding` | `0.65rem` | Gallery | Space inside the frame around the tiles. |
+| `--gallery-border` | `1px solid rgba(148, 163, 184, 0.18)` | Gallery | Frame border. |
+| `--gallery-frame-radius` | `1.1rem` | Gallery | Outer frame corner radius; separate from tile radius. |
+| `--gallery-gap` | `0.75rem` | Gallery | Space between gallery tiles. |
+| `--gallery-radius` | `1rem` | Gallery | Tile corner radius. |
+| `--gallery-row-height` | `12rem` | Gallery | Tile/base mosaic row height, or target justified-row height, when `rowHeight` is not supplied. |
+| `--gallery-accent` | `#9ef01a` | Both | Focus ring, loader, and interactive accent color. |
+| `--gallery-carousel-height` | `24rem` | Gallery | Height of the inline carousel (`14rem` at screen widths up to `600px`). |
+| `--gallery-motion` | `180ms` | Both | Transition and animation duration. |
+| `--gallery-overlay` | `rgba(7, 11, 16, 0.94)` | Lightbox | Lightbox backdrop color. |
+| `--gallery-control-size` | `2.75rem` | Lightbox | Close and navigation target size. |
+
+The default grid uses three columns. Pass `columns` for a different fixed count. `rowHeight` accepts CSS height values or numeric pixels; its meaning depends on the selected layout as described above.
 
 ## API
 

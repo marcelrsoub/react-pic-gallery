@@ -42,19 +42,14 @@ React 18.3+ and React 19 are supported.
 
 ## Create image data
 
-`src` and `alt` are required. Use `srcSet` and `sizes` for responsive full-size images. Add the thumbnail fields when you have a smaller or separately optimized thumbnail family.
+`src` and `alt` are required. `caption`, `id`, `width`, and `height` are optional.
 
 ```tsx
 import type { GalleryImage } from 'react-pic-gallery'
 
 const images: GalleryImage[] = [
   {
-    src: 'https://example.com/mountain-1600.jpg',
-    srcSet: 'https://example.com/mountain-960.jpg 960w, https://example.com/mountain-1600.jpg 1600w',
-    sizes: '(max-width: 48rem) 100vw, 80rem',
-    thumbnailSrc: 'https://example.com/mountain-thumb-480.jpg',
-    thumbnailSrcSet: 'https://example.com/mountain-thumb-320.jpg 320w, https://example.com/mountain-thumb-640.jpg 640w',
-    thumbnailSizes: '(max-width: 48rem) 100vw, 33vw',
+    src: 'https://example.com/mountain.jpg',
     alt: 'A mountain reflected in a lake',
     caption: 'Morning at the lake'
   }
@@ -62,21 +57,6 @@ const images: GalleryImage[] = [
 ```
 
 Image objects can include application-specific fields. Use a generic image type when custom renderers need those fields.
-
-When neither `thumbnailSrc` nor `thumbnailSrcSet` is provided, thumbnails use the full-size `src`, `srcSet`, and `sizes` family. For example, this responsive image data needs no duplicate thumbnail files:
-
-```tsx
-const imagesWithoutSeparateThumbnails: GalleryImage[] = [
-  {
-    src: 'https://example.com/coast-1600.jpg',
-    srcSet: 'https://example.com/coast-800.jpg 800w, https://example.com/coast-1600.jpg 1600w',
-    sizes: '(max-width: 48rem) 100vw, 80rem',
-    alt: 'A blue coast under a bright sky'
-  }
-]
-```
-
-If only `thumbnailSrcSet` is supplied, `src` is used as its fallback URL. The browser selects from the thumbnail candidates using `thumbnailSizes` when provided.
 
 ## Render the default gallery
 
@@ -96,6 +76,41 @@ The default gallery provides:
 - An image-focused lightbox with captions and image count.
 - Previous/next controls, Escape-to-close, and arrow-key navigation.
 - Focus restoration, focus containment, safe-area spacing, and reduced-motion support.
+
+## Responsive images
+
+When you have multiple sizes, add native `srcSet` and `sizes` for the full-size image and optionally a separate thumbnail family. The browser picks the best candidate.
+
+```tsx
+const images: GalleryImage[] = [
+  {
+    src: 'https://example.com/mountain-1600.jpg',
+    srcSet: 'https://example.com/mountain-960.jpg 960w, https://example.com/mountain-1600.jpg 1600w',
+    sizes: '(max-width: 48rem) 100vw, 80rem',
+    thumbnailSrc: 'https://example.com/mountain-thumb-480.jpg',
+    thumbnailSrcSet: 'https://example.com/mountain-thumb-320.jpg 320w, https://example.com/mountain-thumb-640.jpg 640w',
+    thumbnailSizes: '(max-width: 48rem) 100vw, 33vw',
+    alt: 'A mountain reflected in a lake'
+  }
+]
+```
+
+- A dedicated thumbnail family is used when either `thumbnailSrc` or `thumbnailSrcSet` is set.
+- If only `thumbnailSrcSet` is set, `src` is its fallback URL.
+- Otherwise thumbnails reuse `src`, `srcSet`, and `sizes`, so you can skip thumbnails entirely:
+
+```tsx
+const images: GalleryImage[] = [
+  {
+    src: 'https://example.com/coast-1600.jpg',
+    srcSet: 'https://example.com/coast-800.jpg 800w, https://example.com/coast-1600.jpg 1600w',
+    sizes: '(max-width: 48rem) 100vw, 80rem',
+    alt: 'A blue coast under a bright sky'
+  }
+]
+```
+
+`sizes` is optional, but accurate values let the browser avoid downloading larger candidates than needed.
 
 ## Choose a layout
 
