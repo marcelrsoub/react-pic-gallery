@@ -9,6 +9,8 @@ import {
 
 type ImageProps = {
   src: string
+  srcSet?: string
+  sizes?: string
   alt: string
   className?: string
   imageClassName?: string
@@ -24,6 +26,8 @@ type ImageProps = {
 
 export function Image({
   src,
+  srcSet,
+  sizes,
   alt,
   className = '',
   imageClassName = '',
@@ -37,16 +41,24 @@ export function Image({
   height
 }: ImageProps) {
   const imageRef = useRef<HTMLImageElement>(null)
-  const [state, setState] = useState<'loading' | 'loaded' | 'error'>('loading')
+  const sourceKey = JSON.stringify([src, srcSet ?? null, sizes ?? null])
+  const [imageState, setImageState] = useState<{
+    sourceKey: string
+    status: 'loading' | 'loaded' | 'error'
+  }>({ sourceKey, status: 'loading' })
+  const state = imageState.sourceKey === sourceKey ? imageState.status : 'loading'
 
   useEffect(() => {
-    setState('loading')
+    setImageState({ sourceKey, status: 'loading' })
 
     const image = imageRef.current
     if (!image?.complete) return
 
-    setState(image.naturalWidth > 0 ? 'loaded' : 'error')
-  }, [src])
+    setImageState({
+      sourceKey,
+      status: image.naturalWidth > 0 ? 'loaded' : 'error'
+    })
+  }, [sourceKey])
 
   return (
     <span
@@ -58,6 +70,8 @@ export function Image({
     >
       <img
         ref={imageRef}
+        sizes={sizes}
+        srcSet={srcSet}
         src={src}
         alt={alt}
         className={`react-pic-gallery__image-element ${imageClassName}`.trim()}
@@ -66,8 +80,8 @@ export function Image({
         decoding='async'
         width={width}
         height={height}
-        onLoad={() => setState('loaded')}
-        onError={() => setState('error')}
+        onLoad={() => setImageState({ sourceKey, status: 'loaded' })}
+        onError={() => setImageState({ sourceKey, status: 'error' })}
       />
       {state === 'loading' && (
         <span

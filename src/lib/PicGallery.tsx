@@ -6,6 +6,7 @@ import type { GalleryImage, PicGalleryProps } from './types'
 export function PicGallery<T extends GalleryImage>({
   images,
   layout,
+  appearance,
   columns,
   rowHeight,
   className,
@@ -15,7 +16,8 @@ export function PicGallery<T extends GalleryImage>({
   renderCaption,
   renderControls,
   showCounter,
-  showNavigation
+  showNavigation,
+  preloadAdjacent
 }: PicGalleryProps<T>) {
   const [index, setIndex] = useState<number | null>(null)
 
@@ -24,6 +26,7 @@ export function PicGallery<T extends GalleryImage>({
       <Gallery
         images={images}
         layout={layout}
+        appearance={appearance}
         columns={columns}
         rowHeight={rowHeight}
         className={galleryClassName}
@@ -31,6 +34,7 @@ export function PicGallery<T extends GalleryImage>({
         renderCaption={renderCaption}
         showCounter={showCounter}
         showNavigation={showNavigation}
+        preloadAdjacent={preloadAdjacent}
       />
       <Lightbox
         images={images}
@@ -41,6 +45,7 @@ export function PicGallery<T extends GalleryImage>({
         renderControls={renderControls}
         showCounter={showCounter}
         showNavigation={showNavigation}
+        preloadAdjacent={preloadAdjacent}
       />
     </div>
   )

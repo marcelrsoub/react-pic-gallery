@@ -1,4 +1,8 @@
-:where(.react-pic-gallery, .react-pic-gallery__gallery, .react-pic-gallery__carousel, .react-pic-gallery__lightbox) {
+:where(
+  .react-pic-gallery,
+  .react-pic-gallery__lightbox,
+  .react-pic-gallery__gallery:not(.react-pic-gallery .react-pic-gallery__gallery)
+) {
   --gallery-gap: 0.75rem;
   --gallery-radius: 1rem;
   --gallery-row-height: 12rem;
@@ -7,6 +11,10 @@
   --gallery-overlay: rgba(7, 11, 16, 0.94);
   --gallery-control-size: 2.75rem;
   --gallery-motion: 180ms;
+  --gallery-background: #111a24;
+  --gallery-padding: 0.65rem;
+  --gallery-border: 1px solid rgba(148, 163, 184, 0.18);
+  --gallery-frame-radius: 1.1rem;
   color: #f8fafc;
   -webkit-user-select: none;
   user-select: none;
@@ -57,6 +65,22 @@
   position: relative;
   width: 100%;
   min-width: 0;
+}
+
+.react-pic-gallery__gallery--framed {
+  box-sizing: border-box;
+  padding: var(--gallery-padding, 0.65rem);
+  border: var(--gallery-border, 1px solid rgba(148, 163, 184, 0.18));
+  border-radius: var(--gallery-frame-radius, 1.1rem);
+  background: var(--gallery-background, #111a24);
+}
+
+.react-pic-gallery__gallery--bare {
+  box-sizing: border-box;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
 }
 
 .react-pic-gallery__grid {
@@ -510,7 +534,11 @@ dialog.react-pic-gallery__lightbox::backdrop {
 }
 
 @media (max-width: 600px) {
-  :where(.react-pic-gallery, .react-pic-gallery__lightbox) {
+  :where(
+    .react-pic-gallery,
+    .react-pic-gallery__lightbox,
+    .react-pic-gallery__gallery:not(.react-pic-gallery .react-pic-gallery__gallery)
+  ) {
     --gallery-gap: 0.5rem;
     --gallery-radius: 0.75rem;
     --gallery-row-height: 8rem;
@@ -593,7 +621,11 @@ dialog.react-pic-gallery__lightbox::backdrop {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  :where(.react-pic-gallery, .react-pic-gallery__lightbox) {
+  :where(
+    .react-pic-gallery,
+    .react-pic-gallery__lightbox,
+    .react-pic-gallery__gallery:not(.react-pic-gallery .react-pic-gallery__gallery)
+  ) {
     --gallery-motion: 0ms;
   }
 

@@ -17,8 +17,8 @@ Want to try it first? The [interactive playground](/react-pic-gallery/) pairs wo
 
 | Guide | What you’ll learn |
 | --- | --- |
-| [Customization](./customization/) | Add actions, captions, and custom controls, or compose the standalone components. |
-| [Styling](./styling/) | Adjust spacing, colors, and layout using CSS variables and classes. |
+| [Customization](./customization/) | Add actions, captions, and custom controls; choose framed/bare appearance and preload behavior. |
+| [Styling](./styling/) | Adjust frame, spacing, colors, and layout using CSS variables and classes. |
 | [Accessibility](./accessibility/) | Understand keyboard navigation, focus management, and your responsibilities when adding custom UI. |
 
 ## Look up the details
@@ -29,6 +29,7 @@ Want to try it first? The [interactive playground](/react-pic-gallery/) pairs wo
 ## Design principles
 
 - The default integration is one component: `PicGallery`.
+- Four layouts, responsive image sources, and framed/bare appearances are available without replacing the built-in structure.
 - `Gallery` and `Lightbox` can be composed independently.
 - Custom UI is added through typed render callbacks instead of copied internals.
 - The package has no runtime dependency beyond React and React DOM.

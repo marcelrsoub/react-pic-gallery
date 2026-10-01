@@ -87,6 +87,7 @@ export function Lightbox<T extends GalleryImage>({
   renderControls,
   showCounter = true,
   showNavigation = true,
+  preloadAdjacent = true,
   className
 }: LightboxProps<T>) {
   const lightboxRef = useRef<HTMLDialogElement>(null)
@@ -265,6 +266,7 @@ export function Lightbox<T extends GalleryImage>({
         renderControls={renderControls}
         showCounter={showCounter}
         showNavigation={showNavigation && !renderControls}
+        preloadAdjacent={preloadAdjacent}
         close={close}
         onEmptyAreaClick={close}
       />

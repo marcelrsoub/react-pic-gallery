@@ -11,6 +11,7 @@ import {
 import { Image } from './Image'
 import { Carousel } from './Carousel'
 import { buildJustifiedRows } from './layout'
+import { getThumbnailImageSource } from './imageSources'
 import type { GalleryImage, GalleryProps } from './types'
 import { useCarouselNavigation } from './useCarouselNavigation'
 
@@ -20,6 +21,15 @@ const DEFAULT_GAP = 12
 const useIsomorphicLayoutEffect =
   typeof window === 'undefined' ? useEffect : useLayoutEffect
 
+function parseNonNegativeCssLength(value: string) {
+  const parsed = Number.parseFloat(value)
+  return Number.isFinite(parsed) && parsed >= 0 ? parsed : null
+}
+
+function isPositiveFinite(value: number): value is number {
+  return Number.isFinite(value) && value > 0
+}
+
 type TileOptions = {
   className?: string
   style?: CSSProperties
@@ -27,7 +37,12 @@ type TileOptions = {
 
 type CarouselLayoutProps<T extends GalleryImage> = Pick<
   GalleryProps<T>,
-  'images' | 'onImageClick' | 'renderCaption' | 'showCounter' | 'showNavigation'
+  | 'images'
+  | 'onImageClick'
+  | 'renderCaption'
+  | 'showCounter'
+  | 'showNavigation'
+  | 'preloadAdjacent'
 >
 
 function CarouselLayout<T extends GalleryImage>({
@@ -35,7 +50,8 @@ function CarouselLayout<T extends GalleryImage>({
   onImageClick,
   renderCaption,
   showCounter,
-  showNavigation
+  showNavigation,
+  preloadAdjacent
 }: CarouselLayoutProps<T>) {
   const [carouselIndex, setCarouselIndex] = useState(0)
   const index = Math.max(0, Math.min(carouselIndex, images.length - 1))
@@ -66,6 +82,7 @@ function CarouselLayout<T extends GalleryImage>({
         renderCaption={renderCaption}
         showCounter={showCounter}
         showNavigation={showNavigation}
+        preloadAdjacent={preloadAdjacent}
         onImageClick={() => onImageClick?.(index)}
       />
     </div>
@@ -76,13 +93,15 @@ function GalleryComponent<T extends GalleryImage>({
   images,
   onImageClick,
   layout = 'grid',
+  appearance = 'framed',
   columns,
   rowHeight,
   className = '',
   style,
   renderCaption,
   showCounter,
-  showNavigation
+  showNavigation,
+  preloadAdjacent = true
 }: GalleryProps<T>) {
   const tileRefs = useRef<Array<HTMLButtonElement | null>>([])
   const galleryRef = useRef<HTMLDivElement>(null)
@@ -119,21 +138,44 @@ function GalleryComponent<T extends GalleryImage>({
 
     const measure = () => {
       const rect = gallery.getBoundingClientRect()
-      const width = rect.width || gallery.clientWidth || window.innerWidth || 1024
+      const galleryStyle = window.getComputedStyle(gallery)
+      const horizontalPadding =
+        (parseNonNegativeCssLength(galleryStyle.paddingLeft) ?? 0) +
+        (parseNonNegativeCssLength(galleryStyle.paddingRight) ?? 0)
+      const horizontalBorder =
+        (parseNonNegativeCssLength(galleryStyle.borderLeftWidth) ?? 0) +
+        (parseNonNegativeCssLength(galleryStyle.borderRightWidth) ?? 0)
+      const contentWidthCandidates = [
+        rect.width - horizontalPadding - horizontalBorder,
+        gallery.clientWidth - horizontalPadding
+      ]
+      const width =
+        contentWidthCandidates.find(isPositiveFinite) ??
+        (isPositiveFinite(window.innerWidth) ? window.innerWidth : 1024)
       const probeRect = probe.getBoundingClientRect()
       const computedGap = Number.parseFloat(window.getComputedStyle(probe).width)
-      const fallbackHeight =
+      const requestedHeight =
         typeof rowHeight === 'number'
           ? rowHeight
           : typeof rowHeight === 'string' && /^\s*\d+(?:\.\d+)?px\s*$/.test(rowHeight)
             ? Number.parseFloat(rowHeight)
-            : DEFAULT_ROW_HEIGHT
+            : null
+      const fallbackHeight =
+        requestedHeight !== null && isPositiveFinite(requestedHeight)
+          ? requestedHeight
+          : DEFAULT_ROW_HEIGHT
+      const measuredHeight = isPositiveFinite(probeRect.height)
+        ? probeRect.height
+        : fallbackHeight
+      const gapCandidates = [computedGap, probeRect.width]
+      const gap =
+        gapCandidates.find((value) => Number.isFinite(value) && value >= 0) ?? DEFAULT_GAP
 
       setMeasurements((previous) => {
         const next = {
           width,
-          rowHeight: probeRect.height || fallbackHeight,
-          gap: Number.isFinite(computedGap) ? computedGap : probeRect.width || DEFAULT_GAP
+          rowHeight: measuredHeight,
+          gap
         }
         return previous.width === next.width &&
           previous.rowHeight === next.rowHeight &&
@@ -154,7 +196,7 @@ function GalleryComponent<T extends GalleryImage>({
       observer?.disconnect()
       window.removeEventListener('resize', measure)
     }
-  }, [layout, rowHeight, rowHeightValue])
+  }, [appearance, layout, rowHeight, rowHeightValue])
 
   const moveTileFocus = useCallback((index: number) => {
     setFocusedIndex(index)
@@ -264,33 +306,38 @@ function GalleryComponent<T extends GalleryImage>({
     [columnCount, findVerticalNeighbor, lastIndex, layout, moveTileFocus]
   )
 
-  const renderTile = (image: T, index: number, options: TileOptions = {}) => (
-    <button
-      className={`react-pic-gallery__tile ${options.className ?? ''}`.trim()}
-      type='button'
-      disabled={!onImageClick}
-      key={image.id ?? `${image.src}-${index}`}
-      tabIndex={index === rovingIndex ? 0 : -1}
-      ref={(element) => {
-        tileRefs.current[index] = element
-      }}
-      style={options.style}
-      onKeyDown={(event) => handleTileKeyDown(event, index)}
-      onClick={() => {
-        setFocusedIndex(index)
-        onImageClick?.(index)
-      }}
-      aria-label={`Open ${image.alt}`}
-    >
-      <Image
-        src={image.thumbnailSrc ?? image.src}
-        alt={image.alt}
-        objectFit='cover'
-        width={image.width}
-        height={image.height}
-      />
-    </button>
-  )
+  const renderTile = (image: T, index: number, options: TileOptions = {}) => {
+    const source = getThumbnailImageSource(image)
+    return (
+      <button
+        className={`react-pic-gallery__tile ${options.className ?? ''}`.trim()}
+        type='button'
+        disabled={!onImageClick}
+        key={image.id ?? `${image.src}-${index}`}
+        tabIndex={index === rovingIndex ? 0 : -1}
+        ref={(element) => {
+          tileRefs.current[index] = element
+        }}
+        style={options.style}
+        onKeyDown={(event) => handleTileKeyDown(event, index)}
+        onClick={() => {
+          setFocusedIndex(index)
+          onImageClick?.(index)
+        }}
+        aria-label={`Open ${image.alt}`}
+      >
+        <Image
+          sizes={source.sizes}
+          srcSet={source.srcSet}
+          src={source.src}
+          alt={image.alt}
+          objectFit='cover'
+          width={image.width}
+          height={image.height}
+        />
+      </button>
+    )
+  }
 
   const justifiedRows =
     layout === 'justified'
@@ -314,7 +361,7 @@ function GalleryComponent<T extends GalleryImage>({
   return (
     <div
       ref={galleryRef}
-      className={`react-pic-gallery__gallery react-pic-gallery__gallery--${layout} ${
+      className={`react-pic-gallery__gallery react-pic-gallery__gallery--${layout} react-pic-gallery__gallery--${appearance} ${
         layout === 'grid' ? 'react-pic-gallery__grid' : ''
       } ${className}`.trim()}
       style={galleryStyle}
@@ -330,6 +377,7 @@ function GalleryComponent<T extends GalleryImage>({
           renderCaption={renderCaption}
           showCounter={showCounter}
           showNavigation={showNavigation}
+          preloadAdjacent={preloadAdjacent}
         />
       )}
 

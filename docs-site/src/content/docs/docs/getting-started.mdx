@@ -42,15 +42,19 @@ React 18.3+ and React 19 are supported.
 
 ## Create image data
 
-`src` and `alt` are required. Add `thumbnailSrc` when the thumbnail should be a smaller or separately optimized asset.
+`src` and `alt` are required. Use `srcSet` and `sizes` for responsive full-size images. Add the thumbnail fields when you have a smaller or separately optimized thumbnail family.
 
 ```tsx
 import type { GalleryImage } from 'react-pic-gallery'
 
 const images: GalleryImage[] = [
   {
-    src: 'https://example.com/mountain-large.jpg',
-    thumbnailSrc: 'https://example.com/mountain-thumb.jpg',
+    src: 'https://example.com/mountain-1600.jpg',
+    srcSet: 'https://example.com/mountain-960.jpg 960w, https://example.com/mountain-1600.jpg 1600w',
+    sizes: '(max-width: 48rem) 100vw, 80rem',
+    thumbnailSrc: 'https://example.com/mountain-thumb-480.jpg',
+    thumbnailSrcSet: 'https://example.com/mountain-thumb-320.jpg 320w, https://example.com/mountain-thumb-640.jpg 640w',
+    thumbnailSizes: '(max-width: 48rem) 100vw, 33vw',
     alt: 'A mountain reflected in a lake',
     caption: 'Morning at the lake'
   }
@@ -58,6 +62,21 @@ const images: GalleryImage[] = [
 ```
 
 Image objects can include application-specific fields. Use a generic image type when custom renderers need those fields.
+
+When neither `thumbnailSrc` nor `thumbnailSrcSet` is provided, thumbnails use the full-size `src`, `srcSet`, and `sizes` family. For example, this responsive image data needs no duplicate thumbnail files:
+
+```tsx
+const imagesWithoutSeparateThumbnails: GalleryImage[] = [
+  {
+    src: 'https://example.com/coast-1600.jpg',
+    srcSet: 'https://example.com/coast-800.jpg 800w, https://example.com/coast-1600.jpg 1600w',
+    sizes: '(max-width: 48rem) 100vw, 80rem',
+    alt: 'A blue coast under a bright sky'
+  }
+]
+```
+
+If only `thumbnailSrcSet` is supplied, `src` is used as its fallback URL. The browser selects from the thumbnail candidates using `thumbnailSizes` when provided.
 
 ## Render the default gallery
 
@@ -72,6 +91,7 @@ export function App() {
 
 The default gallery provides:
 
+- A framed gallery surface; set `appearance='bare'` to remove only that surface.
 - Responsive thumbnails with native lazy loading.
 - An image-focused lightbox with captions and image count.
 - Previous/next controls, Escape-to-close, and arrow-key navigation.
@@ -79,8 +99,11 @@ The default gallery provides:
 
 ## Choose a layout
 
-Choose `grid`, `justified`, or `mosaic` for a thumbnail layout, or `carousel` to show one image at a time with inline navigation. For grid-based layouts, use `columns` for a fixed number of columns or leave it unset for responsive auto-fill. `rowHeight` accepts CSS values and numeric pixel values; neither option applies to the carousel.
+Choose `grid`, `justified`, or `mosaic` for a thumbnail layout, or `carousel` to show one image at a time with inline navigation. `columns` sets the fixed column count for the grid (three by default). `rowHeight` accepts CSS values and numeric pixel values; neither option applies to the carousel.
 
 ```tsx
 <PicGallery images={images} columns={4} rowHeight='10rem' />
+<PicGallery images={images} appearance='bare' />
 ```
+
+Adjacent full-size images are preloaded by default while the viewer is active: while the lightbox is open or the inline carousel is mounted. Set `preloadAdjacent={false}` on `PicGallery` to disable it.

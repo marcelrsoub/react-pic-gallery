@@ -3,7 +3,11 @@ import type { CSSProperties, ReactNode } from 'react'
 export type GalleryImage = {
   id?: string
   src: string
+  srcSet?: string
+  sizes?: string
   thumbnailSrc?: string
+  thumbnailSrcSet?: string
+  thumbnailSizes?: string
   alt: string
   caption?: ReactNode
   width?: number
@@ -11,6 +15,8 @@ export type GalleryImage = {
 }
 
 export type GalleryLayout = 'grid' | 'justified' | 'mosaic' | 'carousel'
+
+export type GalleryAppearance = 'framed' | 'bare'
 
 export type LightboxContext<T extends GalleryImage = GalleryImage> = {
   image: T
@@ -31,11 +37,13 @@ export type GalleryProps<T extends GalleryImage = GalleryImage> = {
   images: readonly T[]
   onImageClick?: (index: number) => void
   layout?: GalleryLayout
+  appearance?: GalleryAppearance
   columns?: number
   rowHeight?: CSSProperties['height']
   renderCaption?: LightboxRenderer<T>
   showCounter?: boolean
   showNavigation?: boolean
+  preloadAdjacent?: boolean
   className?: string
   style?: CSSProperties
 }
@@ -49,12 +57,14 @@ export type LightboxProps<T extends GalleryImage = GalleryImage> = {
   renderControls?: LightboxRenderer<T>
   showCounter?: boolean
   showNavigation?: boolean
+  preloadAdjacent?: boolean
   className?: string
 }
 
 export type PicGalleryProps<T extends GalleryImage = GalleryImage> = {
   images: readonly T[]
   layout?: GalleryLayout
+  appearance?: GalleryAppearance
   columns?: number
   rowHeight?: CSSProperties['height']
   className?: string
@@ -65,4 +75,5 @@ export type PicGalleryProps<T extends GalleryImage = GalleryImage> = {
   renderControls?: LightboxRenderer<T>
   showCounter?: boolean
   showNavigation?: boolean
+  preloadAdjacent?: boolean
 }

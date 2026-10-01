@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.0.4] (2026-10-01)
+
+This patch makes images load faster, preloads adjacent lightbox images, and ships the polished demo frame as the default gallery surface. The default appearance change is visually breaking; see the migration note below.
+
+### Added
+
+- Responsive image sources: `srcSet` and `sizes` on `GalleryImage`, plus `thumbnailSrcSet` and `thumbnailSizes` for a dedicated thumbnail family. When no thumbnail source is supplied, thumbnails reuse the full-size family.
+- Adjacent-image preloading in the lightbox and inline carousel: the immediate previous and next full-size images are fetched at low priority while the viewer is active, with deduplication and a bounded tracker. Opt out with `preloadAdjacent={false}`.
+- `appearance` prop (`'framed' | 'bare'`) on `Gallery` and `PicGallery`, with the exported `GalleryAppearance` type. `'framed'` is now the default.
+- Frame theme variables `--gallery-background`, `--gallery-padding`, `--gallery-border`, and `--gallery-frame-radius`.
+- Visual regression harness (`npm run test:visual`, `npm run test:visual:update`, `npm run test:visual:cross`) with committed baselines for every layout, the standalone components, and the lightbox at desktop and mobile widths.
+
+### Changed
+
+- The gallery now renders a framed surface by default, matching the demo: background, inner padding, border, and outer radius.
+- The justified layout measures the content box, excluding frame padding and border, so rows no longer overflow.
+- Demo and docs cover four layouts, the framed/bare appearance, responsive sources, and preloading behavior.
+
+### Migration
+
+- The default `framed` appearance adds padding, a background, a border, and an outer radius. If you already wrap the gallery in your own card, remove the duplicate surface styles and set `appearance='bare'` to keep the previous unframed look. Tile spacing and tile corner radii are unchanged.
+
 ## [2.0.3] (2026-09-24)
 
 This patch removes visual friction in the gallery and lightbox: cleaner rounded corners, no accidental selection, and no lingering carousel focus ring.

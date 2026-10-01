@@ -5,6 +5,17 @@ description: Move from the legacy imgList/options API to the smaller v2 API.
 
 v2 is a deliberate breaking release. It removes the legacy options object and the external lightbox workaround in favor of three composable components.
 
+## Gallery appearance
+
+`Gallery` and `PicGallery` now render with the built-in `framed` appearance by default. Existing cards that add their own padding, background, border, or rounded surface around the gallery should remove those duplicate surface styles; outer wrappers can remain for spacing or page layout. Use `appearance='bare'` to keep the old unframed look. Bare galleries retain tile gaps and tile corner radii.
+
+```tsx
+<PicGallery images={images} />
+<PicGallery images={images} appearance='bare' />
+```
+
+The frame is themed with `--gallery-background`, `--gallery-padding`, `--gallery-border`, and `--gallery-frame-radius`. Set these variables on the `PicGallery` wrapper to pass them through to its inner layout container.
+
 ## Data model
 
 | v1 | v2 |
@@ -32,6 +43,8 @@ After:
   columns={4}
 />
 ```
+
+The image model also accepts native responsive source fields: `srcSet` and `sizes` for the full-size image, and `thumbnailSrcSet` and `thumbnailSizes` for an optional dedicated thumbnail source family. When neither `thumbnailSrc` nor `thumbnailSrcSet` is set, thumbnails use `src`, `srcSet`, and `sizes` directly.
 
 ## Options become props
 

@@ -71,3 +71,13 @@ export function Viewer({ images }) {
   )
 }
 ```
+
+## Choose an appearance and preload policy
+
+`PicGallery` and `Gallery` use the `framed` appearance by default. Choose `bare` to remove the outer surface without changing tile spacing or tile radius:
+
+```tsx
+<PicGallery images={images} appearance='bare' />
+```
+
+Adjacent full-size responsive images are preloaded by default while the lightbox is open or the inline carousel is mounted. Set `preloadAdjacent={false}` on `PicGallery`, `Lightbox`, or a carousel `Gallery` to opt out. Standalone `Gallery` only preloads in its carousel layout.

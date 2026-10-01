@@ -204,29 +204,29 @@ body {
 
 .gallery-frame {
   margin-top: 1.25rem;
-  padding: 0.65rem;
-  overflow: hidden;
-  border: 1px solid var(--page-line);
-  border-radius: 1.1rem;
-  background: var(--page-panel);
 }
 
-.gallery-frame .react-pic-gallery__gallery {
+.gallery-frame .react-pic-gallery {
   --gallery-gap: 0.65rem;
   --gallery-radius: 0.75rem;
   --gallery-row-height: clamp(9rem, 16vw, 13rem);
 }
 
-.gallery-frame--hero {
-  padding: 0.8rem;
-  border-radius: 1.25rem;
-  background: var(--page-panel-soft);
-}
-
-.gallery-frame--hero .react-pic-gallery__gallery {
+.gallery-frame--hero .react-pic-gallery {
   --gallery-gap: 0.8rem;
   --gallery-radius: 0.9rem;
   --gallery-row-height: clamp(11rem, 25vw, 20rem);
+}
+
+.demo-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.demo-options .layout-switcher {
+  margin-top: 0;
 }
 
 .layout-switcher {

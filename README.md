@@ -3,7 +3,7 @@
 Small, accessible React image gallery and lightbox with a polished default UI and typed escape hatches for custom controls.
 
 [![NPM](https://img.shields.io/npm/v/react-pic-gallery.svg)](https://www.npmjs.com/package/react-pic-gallery)
-[![Minified + gzip size](https://badgen.net/static/minified%20%2B%20gzip/8.5%20KB/blue)](https://bundlephobia.com/package/react-pic-gallery)
+[![Minified + gzip size](https://badgen.net/static/minified%20%2B%20gzip/9.6%20KB/blue)](https://bundlephobia.com/package/react-pic-gallery)
 
 [Live playground and docs](https://marcelrsoub.github.io/react-pic-gallery/)
 
@@ -23,17 +23,17 @@ bun add react-pic-gallery
 
 React 18.3+ and React 19 are supported. The [Quick start docs](https://marcelrsoub.github.io/react-pic-gallery/docs/getting-started/) provide these commands in a package-manager switcher.
 
-The package is intentionally lightweight: it has no runtime dependencies and React is a peer dependency. The built JavaScript and CSS together are about **8.5 KB gzipped** (6.13 KB JS + 2.34 KB CSS).
+The package is intentionally lightweight: it has no runtime dependencies and React is a peer dependency. The built JavaScript and CSS together are about **9.6 KB gzipped** (7.20 KB JS + 2.40 KB CSS).
 
 ## Why react-pic-gallery
 
-- **Tiny by design** — no runtime dependencies, no context providers, no polyfills; ~8.5 KB gzipped total.
+- **Tiny by design** — no runtime dependencies, no context providers, no polyfills; ~9.6 KB gzipped total.
 - **Simple by default** — one component, one stylesheet import, sensible accessible defaults.
 - **Yours when needed** — typed `renderActions`, `renderCaption`, and `renderControls` callbacks let you add custom UI without rebuilding the lightbox; extra fields on your image objects flow through fully typed.
 - **Accessible** — native modal `<dialog>`, focus containment and restoration, Escape to close, screen-reader announcements, `prefers-reduced-motion` support.
 - **Keyboard and touch friendly** — arrow-key navigation in the grid (roving tabindex) and in the lightbox, Enter to open, swipe navigation on touch devices.
 - **Themeable** — namespaced classes and CSS variables (`--gallery-accent`, `--gallery-overlay`, `--gallery-motion`, …).
-- **Three layouts** — choose a uniform grid, proportional justified rows, or an editorial mosaic.
+- **Four layouts** — choose a uniform grid, proportional justified rows, an editorial mosaic, or an inline carousel.
 
 ## Quick start
 
@@ -43,8 +43,12 @@ import 'react-pic-gallery/styles.css'
 
 const images = [
   {
-    src: 'https://example.com/photo-large.jpg',
-    thumbnailSrc: 'https://example.com/photo-thumb.jpg',
+    src: 'https://example.com/mountain-1600.jpg',
+    srcSet: 'https://example.com/mountain-960.jpg 960w, https://example.com/mountain-1600.jpg 1600w',
+    sizes: '(max-width: 48rem) 100vw, 80rem',
+    thumbnailSrc: 'https://example.com/mountain-thumb-480.jpg',
+    thumbnailSrcSet: 'https://example.com/mountain-thumb-320.jpg 320w, https://example.com/mountain-thumb-640.jpg 640w',
+    thumbnailSizes: '(max-width: 48rem) 100vw, 33vw',
     alt: 'A mountain reflected in a lake',
     caption: 'Morning at the lake'
   }
@@ -55,7 +59,7 @@ export function App() {
 }
 ```
 
-`src` and `alt` are required. `id`, `thumbnailSrc`, `caption`, `width`, and `height` are optional. Image objects can include application-specific fields; those fields remain available in renderer callbacks when using TypeScript generics.
+`src` and `alt` are required. `srcSet` and `sizes` describe responsive full-size sources; `thumbnailSrc`, `thumbnailSrcSet`, and `thumbnailSizes` optionally provide a separate responsive thumbnail family. If neither `thumbnailSrc` nor `thumbnailSrcSet` is provided, thumbnails use the full-size source family. `id`, `caption`, `width`, and `height` are optional. Image objects can include application-specific fields; those fields remain available in renderer callbacks when using TypeScript generics.
 
 ## Gallery layouts
 
@@ -64,13 +68,17 @@ The default is the existing three-column grid. Choose another layout with `layou
 ```tsx
 <PicGallery images={images} layout='justified' />
 <PicGallery images={images} layout='mosaic' />
+<PicGallery images={images} layout='carousel' />
 ```
 
 - **`grid`** — consistent tiles with a configurable fixed column count.
 - **`justified`** — proportional photos arranged in aligned rows; the final row stays left-aligned.
 - **`mosaic`** — alternating featured photos and smaller supporting tiles.
+- **`carousel`** — one image at a time with inline previous/next controls.
 
-Image `width` and `height` are recommended, but optional. Justified rows use them when supplied and fall back to 3:2 when either dimension is missing or invalid. Accurate dimensions give the most faithful layout and help reserve space while images load. `rowHeight` sets the tile height for the grid, the base row height for the mosaic, and the target row height for justified galleries. `columns` applies to the grid only.
+The default appearance is `framed`; use `appearance='bare'` to remove the outer surface while retaining tile spacing and rounded corners. Image `width` and `height` are recommended, but optional. Justified rows use them when supplied and fall back to 3:2 when either dimension is missing or invalid. Accurate dimensions give the most faithful layout and help reserve space while images load. `rowHeight` sets the tile height for the grid, the base row height for the mosaic, and the target row height for justified galleries. `columns` applies to the grid only and defaults to three.
+
+Responsive image selection uses native `srcSet` and `sizes`. A dedicated thumbnail family is selected when either `thumbnailSrc` or `thumbnailSrcSet` is set; otherwise thumbnails use `src`, `srcSet`, and `sizes`. For example, `srcSet` alone works as a responsive source for both thumbnails and the lightbox. If `thumbnailSrcSet` is supplied without `thumbnailSrc`, `src` is used as its fallback URL.
 
 ## Custom UI
 
@@ -131,6 +139,7 @@ The lightbox uses the native modal `<dialog>` element and includes:
 - Keyboard navigation, Escape-to-close, focus containment, and focus restoration.
 - Backdrop closing with stable page width while scrolling is locked.
 - Native lazy loading for thumbnails and explicit image loading/error states.
+- Adjacent full-size images are preloaded while the viewer is active, using responsive sources and low fetch priority.
 - Horizontal swipe navigation on touch devices.
 - Instagram-Stories-style edge taps on touch screens: tap the right edge of the image to go forward, the left edge to go back (navigation buttons are hidden on small screens where tap zones take over).
 - Reduced-motion support, safe-area padding, rounded image surfaces, and animated transitions.
@@ -139,21 +148,34 @@ Gallery tiles use roving focus. Left/Right follow image order; in the grid, Up/D
 
 Native modal behavior targets modern browsers: Chrome 37+, Edge 79+, Firefox 98+, and Safari/iOS 15.4+. The package does not ship a dialog polyfill.
 
+Adjacent preloading is enabled by default and considers only the immediate previous and next full-size images while the lightbox is open or the inline carousel is mounted. The shared tracker is capped at 32 entries. Set `preloadAdjacent={false}` to opt out. It uses the browser image cache and does not guarantee reuse; cache headers, browser policy, and network conditions still apply.
+
 ## Styling
 
-The stylesheet uses namespaced classes and CSS variables. Import it once, then override variables globally or on the lightbox class:
+The stylesheet uses namespaced classes and CSS variables. Import it once. Set gallery variables on the `PicGallery` wrapper (for example, through its `className`) so the layout container inherits them; the lightbox is portaled, so lightbox colors should be set globally or on `.react-pic-gallery__lightbox`.
 
 ```css
-:root,
-.react-pic-gallery__lightbox {
+.brand-gallery {
+  --gallery-background: #111a24;
+  --gallery-padding: 0.65rem;
+  --gallery-border: 1px solid rgba(148, 163, 184, 0.18);
+  --gallery-frame-radius: 1.1rem;
   --gallery-accent: #ff7a59;
+}
+
+.react-pic-gallery__lightbox {
   --gallery-overlay: rgba(10, 10, 14, 0.98);
   --gallery-control-size: 3rem;
   --gallery-motion: 240ms;
 }
 ```
 
-The default grid uses three columns. Pass `columns` for a different fixed count. `rowHeight` accepts CSS height values or numeric pixels; its meaning depends on the selected layout as described above.
+```tsx
+<PicGallery className='brand-gallery' images={images} />
+<PicGallery className='brand-gallery' images={images} appearance='bare' />
+```
+
+The default frame variables are `--gallery-background`, `--gallery-padding`, `--gallery-border`, and `--gallery-frame-radius`. The default grid uses three columns. Pass `columns` for a different fixed count. `rowHeight` accepts CSS height values or numeric pixels; its meaning depends on the selected layout as described above.
 
 ## API
 
@@ -162,22 +184,39 @@ The default grid uses three columns. Pass `columns` for a different fixed count.
 | Prop | Type | Description |
 | --- | --- | --- |
 | `images` | `readonly GalleryImage[]` | Images to display. |
-| `layout` | `'grid' \| 'justified' \| 'mosaic'` | Defaults to `'grid'`. |
+| `layout` | `'grid' \| 'justified' \| 'mosaic' \| 'carousel'` | Defaults to `'grid'`. |
+| `appearance` | `'framed' \| 'bare'` | Defaults to `'framed'`. |
 | `columns` | `number` | Optional fixed grid column count. Defaults to three; only applies to `grid`. |
 | `rowHeight` | `CSSProperties['height']` | Grid tile height, mosaic base row height, or justified target row height. |
+| `preloadAdjacent` | `boolean` | Defaults to `true`. Preloads adjacent full-size images while the lightbox is open, and for the inline carousel while it is mounted. |
 | `renderActions` | `LightboxRenderer` | Adds controls to the default toolbar. |
 | `renderCaption` | `LightboxRenderer` | Replaces the current caption. |
 | `renderControls` | `LightboxRenderer` | Replaces the complete default control layer. |
 | `showCounter` | `boolean` | Shows the current image count. Defaults to `true`. |
 | `showNavigation` | `boolean` | Shows previous/next controls. Defaults to `true`. |
 
-`Gallery` accepts `images`, `onImageClick`, `layout`, `columns`, `rowHeight`, `className`, and `style`.
+`Gallery` accepts `images`, `onImageClick`, `layout`, `appearance`, `columns`, `rowHeight`, `preloadAdjacent`, `className`, and `style`. Its appearance defaults to `framed`; adjacent-image preloading applies only when `layout='carousel'`.
 
-`Lightbox` accepts `images`, controlled `index`, `onIndexChange`, the renderer props, `showCounter`, `showNavigation`, and `className`.
+`Lightbox` accepts `images`, controlled `index`, `onIndexChange`, the renderer props, `showCounter`, `showNavigation`, `preloadAdjacent`, and `className`.
+
+`PicGallery` accepts `appearance` (`'framed' | 'bare'`, default `'framed'`) and `preloadAdjacent` in addition to the props above. Adjacent preloading is enabled by default while the lightbox is open or the inline carousel is mounted. It preloads only the immediate previous and next full-size responsive sources, uses low fetch priority, and tracks at most 32 preload entries. Set `preloadAdjacent={false}` to opt out. Browser caching and network policy determine whether a prefetched response is reused.
+
+### `GalleryImage`
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `src` | `string` | Required full-size fallback source. |
+| `srcSet` | `string` | Optional responsive full-size candidates, passed to the browser natively. |
+| `sizes` | `string` | Optional rendered-size hint for `srcSet`. |
+| `thumbnailSrc` | `string` | Optional dedicated thumbnail source. |
+| `thumbnailSrcSet` | `string` | Optional responsive candidates for a dedicated thumbnail family. |
+| `thumbnailSizes` | `string` | Optional rendered-size hint for `thumbnailSrcSet`. |
 
 ## Migrating from v1
 
 v2 intentionally removes the old configuration and external lightbox workaround.
+
+`Gallery` and `PicGallery` now use the built-in framed appearance by default. If an existing card or `.gallery-frame` wrapper adds its own padding, background, border, or rounded surface, remove those duplicate surface styles and keep only layout or margin rules. Set `appearance='bare'` when you want the previous unframed look; tile spacing and tile corner radii remain in place.
 
 | v1 | v2 |
 | --- | --- |
@@ -222,6 +261,7 @@ npm install
 npm run dev
 npm run dev:library
 npm test
+npm run test:visual
 npm run typecheck
 npm run build
 npm run build:docs
@@ -229,6 +269,22 @@ npm pack --dry-run
 ```
 
 `npm run dev` starts the Astro playground and docs site. `npm run dev:library` starts the standalone Vite library demo. Publishing runs the package build automatically through `prepack`.
+
+### Visual regression tests
+
+`npm run test:visual` renders a deterministic fixture (`visual/`) across every layout, the standalone components, and the lightbox at desktop and mobile widths, then compares screenshots and layout metrics against the committed baselines in `visual/baselines/`. `npm run test:visual:update` regenerates those baselines after an intentional visual change.
+
+The harness drives a real Chromium over the DevTools protocol, so a browser must be reachable. It defaults to `ws://127.0.0.1:9222/`; override with `VISUAL_CDP`. In this repository's environment, run the browserless Chromium container and set `VISUAL_BASE_HOST` to the host address the container can reach (the container's default gateway, e.g. `192.168.16.1`):
+
+```bash
+VISUAL_BASE_HOST=192.168.16.1 npm run test:visual
+```
+
+`npm run test:visual:cross` renders the current working tree and a prior git ref with the `bare` appearance, which matches the pre-`framed` default, and diffs them to confirm rendering did not change. It accepts `--ref <ref>` (default `HEAD`) and `--tolerance <ratio>` (default `0.0005`, i.e. 0.05% of pixels) for sub-pixel text antialiasing:
+
+```bash
+VISUAL_BASE_HOST=192.168.16.1 npm run test:visual:cross -- --ref HEAD
+```
 
 ## License
 

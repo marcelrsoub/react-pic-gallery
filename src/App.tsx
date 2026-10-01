@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from 'react'
 import {
   PicGallery,
+  type GalleryAppearance,
   type GalleryImage,
   type GalleryLayout,
   type LightboxContext
@@ -345,6 +346,7 @@ function ExampleHeader({ title, description, level = 2 }: {
 
 export default function App() {
   const [layout, setLayout] = useState<GalleryLayout>('grid')
+  const [appearance, setAppearance] = useState<GalleryAppearance>('framed')
   const layouts: Array<{ value: GalleryLayout; label: string }> = [
     { value: 'grid', label: 'Grid' },
     { value: 'justified', label: 'Justified' },
@@ -372,7 +374,7 @@ export default function App() {
         </p>
         <ul className='feature-strip' aria-label='Key features'>
           <li className='feature-strip__stat'>
-            <strong>8.5 kB</strong>
+            <strong>9.6 kB</strong>
             <span>gzipped, JS + CSS</span>
           </li>
           <li className='feature-strip__stat'>
@@ -398,25 +400,41 @@ export default function App() {
 
       <section className='demo-section demo-section--hero' id='examples'>
         <h2>Default gallery</h2>
-        <div className='layout-switcher' role='group' aria-label='Gallery layout'>
-          {layouts.map((option) => (
-            <button
-              type='button'
-              key={option.value}
-              aria-pressed={layout === option.value}
-              onClick={() => setLayout(option.value)}
-            >
-              {option.label}
-            </button>
-          ))}
+        <div className='demo-options'>
+          <div className='layout-switcher' role='group' aria-label='Gallery layout'>
+            {layouts.map((option) => (
+              <button
+                type='button'
+                key={option.value}
+                aria-pressed={layout === option.value}
+                onClick={() => setLayout(option.value)}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+          <div className='layout-switcher' role='group' aria-label='Gallery appearance'>
+            {(['framed', 'bare'] as const).map((option) => (
+              <button
+                type='button'
+                key={option}
+                aria-pressed={appearance === option}
+                onClick={() => setAppearance(option)}
+              >
+                {option === 'framed' ? 'Framed' : 'Bare'}
+              </button>
+            ))}
+          </div>
         </div>
         <div className='gallery-frame gallery-frame--hero'>
-          <PicGallery images={images} layout={layout} />
+          <PicGallery images={images} layout={layout} appearance={appearance} />
         </div>
         <CodeBlock
           code={layout === 'grid'
-            ? basicSnippet
-            : `<PicGallery images={images} layout="${layout}" />`}
+            ? appearance === 'framed'
+              ? basicSnippet
+              : `<PicGallery images={images} appearance='bare' />`
+            : `<PicGallery images={images} layout='${layout}'${appearance === 'bare' ? " appearance='bare'" : ''} />`}
         />
       </section>
 

@@ -3,6 +3,8 @@ import { Image } from './Image'
 import type { GalleryImage, LightboxContext, LightboxRenderer } from './types'
 import type { UseCarouselNavigationResult } from './useCarouselNavigation'
 import { ChevronIcon, CloseIcon, getEdgeTapZone, joinClassNames } from './utils'
+import { getFullImageSource } from './imageSources'
+import { useAdjacentImagePreload } from './useAdjacentImagePreload'
 
 export type CarouselProps<T extends GalleryImage = GalleryImage> = {
   images: readonly T[]
@@ -13,6 +15,7 @@ export type CarouselProps<T extends GalleryImage = GalleryImage> = {
   renderControls?: LightboxRenderer<T>
   showCounter?: boolean
   showNavigation?: boolean
+  preloadAdjacent?: boolean
   close?: () => void
   onEmptyAreaClick?: () => void
   onImageClick?: () => void
@@ -22,10 +25,12 @@ export type CarouselProps<T extends GalleryImage = GalleryImage> = {
 export function Carousel<T extends GalleryImage>(props: CarouselProps<T>): ReactNode {
   const {
     images, index, navigation, renderActions, renderCaption, renderControls,
-    showCounter = true, showNavigation = true, close, onEmptyAreaClick,
+    showCounter = true, showNavigation = true, preloadAdjacent = true, close, onEmptyAreaClick,
     onImageClick, className
   } = props
   const image = images[index]
+  useAdjacentImagePreload(images, index, preloadAdjacent)
+  const source = image ? getFullImageSource(image) : undefined
   const context: LightboxContext<T> = {
     image,
     index,
@@ -97,8 +102,10 @@ export function Carousel<T extends GalleryImage>(props: CarouselProps<T>): React
             </button>
           )}
           <Image
-            key={image.src}
-            src={image.src}
+            key={source ? JSON.stringify([source.src, source.srcSet, source.sizes]) : index}
+            sizes={source?.sizes}
+            srcSet={source?.srcSet}
+            src={source?.src ?? ''}
             alt={image.alt}
             eager
             objectFit='contain'
