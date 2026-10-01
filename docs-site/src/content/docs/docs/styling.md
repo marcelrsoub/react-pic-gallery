@@ -9,7 +9,7 @@ Import the default stylesheet once:
 import 'react-pic-gallery/styles.css'
 ```
 
-The library uses namespaced classes and CSS variables. **No variable is required** — the stylesheet ships sensible defaults for every one — so you only override what you want to change.
+The library uses namespaced classes and CSS variables. **No variable is required**: the stylesheet ships sensible defaults for every one, so you only override what you want to change.
 
 Minimal override: change a single value.
 

@@ -441,8 +441,8 @@ export default function App() {
       <section className='demo-section' id='customize'>
         <h2>Customize Your Lightbox</h2>
         <p className='section-intro'>
-          Typed render callbacks —<code> renderActions</code>,<code> renderCaption</code>, and
-          <code> renderControls</code> — add actions beside the counter, replace the caption, or
+          Typed render callbacks such as<code> renderActions</code>,<code> renderCaption</code>,
+          and<code> renderControls</code> add actions beside the counter, replace the caption, or
           own the entire control layer.
         </p>
         <div className='example-grid'>
@@ -484,7 +484,7 @@ export default function App() {
             description={
               <>
                 Extend the image type with your own metadata and render it with
-                <code> renderCaption</code> — the library stays out of the way.
+                <code> renderCaption</code>; the library stays out of the way.
               </>
             }
           />

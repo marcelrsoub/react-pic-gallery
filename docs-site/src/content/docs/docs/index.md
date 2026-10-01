@@ -23,8 +23,8 @@ Want to try it first? The [interactive playground](/react-pic-gallery/) pairs wo
 
 ## Look up the details
 
-- [API reference](./api/) — component props, image types, render callbacks, and controlled lightbox state.
-- [Migrating from v1](./migration-v1/) — update an existing integration to the v2 API.
+- [API reference](./api/): component props, image types, render callbacks, and controlled lightbox state.
+- [Migrating from v1](./migration-v1/): update an existing integration to the v2 API.
 
 ## Design principles
 

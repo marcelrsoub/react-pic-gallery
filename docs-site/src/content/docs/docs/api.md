@@ -42,11 +42,11 @@ type GalleryAppearance = 'framed' | 'bare'
 | `columns` | `number` | `3` | Fixed grid column count; only applies to `grid`. |
 | `rowHeight` | `CSSProperties['height']` | CSS default | Grid tile height, mosaic base row height, or justified target row height. Numbers are pixels. |
 | `preloadAdjacent` | `boolean` | `true` | Preload immediate previous/next full-size images while the lightbox is open or inline carousel is mounted. |
-| `className` | `string` | — | Class on the gallery wrapper. |
-| `galleryClassName` | `string` | — | Class on the selected gallery layout container. |
-| `renderActions` | `LightboxRenderer<T>` | — | Adds actions to the default toolbar. |
+| `className` | `string` | None | Class on the gallery wrapper. |
+| `galleryClassName` | `string` | None | Class on the selected gallery layout container. |
+| `renderActions` | `LightboxRenderer<T>` | None | Adds actions to the default toolbar. |
 | `renderCaption` | `LightboxRenderer<T>` | image caption | Replaces the lightbox caption, and the carousel caption when `layout="carousel"`. Uses the same renderer context; `context.close` is a no-op in the carousel. |
-| `renderControls` | `LightboxRenderer<T>` | — | Replaces the complete default control layer. |
+| `renderControls` | `LightboxRenderer<T>` | None | Replaces the complete default control layer. |
 | `showCounter` | `boolean` | `true` | Shows the current image count in the lightbox and carousel. |
 | `showNavigation` | `boolean` | `true` | Shows previous/next controls in the lightbox and carousel. |
 

@@ -27,13 +27,13 @@ The package is intentionally lightweight: it has no runtime dependencies and Rea
 
 ## Why react-pic-gallery
 
-- **Tiny by design** — no runtime dependencies, no context providers, no polyfills; ~9.6 KB gzipped total.
-- **Simple by default** — one component, one stylesheet import, sensible accessible defaults.
-- **Yours when needed** — typed `renderActions`, `renderCaption`, and `renderControls` callbacks let you add custom UI without rebuilding the lightbox; extra fields on your image objects flow through fully typed.
-- **Accessible** — native modal `<dialog>`, focus containment and restoration, Escape to close, screen-reader announcements, `prefers-reduced-motion` support.
-- **Keyboard and touch friendly** — arrow-key navigation in the grid (roving tabindex) and in the lightbox, Enter to open, swipe navigation on touch devices.
-- **Themeable** — namespaced classes and CSS variables (`--gallery-accent`, `--gallery-overlay`, `--gallery-motion`, …).
-- **Four layouts** — choose a uniform grid, proportional justified rows, an editorial mosaic, or an inline carousel.
+- **Tiny by design**: no runtime dependencies, no context providers, no polyfills; ~9.6 KB gzipped total.
+- **Simple by default**: one component, one stylesheet import, sensible accessible defaults.
+- **Yours when needed**: typed `renderActions`, `renderCaption`, and `renderControls` callbacks let you add custom UI without rebuilding the lightbox; extra fields on your image objects flow through fully typed.
+- **Accessible**: native modal `<dialog>`, focus containment and restoration, Escape to close, screen-reader announcements, `prefers-reduced-motion` support.
+- **Keyboard and touch friendly**: arrow-key navigation in the grid (roving tabindex) and in the lightbox, Enter to open, swipe navigation on touch devices.
+- **Themeable**: namespaced classes and CSS variables (`--gallery-accent`, `--gallery-overlay`, `--gallery-motion`, …).
+- **Four layouts**: choose a uniform grid, proportional justified rows, an editorial mosaic, or an inline carousel.
 
 ## Quick start
 
@@ -86,10 +86,10 @@ The default is the existing three-column grid. Choose another layout with `layou
 <PicGallery images={images} layout='carousel' />
 ```
 
-- **`grid`** — consistent tiles with a configurable fixed column count.
-- **`justified`** — proportional photos arranged in aligned rows; the final row stays left-aligned.
-- **`mosaic`** — alternating featured photos and smaller supporting tiles.
-- **`carousel`** — one image at a time with inline previous/next controls.
+- **`grid`**: consistent tiles with a configurable fixed column count.
+- **`justified`**: proportional photos arranged in aligned rows; the final row stays left-aligned.
+- **`mosaic`**: alternating featured photos and smaller supporting tiles.
+- **`carousel`**: one image at a time with inline previous/next controls.
 
 The default appearance is `framed`; use `appearance='bare'` to remove the outer surface while retaining tile spacing and rounded corners. Image `width` and `height` are recommended, but optional. Justified rows use them when supplied and fall back to 3:2 when either dimension is missing or invalid. Accurate dimensions give the most faithful layout and help reserve space while images load. `rowHeight` sets the tile height for the grid, the base row height for the mosaic, and the target row height for justified galleries. `columns` applies to the grid only and defaults to three.
 
@@ -165,7 +165,7 @@ Adjacent preloading is enabled by default and considers only the immediate previ
 
 ## Styling
 
-The stylesheet uses namespaced classes and CSS variables. Import it once. **No variable is required** — every one ships with a default — so override only what you need.
+The stylesheet uses namespaced classes and CSS variables. Import it once. **No variable is required**. Every one ships with a default, so override only what you need.
 
 ```css
 .brand-gallery {
